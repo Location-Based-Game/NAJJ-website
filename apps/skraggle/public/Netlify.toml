@@ -1,0 +1,23 @@
+[[headers]]
+  for = "/game-files/Build/*.data.br"
+  [headers.values]
+    Content-Encoding = "br"
+    Content-Type = "application/octet-stream"
+	
+[[headers]]
+  for = "/game-files/Build/*.wasm.br"
+  [headers.values]
+    Content-Encoding = "br"
+    Content-Type = "application/wasm"
+
+[[headers]]                                                                      
+  for = "/game-files/Build/*.js"                                                             
+  [headers.values]
+    Content-Encoding = "js"
+    Content-Type = "application/javascript"
+	
+[[headers]]                                                                      
+  for = "/game-files/Build/*.js.br"                                                             
+  [headers.values]
+    Content-Encoding = "br"
+    Content-Type = "application/javascript"

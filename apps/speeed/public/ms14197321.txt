@@ -1,0 +1,5 @@
+﻿{
+  "Description": "Domain ownership verification file for Microsoft 365 - place in the website root",
+  "Domain": "najjgames.com",
+  "Id": "d9bf5eca-9b00-4388-9ff3-c3cd863ac1c1"
+}
