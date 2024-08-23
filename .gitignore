@@ -26,7 +26,7 @@ coverage
 out/
 build
 dist
-
+!apps/skraggle/public/game-files/Build
 
 # Debug
 npm-debug.log*
