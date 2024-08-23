@@ -1,13 +1,13 @@
 [[headers]]
-  for = "/game-files/UnityBuild/*.data.gz"
+  for = "/game-files/UnityBuild/*.data.br"
   [headers.values]
-    Content-Encoding = "gz"
+    Content-Encoding = "br"
     Content-Type = "application/octet-stream"
 	
 [[headers]]
-  for = "/game-files/UnityBuild/*.wasm.gz"
+  for = "/game-files/UnityBuild/*.wasm.br"
   [headers.values]
-    Content-Encoding = "gz"
+    Content-Encoding = "br"
     Content-Type = "application/wasm"
 
 [[headers]]                                                                      
@@ -17,7 +17,7 @@
     Content-Type = "application/javascript"
 	
 [[headers]]                                                                      
-  for = "/game-files/UnityBuild/*.js.gz"                                                             
+  for = "/game-files/UnityBuild/*.js.br"                                                             
   [headers.values]
-    Content-Encoding = "gz"
+    Content-Encoding = "br"
     Content-Type = "application/javascript"
