@@ -2,12 +2,16 @@
 import { Unity, useUnityContext } from "react-unity-webgl";
 
 export default function Home() {
+  const env = process.env.NODE_ENV
+  const buildDir = env === "development" ? "dev-build" : "game-files"
+  const extension = env === "development" ? "" : ".br"
+
   const { unityProvider } = useUnityContext({
-    loaderUrl: "./game-files/Build/game-files.loader.js",
-    dataUrl: "./game-files/Build/game-files.data.br",
-    frameworkUrl: "./game-files/Build/game-files.framework.js.br",
-    codeUrl: "./game-files/Build/game-files.wasm.br",
+    loaderUrl: `./${buildDir}/Build/${buildDir}.loader.js`,
+    dataUrl: `./${buildDir}/Build/${buildDir}.data${extension}`,
+    frameworkUrl: `./${buildDir}/Build/${buildDir}.framework.js${extension}`,
+    codeUrl: `./${buildDir}/Build/${buildDir}.wasm${extension}`,
   });
 
-  return <Unity unityProvider={unityProvider} />;
+  return <Unity unityProvider={unityProvider} className="w-screen h-screen" />;
 }
