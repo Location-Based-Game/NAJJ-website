@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://skraggle.netlify.app/Site-Screenshot.png",
-        width: 1101,
-        height: 619,
+        width: 2300,
+        height: 1293,
         alt: "screenshot of the Skraggle"
       }
     ],
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://skraggle.netlify.app/Site-Screenshot.png",
-        width: 1101,
-        height: 619,
+        width: 2300,
+        height: 1293,
         alt: "screenshot of the Skraggle"
       }
     ],
