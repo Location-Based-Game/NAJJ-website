@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   twitter: {
     images: [
       {
-        url: "/Site-Screenshot.png",
+        url: "https://skraggle.netlify.app/Site-Screenshot.png",
         width: 1101,
         height: 619,
         alt: "screenshot of the Skraggle"
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: "/Site-Screenshot.png",
+        url: "https://skraggle.netlify.app/Site-Screenshot.png",
         width: 1101,
         height: 619,
         alt: "screenshot of the Skraggle"
