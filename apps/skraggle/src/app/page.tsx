@@ -11,10 +11,10 @@ export default function Home() {
   const [enablePlayer, setEnablePlayer] = useState(false);
 
   const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
-    loaderUrl: `./${buildDir}/Build/${buildDir}.loader.js`,
-    dataUrl: `./${buildDir}/Build/${buildDir}.data${extension}`,
-    frameworkUrl: `./${buildDir}/Build/${buildDir}.framework.js${extension}`,
-    codeUrl: `./${buildDir}/Build/${buildDir}.wasm${extension}`,
+    loaderUrl: `./${buildDir}/Build/${name}.loader.js`,
+    dataUrl: `./${buildDir}/Build/${name}.data${extension}`,
+    frameworkUrl: `./${buildDir}/Build/${name}.framework.js${extension}`,
+    codeUrl: `./${buildDir}/Build/${name}.wasm${extension}`,
   });
 
   return (
