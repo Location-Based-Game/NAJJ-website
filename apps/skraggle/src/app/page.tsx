@@ -5,6 +5,7 @@ import { Unity, useUnityContext } from "react-unity-webgl";
 export default function Home() {
   const env = process.env.NODE_ENV;
   const buildDir = env === "development" ? "dev-build" : "WebGL/WebGL";
+  const name = env === "development" ? "dev-build" : "WebGL";
   const extension = env === "development" ? "" : ".br";
 
   const [enablePlayer, setEnablePlayer] = useState(false);
