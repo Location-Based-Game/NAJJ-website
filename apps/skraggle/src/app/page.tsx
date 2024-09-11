@@ -4,16 +4,17 @@ import { Unity, useUnityContext } from "react-unity-webgl";
 
 export default function Home() {
   const env = process.env.NODE_ENV;
-  const buildDir = env === "development" ? "dev-build" : "game-files";
+  const buildDir = env === "development" ? "dev-build" : "WebGL/WebGL";
+  const name = env === "development" ? "dev-build" : "WebGL";
   const extension = env === "development" ? "" : ".br";
 
   const [enablePlayer, setEnablePlayer] = useState(false);
 
   const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
-    loaderUrl: `./${buildDir}/Build/${buildDir}.loader.js`,
-    dataUrl: `./${buildDir}/Build/${buildDir}.data${extension}`,
-    frameworkUrl: `./${buildDir}/Build/${buildDir}.framework.js${extension}`,
-    codeUrl: `./${buildDir}/Build/${buildDir}.wasm${extension}`,
+    loaderUrl: `./${buildDir}/Build/${name}.loader.js`,
+    dataUrl: `./${buildDir}/Build/${name}.data${extension}`,
+    frameworkUrl: `./${buildDir}/Build/${name}.framework.js${extension}`,
+    codeUrl: `./${buildDir}/Build/${name}.wasm${extension}`,
   });
 
   return (
