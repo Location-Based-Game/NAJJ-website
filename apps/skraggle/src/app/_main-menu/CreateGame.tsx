@@ -1,36 +1,35 @@
 import { useDispatch } from "react-redux";
-import { mainMenuState } from "@/state/store";
-import { useState } from "react";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
+import { mainMenuState } from "@/state/store";
+import { useState } from "react";
 
-export default function MainButtons() {
+export default function CreateGame() {
   const dispatch = useDispatch();
   const [enableButtons, setEnableButtons] = useState(true);
 
-  const {scope, handleAnimation} = usePanelTransition(() => {
-    dispatch(
-      mainMenuState.updateState({ state: "create game", panelWidth: 34 }),
-    );
-  })
+  const { scope, handleAnimation } = usePanelTransition(() => {
+    dispatch(mainMenuState.updateState({ state: "main" }));
+  });
 
   return (
     <InnerPanelWrapper ref={scope}>
       <button
         disabled={!enableButtons}
         className="h-12 w-full rounded-md border-4 border-gray-700 bg-gray-800 bg-opacity-40"
-      >
-        Join Game
-      </button>
-      <button
-        disabled={!enableButtons}
-        className="h-12 w-full rounded-md bg-gray-700"
         onClick={() => {
           setEnableButtons(false);
           handleAnimation();
         }}
       >
-        Create Game
+        Back
+      </button>
+      <div className="grow"></div>
+      <button
+        disabled={!enableButtons}
+        className="h-12 w-full rounded-md bg-gray-700"
+      >
+        Start
       </button>
     </InnerPanelWrapper>
   );
