@@ -10,7 +10,7 @@ export default function MainButtons() {
 
   const {scope, handleAnimation} = usePanelTransition(() => {
     dispatch(
-      mainMenuState.updateState({ state: "create game", panelWidth: 34 }),
+      mainMenuState.updateState("type name or sign in"),
     );
   })
 

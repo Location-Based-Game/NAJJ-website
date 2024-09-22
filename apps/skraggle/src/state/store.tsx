@@ -3,7 +3,7 @@ import { UIStateSlice } from "./UIStateSlice";
 import { MainMenuState } from "@/app/_main-menu/MainMenuPanel";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
-  state: "main",
+  state: "type name or sign in",
 });
 
 export const store = configureStore({

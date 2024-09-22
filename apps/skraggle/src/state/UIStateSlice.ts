@@ -2,8 +2,6 @@ import { Draft, PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface UIComponent<TState> {
   state: TState;
-  panelWidth?: number;
-  panelHeight?: number;
 }
 
 export class UIStateSlice<TState> {
@@ -17,9 +15,9 @@ export class UIStateSlice<TState> {
       reducers: {
         updateState: (
           state: Draft<UIComponent<TState>>,
-          action: PayloadAction<UIComponent<TState>>,
+          action: PayloadAction<TState>,
         ) => {
-          return action.payload as Draft<UIComponent<TState>>;
+          state.state = action.payload as Draft<TState>;
         },
       },
     });
