@@ -7,6 +7,7 @@ export default function UnityPlayer({
 }: {
   children: React.ReactNode;
 }) {
+
   const env = process.env.NODE_ENV;
   const buildDir = env === "development" ? "dev-build" : "WebGL/WebGL";
   const name = env === "development" ? "dev-build" : "WebGL";
