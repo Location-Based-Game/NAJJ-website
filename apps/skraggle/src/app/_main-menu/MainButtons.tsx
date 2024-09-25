@@ -3,35 +3,42 @@ import { mainMenuState } from "@/state/store";
 import { useState } from "react";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
+import { Button } from "@/components/ui/button";
+import { MainMenuState } from "./MainMenuPanel";
 
 export default function MainButtons() {
   const dispatch = useDispatch();
   const [enableButtons, setEnableButtons] = useState(true);
 
-  const {scope, handleAnimation} = usePanelTransition(() => {
+  const {scope, handleAnimation} = usePanelTransition((state:MainMenuState) => {
     dispatch(
-      mainMenuState.updateState("type name or sign in"),
+      mainMenuState.updateState(state),
     );
   })
 
   return (
     <InnerPanelWrapper ref={scope}>
-      <button
+      <Button
         disabled={!enableButtons}
-        className="h-12 w-full rounded-md border-4 border-gray-700 bg-gray-800 bg-opacity-40"
-      >
-        Join Game
-      </button>
-      <button
-        disabled={!enableButtons}
-        className="h-12 w-full rounded-md bg-gray-700"
+        variant={"outline"}
+        className="h-12 w-full"
         onClick={() => {
           setEnableButtons(false);
-          handleAnimation();
+          handleAnimation("join game");
+        }}
+      >
+        Join Game
+      </Button>
+      <Button
+        disabled={!enableButtons}
+        className="h-12 w-full"
+        onClick={() => {
+          setEnableButtons(false);
+          handleAnimation("type name or sign in");
         }}
       >
         Create Game
-      </button>
+      </Button>
     </InnerPanelWrapper>
   );
 }

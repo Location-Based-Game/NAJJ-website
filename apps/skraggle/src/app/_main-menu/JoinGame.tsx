@@ -1,18 +1,20 @@
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
-import usePanelTransition from "@/hooks/usePanelTransition";
-import { mainMenuState, RootState } from "@/state/store";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { MainMenuState } from "./MainMenuPanel";
-import { setGuestName } from "@/state/GuestNameSlice";
 import { Button } from "@/components/ui/button";
+import usePanelTransition from "@/hooks/usePanelTransition";
+import { useState } from "react";
+import { MainMenuState } from "./MainMenuPanel";
+import { useDispatch } from "react-redux";
+import { mainMenuState } from "@/state/store";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from "@/components/ui/input-otp";
 
-export default function TypeNameOrSignIn() {
-  const dispatch = useDispatch();
-  const guestName = useSelector((state: RootState) => state.guestName);
-
+export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
-
+  const dispatch = useDispatch();
   const { scope, handleAnimation } = usePanelTransition(
     (state: MainMenuState) => {
       dispatch(mainMenuState.updateState(state));
@@ -32,16 +34,16 @@ export default function TypeNameOrSignIn() {
       >
         Back
       </Button>
-      <div className="flex w-full grow items-center">
-        <input
-          type="text"
-          placeholder="enter name"
-          value={guestName.name}
-          onChange={(e) => {
-            dispatch(setGuestName(e.currentTarget.value))
-          }}
-          className="h-12 w-full rounded-md bg-gray-950 text-center text-gray-300 outline-none placeholder:text-gray-500"
-        />
+      <div className="flex flex-col gap-4 w-full grow items-center justify-center">
+        <h2>Enter Join Code</h2>
+        <InputOTP maxLength={4}>
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+          </InputOTPGroup>
+        </InputOTP>
       </div>
       <Button
         disabled={!enableButtons}

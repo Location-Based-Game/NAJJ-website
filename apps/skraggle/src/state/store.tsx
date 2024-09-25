@@ -5,7 +5,7 @@ import { guestNameSlice } from "./GuestNameSlice";
 import { joinCodeSlice } from "./JoinCodeSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
-  state: "create game",
+  state: "join game",
 });
 
 export const store = configureStore({

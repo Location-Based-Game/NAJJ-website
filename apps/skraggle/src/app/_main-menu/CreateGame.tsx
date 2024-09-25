@@ -5,6 +5,7 @@ import { mainMenuState } from "@/state/store";
 import { useState } from "react";
 import QRCode from "./QRCode";
 import PlayerList from "./PlayerList";
+import { Button } from "@/components/ui/button";
 
 export default function CreateGame() {
   const dispatch = useDispatch();
@@ -18,31 +19,31 @@ export default function CreateGame() {
 
   return (
     <InnerPanelWrapper ref={scope}>
-      <div className="flex w-full grow gap-4">
+      <div className="flex w-full grow gap-8">
         <QRCode />
         <PlayerList />
       </div>
       <div className="flex w-full gap-4">
-        <button
+        <Button
           disabled={!enableButtons}
-          className="h-12 w-full rounded-md border-4 border-gray-700 bg-gray-800 bg-opacity-40"
+          className="h-12 w-full"
+          variant={"outline"}   
           onClick={() => {
             setEnableButtons(false);
             handleAnimation();
           }}
         >
           Back
-        </button>
-        <div className="grow"></div>
-        <button
+        </Button>
+        <Button
           disabled={!enableButtons}
-          className="h-12 w-full rounded-md bg-gray-700"
+          className="h-12 w-full"
           onClick={() => {
             setStartGameTest(!startGameTest);
           }}
         >
           Start
-        </button>
+        </Button>
       </div>
     </InnerPanelWrapper>
   );

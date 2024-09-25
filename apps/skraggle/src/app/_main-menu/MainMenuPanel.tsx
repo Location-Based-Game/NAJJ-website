@@ -4,6 +4,7 @@ import { RootState } from "../../state/store";
 import MainButtons from "./MainButtons";
 import CreateGame from "./CreateGame";
 import TypeNameOrSignIn from "./TypeNameOrSignIn";
+import JoinGame from "./JoinGame";
 
 export type MainMenuState =
   | "main"
@@ -39,6 +40,10 @@ export default function MainMenuPanel() {
         params.component = <TypeNameOrSignIn />;
         params.height = "20rem"
         break;
+      case "join game":
+        params.component = <JoinGame />
+        params.height = "26rem"
+        break;
       case "create game":
         params.component = <CreateGame />;
         params.width = "40rem";
@@ -51,7 +56,7 @@ export default function MainMenuPanel() {
   return (
     <>
       <div
-        className="pointer-events-auto z-10 rounded-lg bg-gray-900 bg-opacity-80 p-8 backdrop-blur-lg transition-all duration-200"
+        className="pointer-events-auto z-10 rounded-lg bg-background bg-opacity-80 p-8 backdrop-blur-lg transition-all duration-200"
         style={{
           height: handlePanelUI(mainMenuUI.state).height,
           width: handlePanelUI(mainMenuUI.state).width,
