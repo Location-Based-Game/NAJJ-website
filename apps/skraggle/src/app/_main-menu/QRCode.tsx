@@ -54,7 +54,7 @@ const QRCode = memo(() => {
 
       await set(ref(rtdb, "activeGames/" + "jr2p"), {
         name: code,
-        players: ["blah"]
+        players: ["blah", "Andy", "asdfasdkfjalsdkfjw", "Dr samuel hayden"]
       })
 
     })();
