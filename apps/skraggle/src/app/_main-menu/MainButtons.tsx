@@ -24,7 +24,7 @@ export default function MainButtons() {
         className="h-12 w-full"
         onClick={() => {
           setEnableButtons(false);
-          handleAnimation("join game");
+          handleAnimation("enter join code");
         }}
       >
         Join Game
@@ -34,7 +34,7 @@ export default function MainButtons() {
         className="h-12 w-full"
         onClick={() => {
           setEnableButtons(false);
-          handleAnimation("type name or sign in");
+          handleAnimation("sign in create");
         }}
       >
         Create Game

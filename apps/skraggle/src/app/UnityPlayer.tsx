@@ -56,10 +56,10 @@ export default function UnityPlayer({
           children
         )}
       </div>
-      <Unity
+      {/* <Unity
         unityProvider={unityProvider}
         className={`h-dvh w-screen transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
-      />
+      /> */}
     </>
   );
 }

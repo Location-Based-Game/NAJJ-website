@@ -2,15 +2,19 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../state/store";
 import MainButtons from "./MainButtons";
-import CreateGame from "./CreateGame";
-import TypeNameOrSignIn from "./TypeNameOrSignIn";
-import JoinGame from "./JoinGame";
+import CreateGame from "./_create-game/CreateGame";
+import SignInCreate from "./_create-game/SignInCreate";
+import JoinCode from "./_join-game/JoinCode";
+import SignInJoin from "./_join-game/SignInJoin";
+import JoinGame from "./_join-game/JoinGame";
 
 export type MainMenuState =
   | "main"
-  | "type name or sign in"
+  | "sign in create"
+  | "sign in join"
   | "create game"
-  | "join game";
+  | "enter join code"
+  | "join game"
 
 interface MainMenuPanel {
   setPlayGame: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,13 +40,22 @@ export default function MainMenuPanel() {
       case "main":
         params.component = <MainButtons />;
         break;
-      case "type name or sign in":
-        params.component = <TypeNameOrSignIn />;
+      case "sign in create":
+        params.component = <SignInCreate />;
         params.height = "20rem"
+        break;
+      case "sign in join":
+        params.component = <SignInJoin />;
+        params.height = "20rem"
+        break;
+      case "enter join code":
+        params.component = <JoinCode />
+        params.height = "26rem"
         break;
       case "join game":
         params.component = <JoinGame />
-        params.height = "26rem"
+        params.width = "34rem"
+
         break;
       case "create game":
         params.component = <CreateGame />;

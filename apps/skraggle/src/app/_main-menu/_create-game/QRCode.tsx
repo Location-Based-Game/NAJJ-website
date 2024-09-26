@@ -3,7 +3,7 @@ import { RootState } from "@/state/store";
 import QRCodeStyling from "qr-code-styling-2";
 import { memo, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { rtdb } from "../firebaseConfig";
+import { rtdb } from "../../firebaseConfig";
 import { set, ref } from "firebase/database";
 
 function makeid(length: number): string {

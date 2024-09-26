@@ -4,7 +4,7 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { mainMenuState } from "@/state/store";
 import { useState } from "react";
 import QRCode from "./QRCode";
-import PlayerList from "./PlayerList";
+import PlayerList from "../PlayerList";
 import { Button } from "@/components/ui/button";
 
 export default function CreateGame() {
@@ -14,7 +14,7 @@ export default function CreateGame() {
   const [startGameTest, setStartGameTest] = useState(false);
 
   const { scope, handleAnimation } = usePanelTransition(() => {
-    dispatch(mainMenuState.updateState("type name or sign in"));
+    dispatch(mainMenuState.updateState("sign in create"));
   });
 
   return (
