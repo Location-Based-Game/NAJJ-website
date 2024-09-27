@@ -8,13 +8,16 @@ import JoinCode from "./_join-game/JoinCode";
 import SignInJoin from "./_join-game/_sign-in-join/SignInJoin";
 import JoinGame from "./_join-game/JoinGame";
 
-export type MainMenuState =
-  | "main"
-  | "sign in create"
-  | "sign in join"
-  | "create game"
-  | "enter join code"
-  | "join game"
+export type MainMenuState = {
+  state:
+    | "Home"
+    | "Sign In to Create"
+    | "Sign In to Join"
+    | "Create Game"
+    | "Enter Join Code"
+    | "Join Game";
+  slideFrom: "left" | "right";
+};
 
 interface MainMenuPanel {
   setPlayGame: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,28 +39,28 @@ export default function MainMenuPanel() {
       width: "24rem",
     };
 
-    switch (state) {
-      case "main":
+    switch (state.state) {
+      case "Home":
         params.component = <MainButtons />;
         break;
-      case "sign in create":
+      case "Sign In to Create":
         params.component = <SignInCreate />;
-        params.height = "20rem"
+        params.height = "20rem";
         break;
-      case "sign in join":
+      case "Sign In to Join":
         params.component = <SignInJoin />;
-        params.height = "20rem"
+        params.height = "20rem";
         break;
-      case "enter join code":
-        params.component = <JoinCode />
-        params.height = "26rem"
+      case "Enter Join Code":
+        params.component = <JoinCode />;
+        params.height = "26rem";
         break;
-      case "join game":
-        params.component = <JoinGame />
-        params.width = "34rem"
+      case "Join Game":
+        params.component = <JoinGame />;
+        params.width = "34rem";
 
         break;
-      case "create game":
+      case "Create Game":
         params.component = <CreateGame />;
         params.width = "40rem";
         break;
@@ -67,16 +70,14 @@ export default function MainMenuPanel() {
   };
 
   return (
-    <>
-      <div
-        className="pointer-events-auto z-10 rounded-lg bg-background bg-opacity-80 p-8 backdrop-blur-lg transition-all duration-200"
-        style={{
-          height: handlePanelUI(mainMenuUI.state).height,
-          width: handlePanelUI(mainMenuUI.state).width,
-        }}
-      >
-        {handlePanelUI(mainMenuUI.state).component}
-      </div>
-    </>
+    <div
+      className="pointer-events-auto z-10 overflow-hidden rounded-lg bg-background bg-opacity-80 p-8 backdrop-blur-lg transition-all duration-200"
+      style={{
+        height: handlePanelUI(mainMenuUI).height,
+        width: handlePanelUI(mainMenuUI).width,
+      }}
+    >
+      {handlePanelUI(mainMenuUI).component}
+    </div>
   );
 }

@@ -35,15 +35,17 @@ export default function JoinGame() {
         const data = snapshot.val();
         setPlayerData(data);
       } else {
-        dispatch(mainMenuState.updateState("main"));
+        dispatch(mainMenuState.updateState({
+          state: "Home",
+          slideFrom: "left"
+        }));
       }
     });
 
     return () => unsubscribe();
-
   }, []);
 
-  const { scope, handleAnimation } = usePanelTransition(
+  const { scope, animationCallback } = usePanelTransition(
     (state: MainMenuState) => {
       dispatch(mainMenuState.updateState(state));
     },
@@ -68,7 +70,10 @@ export default function JoinGame() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                handleAnimation("sign in join");
+                animationCallback("left", {
+                  state: "Sign In to Join",
+                  slideFrom: "left",
+                });
               }}
             >
               Leave
@@ -97,7 +102,10 @@ export default function JoinGame() {
         disabled={!enableButtons}
         className="h-12 w-full"
         onClick={() => {
-          handleAnimation("create game");
+          animationCallback("right", {
+            state: "Create Game",
+            slideFrom: "right",
+          });
           setEnableButtons(false);
         }}
       >

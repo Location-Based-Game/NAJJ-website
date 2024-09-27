@@ -5,7 +5,8 @@ import { guestNameSlice } from "./GuestNameSlice";
 import { joinCodeSlice } from "./JoinCodeSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
-  state: "sign in join",
+  state: "Home",
+  slideFrom: "right"
 });
 
 export const store = configureStore({

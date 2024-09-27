@@ -10,11 +10,11 @@ export default function MainButtons() {
   const dispatch = useDispatch();
   const [enableButtons, setEnableButtons] = useState(true);
 
-  const {scope, handleAnimation} = usePanelTransition((state:MainMenuState) => {
-    dispatch(
-      mainMenuState.updateState(state),
-    );
-  })
+  const { scope, animationCallback } = usePanelTransition(
+    (state: MainMenuState) => {
+      dispatch(mainMenuState.updateState(state));
+    },
+  );
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -24,7 +24,10 @@ export default function MainButtons() {
         className="h-12 w-full"
         onClick={() => {
           setEnableButtons(false);
-          handleAnimation("enter join code");
+          animationCallback("right", {
+            state: "Enter Join Code",
+            slideFrom: "right",
+          });
         }}
       >
         Join Game
@@ -34,7 +37,10 @@ export default function MainButtons() {
         className="h-12 w-full"
         onClick={() => {
           setEnableButtons(false);
-          handleAnimation("sign in create");
+          animationCallback("right", {
+            state: "Sign In to Create",
+            slideFrom: "right",
+          });
         }}
       >
         Create Game

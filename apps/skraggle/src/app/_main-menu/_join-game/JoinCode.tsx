@@ -30,7 +30,7 @@ const FormSchema = z.object({
 export default function JoinCode() {
   const [enableButtons, setEnableButtons] = useState(true);
   const dispatch = useDispatch();
-  const { scope, handleAnimation } = usePanelTransition(
+  const { scope, animationCallback } = usePanelTransition(
     (state: MainMenuState) => {
       dispatch(mainMenuState.updateState(state));
     },
@@ -58,7 +58,7 @@ export default function JoinCode() {
     const dbRef = ref(getDatabase());
     const snapshot = await get(child(dbRef, `activeGames/${codeInput}`));
     if (snapshot.exists()) {
-      handleAnimation("sign in join");
+      animationCallback("right", {state: "Sign In to Join", slideFrom: "right"});
       return;
     } else {
       setErrorMessage("Invalid Code!");
@@ -73,7 +73,7 @@ export default function JoinCode() {
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          handleAnimation("main");
+          animationCallback("left", {state: "Home", slideFrom: "left"});
           setEnableButtons(false);
         }}
       >

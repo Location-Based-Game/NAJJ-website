@@ -1,23 +1,19 @@
 import { Draft, PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-interface UIComponent<TState> {
-  state: TState;
-}
-
 export class UIStateSlice<TState> {
   updateState;
   reducer;
 
-  constructor(name: string, initialComponent: UIComponent<TState>) {
+  constructor(name: string, initialComponent: TState) {
     const slice = createSlice({
       name,
       initialState: initialComponent,
       reducers: {
         updateState: (
-          state: Draft<UIComponent<TState>>,
+          state: Draft<TState>,
           action: PayloadAction<TState>,
         ) => {
-          state.state = action.payload as Draft<TState>;
+          return action.payload as Draft<TState>;
         },
       },
     });

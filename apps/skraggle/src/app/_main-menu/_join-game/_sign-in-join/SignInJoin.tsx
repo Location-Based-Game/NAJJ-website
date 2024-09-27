@@ -15,7 +15,7 @@ export default function SignInJoin() {
 
   const [enableButtons, setEnableButtons] = useState(true);
 
-  const { scope, handleAnimation } = usePanelTransition(
+  const { scope, animationCallback } = usePanelTransition(
     (state: MainMenuState) => {
       dispatch(mainMenuState.updateState(state));
     },
@@ -23,7 +23,7 @@ export default function SignInJoin() {
 
   const { handleSubmit } = useSubmitGuestName(
     setEnableButtons,
-    handleAnimation,
+    animationCallback,
   );
 
   return (
@@ -33,7 +33,7 @@ export default function SignInJoin() {
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          handleAnimation("enter join code");
+          animationCallback("left", {state: "Enter Join Code", slideFrom: "left"});
           setEnableButtons(false);
         }}
       >

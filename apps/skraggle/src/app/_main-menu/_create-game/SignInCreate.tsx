@@ -13,7 +13,7 @@ export default function SignInCreate() {
 
   const [enableButtons, setEnableButtons] = useState(true);
 
-  const { scope, handleAnimation } = usePanelTransition(
+  const { scope, animationCallback } = usePanelTransition(
     (state: MainMenuState) => {
       dispatch(mainMenuState.updateState(state));
     },
@@ -26,7 +26,7 @@ export default function SignInCreate() {
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          handleAnimation("main");
+          animationCallback("left", { state: "Home", slideFrom: "left" });
           setEnableButtons(false);
         }}
       >
@@ -38,7 +38,7 @@ export default function SignInCreate() {
           placeholder="enter name"
           value={guestName.name}
           onChange={(e) => {
-            dispatch(setGuestName(e.currentTarget.value))
+            dispatch(setGuestName(e.currentTarget.value));
           }}
           className="h-12 w-full rounded-md bg-gray-950 text-center text-gray-300 outline-none placeholder:text-gray-500"
         />
@@ -47,7 +47,7 @@ export default function SignInCreate() {
         disabled={!enableButtons}
         className="h-12 w-full"
         onClick={() => {
-          handleAnimation("create game");
+          animationCallback("right", { state: "Create Game", slideFrom: "right" });
           setEnableButtons(false);
         }}
       >

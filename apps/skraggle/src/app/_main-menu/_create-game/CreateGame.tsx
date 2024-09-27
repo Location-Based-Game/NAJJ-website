@@ -13,8 +13,8 @@ export default function CreateGame() {
 
   const [startGameTest, setStartGameTest] = useState(false);
 
-  const { scope, handleAnimation } = usePanelTransition(() => {
-    dispatch(mainMenuState.updateState("sign in create"));
+  const { scope, animationCallback } = usePanelTransition(() => {
+    dispatch(mainMenuState.updateState({state: "Sign In to Create", slideFrom: "left"}));
   });
 
   return (
@@ -30,7 +30,7 @@ export default function CreateGame() {
           variant={"outline"}   
           onClick={() => {
             setEnableButtons(false);
-            handleAnimation();
+            animationCallback("left");
           }}
         >
           Back
