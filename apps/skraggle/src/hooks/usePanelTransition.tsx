@@ -10,7 +10,7 @@ export default function usePanelTransition<T extends any[]>(
       scope.current,
       { opacity: 0 },
       {
-        duration: 0.2,
+        duration: 0.1,
         onComplete: () => {
           callback(...args);
         },

@@ -2,7 +2,7 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import { RootState, mainMenuState } from "@/state/store";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MainMenuState } from "../MainMenuPanel";
 import {
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { rtdb } from "@/app/firebaseConfig";
-import { ref, onValue, set, push } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { CrownIcon } from "lucide-react";
 
 export default function JoinGame() {

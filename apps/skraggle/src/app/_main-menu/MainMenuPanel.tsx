@@ -5,7 +5,7 @@ import MainButtons from "./MainButtons";
 import CreateGame from "./_create-game/CreateGame";
 import SignInCreate from "./_create-game/SignInCreate";
 import JoinCode from "./_join-game/JoinCode";
-import SignInJoin from "./_join-game/SignInJoin";
+import SignInJoin from "./_join-game/_sign-in-join/SignInJoin";
 import JoinGame from "./_join-game/JoinGame";
 
 export type MainMenuState =
