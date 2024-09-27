@@ -2,9 +2,7 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import { useEffect, useState } from "react";
-import { MainMenuState } from "../MainMenuPanel";
 import { useDispatch } from "react-redux";
-import { mainMenuState } from "@/state/store";
 import {
   InputOTP,
   InputOTPGroup,
@@ -30,11 +28,7 @@ const FormSchema = z.object({
 export default function JoinCode() {
   const [enableButtons, setEnableButtons] = useState(true);
   const dispatch = useDispatch();
-  const { scope, animationCallback } = usePanelTransition(
-    (state: MainMenuState) => {
-      dispatch(mainMenuState.updateState(state));
-    },
-  );
+  const { scope, animationCallback } = usePanelTransition();
 
   const [codeInput, setCodeInput] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("&nbsp;");
@@ -58,7 +52,7 @@ export default function JoinCode() {
     const dbRef = ref(getDatabase());
     const snapshot = await get(child(dbRef, `activeGames/${codeInput}`));
     if (snapshot.exists()) {
-      animationCallback("right", {state: "Sign In to Join", slideFrom: "right"});
+      animationCallback({state: "Sign In to Join", slideFrom: "right"});
       return;
     } else {
       setErrorMessage("Invalid Code!");
@@ -73,7 +67,7 @@ export default function JoinCode() {
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          animationCallback("left", {state: "Home", slideFrom: "left"});
+          animationCallback({state: "Home", slideFrom: "left"});
           setEnableButtons(false);
         }}
       >

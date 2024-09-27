@@ -15,7 +15,7 @@ import { FormSchema } from "./GuestNameInput";
 
 export default function useSubmitGuestName(
   setEnableButtons: React.Dispatch<React.SetStateAction<boolean>>,
-  animationCallback: (direction: "left" | "right", state: MainMenuState) => void
+  animationCallback: (state: MainMenuState) => void
 ) {
   const { toast } = useToast();
 
@@ -32,7 +32,7 @@ export default function useSubmitGuestName(
         title: "Error",
         description: "Game not available! Try entering a different code.",
       });
-      animationCallback("left", {state: "Enter Join Code", slideFrom: "left"});
+      animationCallback({state: "Enter Join Code", slideFrom: "left"});
     }
     setEnableButtons(true);
   };
@@ -44,14 +44,14 @@ export default function useSubmitGuestName(
     const playersRef = ref(rtdb, `activeGames/jr2p/players`);
 
     if (Object.values(snapshot.val().players).length >= 8) {
-      animationCallback("left", {state: "Home", slideFrom: "left"});
+      animationCallback({state: "Home", slideFrom: "left"});
       return;
     }
 
     const newPlayerRef = push(playersRef);
     await set(newPlayerRef, values.guestName);
 
-    animationCallback("right", {state: "Join Game", slideFrom: "right"});
+    animationCallback({state: "Join Game", slideFrom: "right"});
   }
 
   return { handleSubmit };

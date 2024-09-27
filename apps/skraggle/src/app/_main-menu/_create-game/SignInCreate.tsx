@@ -1,9 +1,8 @@
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import usePanelTransition from "@/hooks/usePanelTransition";
-import { mainMenuState, RootState } from "@/state/store";
+import { RootState } from "@/state/store";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MainMenuState } from "../MainMenuPanel";
 import { setGuestName } from "@/state/GuestNameSlice";
 import { Button } from "@/components/ui/button";
 
@@ -13,11 +12,7 @@ export default function SignInCreate() {
 
   const [enableButtons, setEnableButtons] = useState(true);
 
-  const { scope, animationCallback } = usePanelTransition(
-    (state: MainMenuState) => {
-      dispatch(mainMenuState.updateState(state));
-    },
-  );
+  const { scope, animationCallback } = usePanelTransition();
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -26,7 +21,7 @@ export default function SignInCreate() {
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          animationCallback("left", { state: "Home", slideFrom: "left" });
+          animationCallback({ state: "Home", slideFrom: "left" });
           setEnableButtons(false);
         }}
       >
@@ -47,7 +42,7 @@ export default function SignInCreate() {
         disabled={!enableButtons}
         className="h-12 w-full"
         onClick={() => {
-          animationCallback("right", { state: "Create Game", slideFrom: "right" });
+          animationCallback({ state: "Create Game", slideFrom: "right" });
           setEnableButtons(false);
         }}
       >

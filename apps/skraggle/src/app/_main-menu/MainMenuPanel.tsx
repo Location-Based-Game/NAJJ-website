@@ -58,7 +58,6 @@ export default function MainMenuPanel() {
       case "Join Game":
         params.component = <JoinGame />;
         params.width = "34rem";
-
         break;
       case "Create Game":
         params.component = <CreateGame />;

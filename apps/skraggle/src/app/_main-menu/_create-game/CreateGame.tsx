@@ -1,21 +1,16 @@
-import { useDispatch } from "react-redux";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
-import { mainMenuState } from "@/state/store";
 import { useState } from "react";
 import QRCode from "./QRCode";
 import PlayerList from "../PlayerList";
 import { Button } from "@/components/ui/button";
 
 export default function CreateGame() {
-  const dispatch = useDispatch();
   const [enableButtons, setEnableButtons] = useState(true);
 
   const [startGameTest, setStartGameTest] = useState(false);
 
-  const { scope, animationCallback } = usePanelTransition(() => {
-    dispatch(mainMenuState.updateState({state: "Sign In to Create", slideFrom: "left"}));
-  });
+  const { scope, animationCallback } = usePanelTransition();
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -27,10 +22,13 @@ export default function CreateGame() {
         <Button
           disabled={!enableButtons}
           className="h-12 w-full"
-          variant={"outline"}   
+          variant={"outline"}
           onClick={() => {
             setEnableButtons(false);
-            animationCallback("left");
+            animationCallback({
+              state: "Sign In to Create",
+              slideFrom: "left",
+            });
           }}
         >
           Back

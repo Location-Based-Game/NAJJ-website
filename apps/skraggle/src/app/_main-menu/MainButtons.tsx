@@ -1,20 +1,12 @@
 import { useDispatch } from "react-redux";
-import { mainMenuState } from "@/state/store";
 import { useState } from "react";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
-import { MainMenuState } from "./MainMenuPanel";
 
 export default function MainButtons() {
-  const dispatch = useDispatch();
   const [enableButtons, setEnableButtons] = useState(true);
-
-  const { scope, animationCallback } = usePanelTransition(
-    (state: MainMenuState) => {
-      dispatch(mainMenuState.updateState(state));
-    },
-  );
+  const { scope, animationCallback } = usePanelTransition();
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -24,7 +16,7 @@ export default function MainButtons() {
         className="h-12 w-full"
         onClick={() => {
           setEnableButtons(false);
-          animationCallback("right", {
+          animationCallback({
             state: "Enter Join Code",
             slideFrom: "right",
           });
@@ -37,7 +29,7 @@ export default function MainButtons() {
         className="h-12 w-full"
         onClick={() => {
           setEnableButtons(false);
-          animationCallback("right", {
+          animationCallback({
             state: "Sign In to Create",
             slideFrom: "right",
           });

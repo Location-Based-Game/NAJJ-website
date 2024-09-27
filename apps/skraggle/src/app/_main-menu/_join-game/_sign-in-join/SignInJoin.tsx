@@ -1,9 +1,8 @@
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import usePanelTransition from "@/hooks/usePanelTransition";
-import { mainMenuState, RootState } from "@/state/store";
+import { RootState } from "@/state/store";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MainMenuState } from "../../MainMenuPanel";
 import { Button } from "@/components/ui/button";
 import useSubmitGuestName from "./useSubmitGuestName";
 import GuestNameInput from "./GuestNameInput";
@@ -15,11 +14,7 @@ export default function SignInJoin() {
 
   const [enableButtons, setEnableButtons] = useState(true);
 
-  const { scope, animationCallback } = usePanelTransition(
-    (state: MainMenuState) => {
-      dispatch(mainMenuState.updateState(state));
-    },
-  );
+  const { scope, animationCallback } = usePanelTransition();
 
   const { handleSubmit } = useSubmitGuestName(
     setEnableButtons,
@@ -33,7 +28,7 @@ export default function SignInJoin() {
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          animationCallback("left", {state: "Enter Join Code", slideFrom: "left"});
+          animationCallback({state: "Enter Join Code", slideFrom: "left"});
           setEnableButtons(false);
         }}
       >

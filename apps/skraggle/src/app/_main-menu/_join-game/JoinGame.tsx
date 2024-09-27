@@ -4,7 +4,6 @@ import usePanelTransition from "@/hooks/usePanelTransition";
 import { RootState, mainMenuState } from "@/state/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MainMenuState } from "../MainMenuPanel";
 import {
   AlertDialogHeader,
   AlertDialogFooter,
@@ -23,7 +22,6 @@ import { CrownIcon } from "lucide-react";
 
 export default function JoinGame() {
   const dispatch = useDispatch();
-  const guestName = useSelector((state: RootState) => state.guestName);
 
   const [enableButtons, setEnableButtons] = useState(true);
   const [playerData, setPlayerData] = useState<string[]>([]);
@@ -45,11 +43,7 @@ export default function JoinGame() {
     return () => unsubscribe();
   }, []);
 
-  const { scope, animationCallback } = usePanelTransition(
-    (state: MainMenuState) => {
-      dispatch(mainMenuState.updateState(state));
-    },
-  );
+  const { scope, animationCallback } = usePanelTransition();
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -70,7 +64,7 @@ export default function JoinGame() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                animationCallback("left", {
+                animationCallback({
                   state: "Sign In to Join",
                   slideFrom: "left",
                 });
@@ -102,7 +96,7 @@ export default function JoinGame() {
         disabled={!enableButtons}
         className="h-12 w-full"
         onClick={() => {
-          animationCallback("right", {
+          animationCallback({
             state: "Create Game",
             slideFrom: "right",
           });
