@@ -5,8 +5,10 @@ import MainButtons from "./MainButtons";
 import CreateGame from "./_create-game/CreateGame";
 import SignInCreate from "./_create-game/SignInCreate";
 import JoinCode from "./_join-game/JoinCode";
-import SignInJoin from "./_join-game/_sign-in-join/SignInJoin";
-import JoinGame from "./_join-game/JoinGame";
+import SignIn from "./SignIn";
+import JoinGame from "./_join-game/_join-game/JoinGame";
+import submitGuestName from "./_join-game/submitGuestName";
+import submitGuestNameCreateGame from "./_create-game/submitGuestNameCreateGame";
 
 export type MainMenuState = {
   state:
@@ -44,11 +46,27 @@ export default function MainMenuPanel() {
         params.component = <MainButtons />;
         break;
       case "Sign In to Create":
-        params.component = <SignInCreate />;
+        params.component = (
+          <SignIn
+            back={{
+              state: "Home",
+              slideFrom: "left",
+            }}
+            submitHandler={submitGuestNameCreateGame}
+          />
+        );
         params.height = "20rem";
         break;
       case "Sign In to Join":
-        params.component = <SignInJoin />;
+        params.component = (
+          <SignIn
+            back={{
+              state: "Enter Join Code",
+              slideFrom: "left",
+            }}
+            submitHandler={submitGuestName}
+          />
+        );
         params.height = "20rem";
         break;
       case "Enter Join Code":

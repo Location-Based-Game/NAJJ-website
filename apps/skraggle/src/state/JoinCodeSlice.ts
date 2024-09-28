@@ -4,8 +4,18 @@ interface JoinCode {
   code: string | null;
 }
 
+function SetDefaultCode() {
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
+  ) {
+    return process.env.NEXT_PUBLIC_PLACEHOLDER_CODE;
+  }
+  return null;
+}
+
 const initialState: JoinCode = {
-  code: null,
+  code: SetDefaultCode(),
 };
 
 export const joinCodeSlice = createSlice({

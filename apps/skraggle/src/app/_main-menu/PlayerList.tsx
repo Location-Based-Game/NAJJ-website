@@ -1,26 +1,48 @@
-import { onValue, ref } from "firebase/database";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { CrownIcon } from "lucide-react";
+import { mainMenuState, RootState } from "@/state/store";
 import { useEffect, useState } from "react";
-import { rtdb } from "../firebaseConfig";
-
+import { useDispatch, useSelector } from "react-redux";
+import { rtdb } from "@/app/firebaseConfig";
+import { ref, onValue } from "firebase/database";
 export default function PlayerList() {
-  const [playerList, setPlayerList] = useState<string[]>([]);
+  const [playerData, setPlayerData] = useState<string[]>([]);
+  const dispatch = useDispatch();
+  const currentJoinCode = useSelector((state:RootState) => state.joinCode)
 
   useEffect(() => {
-    const playersRef = ref(rtdb, `activeGames/jr2p/players`);
-    onValue(playersRef, (snapshot) => {
-      const data = snapshot.val();
-      setPlayerList(data);
+    const playersRef = ref(rtdb, `activeGames/${currentJoinCode.code}/players`);
+    const unsubscribe = onValue(playersRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        setPlayerData(data);
+      } else {
+        dispatch(
+          mainMenuState.updateState({
+            state: "Home",
+            slideFrom: "left",
+          }),
+        );
+      }
     });
+
+    return () => unsubscribe();
   }, []);
 
   return (
-    <div className="grow">
-      <div className="mb-4 border-b-[1px] border-gray-600 pb-2 text-2xl font-bold text-gray-400">
-        Players
-      </div>
-      {Object.values(playerList).map((e, i) => {
-        return <div key={i}>{e}</div>;
-      })}
-    </div>
+    <Table>
+      <TableBody>
+        {Object.values(playerData).map((data, i) => (
+          <TableRow key={i}>
+            <TableCell className="font-medium">
+              {i === 0 && <CrownIcon size={16} />}
+            </TableCell>
+            <TableCell className="font-medium">{i + 1}</TableCell>
+            <TableCell className="w-full">{data}</TableCell>
+            <TableCell className="text-right">color</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

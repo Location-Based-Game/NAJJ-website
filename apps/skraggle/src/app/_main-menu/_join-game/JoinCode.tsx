@@ -2,7 +2,6 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import {
   InputOTP,
   InputOTPGroup,
@@ -20,20 +19,29 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Loader2 } from "lucide-react"
+import { useDispatch } from "react-redux";
+import { setJoinCode } from "@/state/JoinCodeSlice";
 
 const FormSchema = z.object({
   code: z.string().min(4),
 });
 
 export default function JoinCode() {
-  const [enableButtons, setEnableButtons] = useState(true);
   const dispatch = useDispatch();
+  const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
 
   const [codeInput, setCodeInput] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("&nbsp;");
 
   useEffect(() => {
+    if (
+      process.env.NODE_ENV === "development" &&
+      process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
+    ) {
+      setCodeInput(process.env.NEXT_PUBLIC_PLACEHOLDER_CODE);
+      return;
+    }
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get("code");
@@ -52,6 +60,7 @@ export default function JoinCode() {
     const dbRef = ref(getDatabase());
     const snapshot = await get(child(dbRef, `activeGames/${codeInput}`));
     if (snapshot.exists()) {
+      dispatch(setJoinCode(codeInput))
       animationCallback({state: "Sign In to Join", slideFrom: "right"});
       return;
     } else {

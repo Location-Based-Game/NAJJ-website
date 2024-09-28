@@ -2,21 +2,24 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import { RootState } from "@/state/store";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
-import useSubmitGuestName from "./useSubmitGuestName";
+import { SubmitGuestNameType } from "./_join-game/submitGuestName";
 import GuestNameInput from "./GuestNameInput";
 import { Loader2 } from "lucide-react";
+import { MainMenuState } from "./MainMenuPanel";
 
-export default function SignInJoin() {
-  const dispatch = useDispatch();
+interface SignIn {
+  back: MainMenuState;
+  submitHandler: SubmitGuestNameType;
+}
+
+export default function SignIn({back, submitHandler}:SignIn) {
   const guestName = useSelector((state: RootState) => state.guestName);
-
   const [enableButtons, setEnableButtons] = useState(true);
-
   const { scope, animationCallback } = usePanelTransition();
 
-  const { handleSubmit } = useSubmitGuestName(
+  const { handleSubmit } = submitHandler(
     setEnableButtons,
     animationCallback,
   );
@@ -28,7 +31,7 @@ export default function SignInJoin() {
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          animationCallback({state: "Enter Join Code", slideFrom: "left"});
+          animationCallback(back);
           setEnableButtons(false);
         }}
       >

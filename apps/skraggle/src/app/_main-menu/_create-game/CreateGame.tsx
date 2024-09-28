@@ -2,8 +2,8 @@ import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { useState } from "react";
 import QRCode from "./QRCode";
-import PlayerList from "../PlayerList";
 import { Button } from "@/components/ui/button";
+import PlayerList from "../PlayerList";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
@@ -16,7 +16,10 @@ export default function CreateGame() {
     <InnerPanelWrapper ref={scope}>
       <div className="flex w-full grow gap-8">
         <QRCode />
-        <PlayerList />
+        <div className="w-full grow">
+          <h2 className="my-6 w-full text-center">Players</h2>
+          <PlayerList />
+        </div>
       </div>
       <div className="flex w-full gap-4">
         <Button

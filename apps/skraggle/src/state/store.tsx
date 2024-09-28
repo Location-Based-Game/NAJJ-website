@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { UIStateSlice } from "./UIStateSlice";
 import { MainMenuState } from "@/app/_main-menu/MainMenuPanel";
 import { guestNameSlice } from "./GuestNameSlice";
+import { createCodeSlice } from "./CreateCodeSlice";
 import { joinCodeSlice } from "./JoinCodeSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
@@ -13,6 +14,7 @@ export const store = configureStore({
   reducer: {
     mainMenu: mainMenuState.reducer,
     guestName: guestNameSlice.reducer,
+    createCode: createCodeSlice.reducer,
     joinCode: joinCodeSlice.reducer
   },
 });
