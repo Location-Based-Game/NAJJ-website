@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { SubmitGuestNameType } from "../_join-game/submitGuestName";
 import { FormSchema } from "../GuestNameInput";
-import { MainMenuState } from "../MainMenuPanel";
 import { z } from "zod";
 import { setGuestName } from "@/state/GuestNameSlice";
 import { rtdb } from "@/app/firebaseConfig";
 import { setCreateCode } from "@/state/CreateCodeSlice";
 import { RootState } from "@/state/store";
 import { push, ref, set } from "firebase/database";
+import { MainMenuState } from "@/hooks/usePanelUI";
 
 function makeid(length: number): string {
   if (
@@ -45,7 +45,10 @@ const submitGuestNameCreateGame: SubmitGuestNameType = (
 
       await set(ref(rtdb, `activeGames/${code}`), {
         name: code,
+        gameState: "Menu",
         players: [],
+        turnOrder: [],
+        currentTurn: 0
       });
 
       await AddPlayerToDatabase(code, values.guestName)

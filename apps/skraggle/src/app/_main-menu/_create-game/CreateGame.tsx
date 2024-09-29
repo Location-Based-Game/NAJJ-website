@@ -4,13 +4,27 @@ import { useState } from "react";
 import QRCode from "./QRCode";
 import { Button } from "@/components/ui/button";
 import PlayerList from "../PlayerList";
+import { rtdb } from "@/app/firebaseConfig";
+import { RootState } from "@/state/store";
+import { ref, set } from "firebase/database";
+import { useDispatch, useSelector } from "react-redux";
+import { setGameState } from "@/state/GameStateSlice";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
-
-  const [startGameTest, setStartGameTest] = useState(false);
-
   const { scope, animationCallback } = usePanelTransition();
+  const currentJoinCode = useSelector((state: RootState) => state.joinCode);
+  const dispatch = useDispatch()
+
+  const handleStartGame = async () => {
+    const gameStateRef = ref(
+      rtdb,
+      `activeGames/${currentJoinCode.code}/gameState`,
+    );
+
+    dispatch(setGameState("TurnsDiceRoll"));
+    await set(gameStateRef, "TurnsDiceRoll");
+  }
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -40,7 +54,7 @@ export default function CreateGame() {
           disabled={!enableButtons}
           className="h-12 w-full"
           onClick={() => {
-            setStartGameTest(!startGameTest);
+            handleStartGame();
           }}
         >
           Start

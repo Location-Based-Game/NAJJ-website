@@ -9,7 +9,7 @@ const initialState: CreateCode = {
 };
 
 export const createCodeSlice = createSlice({
-  name: "Join Code",
+  name: "Create Code",
   initialState,
   reducers: {
     setCreateCode: (state: CreateCode, action: PayloadAction<string>) => {

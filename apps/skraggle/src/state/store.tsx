@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { UIStateSlice } from "./UIStateSlice";
-import { MainMenuState } from "@/app/_main-menu/MainMenuPanel";
 import { guestNameSlice } from "./GuestNameSlice";
 import { createCodeSlice } from "./CreateCodeSlice";
 import { joinCodeSlice } from "./JoinCodeSlice";
+import { MainMenuState } from "@/hooks/usePanelUI";
+import { gameStateSlice } from "./GameStateSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
   state: "Home",
@@ -15,7 +16,8 @@ export const store = configureStore({
     mainMenu: mainMenuState.reducer,
     guestName: guestNameSlice.reducer,
     createCode: createCodeSlice.reducer,
-    joinCode: joinCodeSlice.reducer
+    joinCode: joinCodeSlice.reducer,
+    gameState: gameStateSlice.reducer
   },
 });
 

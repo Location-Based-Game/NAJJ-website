@@ -1,4 +1,5 @@
 "use client";
+import useSetGameState from "@/hooks/useSetGameState";
 import { useState, useEffect } from "react";
 import { useUnityContext, Unity } from "react-unity-webgl";
 
@@ -23,6 +24,8 @@ export default function UnityPlayer({
       frameworkUrl: `./${buildDir}/Build/${name}.framework.js${extension}`,
       codeUrl: `./${buildDir}/Build/${name}.wasm${extension}`,
     });
+
+  useSetGameState(sendMessage, isLoaded)
 
   useEffect(() => {
     if (isLoaded) {
@@ -56,10 +59,10 @@ export default function UnityPlayer({
           children
         )}
       </div>
-      {/* <Unity
+      <Unity
         unityProvider={unityProvider}
         className={`h-dvh w-screen transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
-      /> */}
+      />
     </>
   );
 }
