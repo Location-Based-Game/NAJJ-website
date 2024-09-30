@@ -1,17 +1,16 @@
 import { RootState } from "@/state/store";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
+import { useUnityReactContext } from "../UnityPlayer";
 
 interface Loader {
   children: React.ReactNode;
-  unityContext: UnityContextHook;
   splashScreenComplete: boolean;
 }
 
-export default function Loader({ children, unityContext, splashScreenComplete }: Loader) {
+export default function Loader({ children, splashScreenComplete }: Loader) {
   const gameState = useSelector((state: RootState) => state.gameState);
-  const { isLoaded, sendMessage, loadingProgression } = unityContext;
+  const { isLoaded, sendMessage, loadingProgression } = useUnityReactContext()
 
   useEffect(() => {
     if (splashScreenComplete && gameState.isGameActive) {
@@ -21,7 +20,7 @@ export default function Loader({ children, unityContext, splashScreenComplete }:
 
   return (
     <div className="pointer-events-none absolute flex h-dvh w-screen items-center justify-center">
-      {gameState.isGameActive ? (
+      {gameState.isGameActive && !isLoaded ? (
         <div
           className="h-2 w-[10rem] bg-gray-900"
           style={{ display: isLoaded ? "none" : "flex" }}

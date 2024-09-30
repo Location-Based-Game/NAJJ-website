@@ -2,7 +2,11 @@
 import useSetGameState from "@/hooks/useSetGameState";
 import { useUnityContext, Unity } from "react-unity-webgl";
 import Loader from "./_gameplay-ui/Loader";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
+import useUpdateGameState from "@/hooks/useUpdateGameState";
+import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
+
+export const UnityReactContext = createContext<UnityContextHook | null>(null);
 
 export default function UnityPlayer({
   children,
@@ -35,11 +39,11 @@ export default function UnityPlayer({
   }, [isLoaded]);
 
   useSetGameState(sendMessage, isLoaded);
-
+  useUpdateGameState(unityContext);
+  
   return (
-    <>
+    <UnityReactContext.Provider value={unityContext}>
       <Loader
-        unityContext={unityContext}
         splashScreenComplete={splashScreenComplete}
       >
         {children}
@@ -48,6 +52,14 @@ export default function UnityPlayer({
         unityProvider={unityProvider}
         className={`h-dvh w-screen transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
       />
-    </>
+    </UnityReactContext.Provider>
   );
+}
+
+export function useUnityReactContext() {
+  const context = useContext(UnityReactContext);
+  if (!context) {
+    throw new Error("useUnityContext must be used within a UnityReactContextProvider");
+  }
+  return context;
 }
