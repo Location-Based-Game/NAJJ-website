@@ -7,7 +7,7 @@ const QRCode = memo(() => {
   const currentJoinCode = useSelector((state: RootState) => state.createCode);
   const divRef = useRef<HTMLDivElement>(null!);
 
-  const url = `${window.location.origin}?code=${currentJoinCode}`;
+  const url = `${window.location.origin}?code=${currentJoinCode.code}`;
   const qrCode = new QRCodeStyling({
     width: 200,
     height: 200,

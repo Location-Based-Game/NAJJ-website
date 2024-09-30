@@ -8,7 +8,7 @@ import { rtdb } from "@/app/firebaseConfig";
 import { RootState } from "@/state/store";
 import { ref, set } from "firebase/database";
 import { useDispatch, useSelector } from "react-redux";
-import { setGameState } from "@/state/GameStateSlice";
+import { setGameActive } from "@/state/GameStateSlice";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
@@ -22,8 +22,7 @@ export default function CreateGame() {
       `activeGames/${currentJoinCode.code}/gameState`,
     );
 
-    dispatch(setGameState("TurnsDiceRoll"));
-    await set(gameStateRef, "TurnsDiceRoll");
+    dispatch(setGameActive(true));
   }
 
   return (

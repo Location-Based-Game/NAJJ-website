@@ -1,21 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type GameStates = "Menu" | "TurnsDiceRoll" | "Gameplay";
+
 interface GameState {
-  state: string;
+  state: GameStates;
+  isGameActive: boolean;
 }
 
 const initialState: GameState = {
   state: "Menu",
+  isGameActive: false,
 };
 
 export const gameStateSlice = createSlice({
   name: "Game State",
   initialState,
   reducers: {
-    setGameState: (state: GameState, action: PayloadAction<string>) => {
+    setGameState: (state: GameState, action: PayloadAction<GameStates>) => {
       state.state = action.payload;
+    },
+    setGameActive: (state: GameState, action: PayloadAction<boolean>) => {
+      state.isGameActive = action.payload;
     },
   },
 });
 
-export const { setGameState } = gameStateSlice.actions;
+export const { setGameState, setGameActive } = gameStateSlice.actions;

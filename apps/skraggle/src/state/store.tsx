@@ -7,7 +7,7 @@ import { MainMenuState } from "@/hooks/usePanelUI";
 import { gameStateSlice } from "./GameStateSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
-  state: "Home",
+  state: "Create Game",
   slideFrom: "right"
 });
 

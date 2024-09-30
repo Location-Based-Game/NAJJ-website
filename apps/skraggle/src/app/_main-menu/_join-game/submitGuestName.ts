@@ -9,12 +9,12 @@ import {
 } from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
 import { useToast } from "@/hooks/use-toast";
-import { MainMenuState } from "../MainMenuPanel";
 import { z } from "zod";
 import { FormSchema } from "../GuestNameInput";
 import { useDispatch, useSelector } from "react-redux";
 import { setGuestKey } from "@/state/GuestNameSlice";
 import { RootState } from "@/state/store";
+import { MainMenuState } from "@/hooks/usePanelUI";
 
 export type SubmitGuestNameType = typeof submitGuestName;
 
