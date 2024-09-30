@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { rtdb } from "@/app/firebaseConfig";
 import { ref, onValue } from "firebase/database";
+import { useToast } from "@/hooks/use-toast";
 export default function PlayerList() {
   const [playerData, setPlayerData] = useState<string[]>([]);
   const dispatch = useDispatch();
-  const currentJoinCode = useSelector((state:RootState) => state.joinCode)
+  const currentJoinCode = useSelector((state: RootState) => state.joinCode);
+  const { toast } = useToast();
 
   useEffect(() => {
     const playersRef = ref(rtdb, `activeGames/${currentJoinCode.code}/players`);
@@ -17,6 +19,12 @@ export default function PlayerList() {
         const data = snapshot.val();
         setPlayerData(data);
       } else {
+        
+        toast({
+          title: "Error",
+          description: "Game not available! Try creating a game.",
+        });
+
         dispatch(
           mainMenuState.updateState({
             state: "Home",
