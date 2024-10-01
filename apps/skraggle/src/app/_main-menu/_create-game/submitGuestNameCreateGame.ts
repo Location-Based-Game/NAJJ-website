@@ -33,13 +33,13 @@ const submitGuestNameCreateGame: SubmitGuestNameType = (
   animationCallback: (state: MainMenuState) => void,
 ) => {
   const dispatch = useDispatch();
-  const currentJoinCode = useSelector((state: RootState) => state.createCode);
+  const currentCreateCode = useSelector((state: RootState) => state.createCode);
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     setEnableButtons(false);
     dispatch(setGuestName(values.guestName));
 
-    if (!currentJoinCode.code) {
+    if (!currentCreateCode.code) {
       const code = makeid(4);
       dispatch(setCreateCode(code));
 
@@ -54,7 +54,7 @@ const submitGuestNameCreateGame: SubmitGuestNameType = (
       await AddPlayerToDatabase(code, values.guestName)
     }
     else {
-      await AddPlayerToDatabase(currentJoinCode.code, values.guestName)
+      await AddPlayerToDatabase(currentCreateCode.code, values.guestName)
     }
     
     animationCallback({ state: "Create Game", slideFrom: "right" });

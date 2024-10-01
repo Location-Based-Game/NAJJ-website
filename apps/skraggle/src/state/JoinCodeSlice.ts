@@ -4,7 +4,7 @@ interface JoinCode {
   code: string | null;
 }
 
-function SetDefaultCode() {
+export function SetDefaultCode() {
   if (
     process.env.NODE_ENV === "development" &&
     process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"

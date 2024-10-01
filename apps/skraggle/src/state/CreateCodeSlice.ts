@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SetDefaultCode } from "./JoinCodeSlice";
 
 interface CreateCode {
   code: string | null;
 }
 
 const initialState: CreateCode = {
-  code: null,
+  code: SetDefaultCode(),
 };
 
 export const createCodeSlice = createSlice({

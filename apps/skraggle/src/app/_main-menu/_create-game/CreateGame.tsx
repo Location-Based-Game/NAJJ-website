@@ -9,19 +9,21 @@ import { RootState } from "@/state/store";
 import { ref, set } from "firebase/database";
 import { useDispatch, useSelector } from "react-redux";
 import { setGameActive } from "@/state/GameStateSlice";
+import { setJoinCode } from "@/state/JoinCodeSlice";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
-  const currentJoinCode = useSelector((state: RootState) => state.joinCode);
+  const currentCreateCode = useSelector((state: RootState) => state.createCode);
   const dispatch = useDispatch()
 
   const handleStartGame = async () => {
     const gameStateRef = ref(
       rtdb,
-      `activeGames/${currentJoinCode.code}/gameState`,
+      `activeGames/${currentCreateCode.code}/gameState`,
     );
 
+    // dispatch(setJoinCode(currentCreateCode.code))
     dispatch(setGameActive(true));
   }
 

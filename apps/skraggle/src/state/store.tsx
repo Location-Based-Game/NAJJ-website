@@ -5,6 +5,7 @@ import { createCodeSlice } from "./CreateCodeSlice";
 import { joinCodeSlice } from "./JoinCodeSlice";
 import { MainMenuState } from "@/hooks/usePanelUI";
 import { gameStateSlice } from "./GameStateSlice";
+import { turnSlice } from "./TurnSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
   state: "Create Game",
@@ -17,7 +18,8 @@ export const store = configureStore({
     guestName: guestNameSlice.reducer,
     createCode: createCodeSlice.reducer,
     joinCode: joinCodeSlice.reducer,
-    gameState: gameStateSlice.reducer
+    gameState: gameStateSlice.reducer,
+    currentTurn: turnSlice.reducer
   },
 });
 

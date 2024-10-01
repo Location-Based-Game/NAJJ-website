@@ -1,11 +1,16 @@
 "use client";
 import { RootState } from "@/state/store";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { QRCode as CreateQRCode } from "react-qrcode-logo";
 
 const QRCode = memo(() => {
   const currentJoinCode = useSelector((state: RootState) => state.createCode);
+  const [url, setURL] = useState<string>("")
+
+  useEffect(() => {
+    setURL(window.location.origin)
+  }, [])
 
   return (
     <div>
@@ -14,7 +19,7 @@ const QRCode = memo(() => {
           ecLevel="M"
           qrStyle="fluid"
           fgColor="#1f1f1f"
-          value={`${window.location.origin}?code=${currentJoinCode.code}`}
+          value={`${url}?code=${currentJoinCode.code}`}
         />
       </div>
       <div className="mt-4 text-gray-500">join code</div>
