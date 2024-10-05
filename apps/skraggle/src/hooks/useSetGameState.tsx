@@ -5,6 +5,7 @@ import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+import { useToast } from "./use-toast";
 
 export default function useSetGameState(
   sendMessage: (
@@ -12,13 +13,15 @@ export default function useSetGameState(
     methodName: string,
     parameter?: ReactUnityEventParameter,
   ) => void,
-  isLoaded: boolean
+  isLoaded: boolean,
 ) {
   const currentJoinCode = useSelector((state: RootState) => state.joinCode);
+  const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded || !isGameActive) return;
 
     const gameStateRef = ref(
       rtdb,
@@ -26,10 +29,18 @@ export default function useSetGameState(
     );
     const unsubscribe = onValue(gameStateRef, (snapshot) => {
       if (snapshot.exists()) {
-        const data = snapshot.val();
-        dispatch(setGameState(data))
-        sendMessage("Receiver", "UpdateGameState", data)
+        const state = snapshot.val();
+        console.log(state);
+        dispatch(setGameState(state));
+        sendMessage("Receiver", "UpdateGameState", state);
       } else {
+        console.error("Game no longer exists!");
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Game no longer exists!",
+        });
+
         dispatch(
           mainMenuState.updateState({
             state: "Home",
@@ -40,5 +51,5 @@ export default function useSetGameState(
     });
 
     return () => unsubscribe();
-  }, [isLoaded]);
+  }, [isLoaded, isGameActive]);
 }

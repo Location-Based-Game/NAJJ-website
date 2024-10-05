@@ -5,6 +5,7 @@ import Loader from "./_gameplay-ui/Loader";
 import { useState, useEffect, createContext, useContext } from "react";
 import useUpdateGameState from "@/hooks/useUpdateGameState";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
+import PlayerData from "@/components/GetPlayers";
 
 export const UnityReactContext = createContext<UnityContextHook | null>(null);
 
@@ -46,7 +47,9 @@ export default function UnityPlayer({
       <Loader
         splashScreenComplete={splashScreenComplete}
       >
-        {children}
+        <PlayerData>
+          {children}
+        </PlayerData>
       </Loader>
       <Unity
         unityProvider={unityProvider}

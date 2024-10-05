@@ -4,28 +4,14 @@ import { useState } from "react";
 import QRCode from "./QRCode";
 import { Button } from "@/components/ui/button";
 import PlayerList from "../PlayerList";
-import { rtdb } from "@/app/firebaseConfig";
 import { RootState } from "@/state/store";
-import { ref, set } from "firebase/database";
-import { useDispatch, useSelector } from "react-redux";
-import { setGameActive } from "@/state/GameStateSlice";
-import { setJoinCode } from "@/state/JoinCodeSlice";
+import { useSelector } from "react-redux";
+import StartGameButton from "./StartGameButton";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
   const currentCreateCode = useSelector((state: RootState) => state.createCode);
-  const dispatch = useDispatch()
-
-  const handleStartGame = async () => {
-    const gameStateRef = ref(
-      rtdb,
-      `activeGames/${currentCreateCode.code}/gameState`,
-    );
-
-    // dispatch(setJoinCode(currentCreateCode.code))
-    dispatch(setGameActive(true));
-  }
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -33,7 +19,7 @@ export default function CreateGame() {
         <QRCode />
         <div className="w-full grow">
           <h2 className="my-6 w-full text-center">Players</h2>
-          <PlayerList />
+          <PlayerList joinCode={currentCreateCode.code} />
         </div>
       </div>
       <div className="flex w-full gap-4">
@@ -51,15 +37,7 @@ export default function CreateGame() {
         >
           Back
         </Button>
-        <Button
-          disabled={!enableButtons}
-          className="h-12 w-full"
-          onClick={() => {
-            handleStartGame();
-          }}
-        >
-          Start
-        </Button>
+        <StartGameButton />
       </div>
     </InnerPanelWrapper>
   );

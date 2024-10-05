@@ -10,7 +10,8 @@ const {addEventListener, removeEventListener} = unityContext
 
   const dispatch = useDispatch()
   const handleUpdateGameState = useCallback((state: any) => {
-    dispatch(setGameState(state))
+    console.log(state)
+    // dispatch(setGameState(state))
   }, []);
 
   // const handleUpdateTurn = useCallback((currentTurn: any) => {

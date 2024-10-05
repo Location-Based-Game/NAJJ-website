@@ -1,5 +1,5 @@
 import { RootState } from "@/state/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useUnityReactContext } from "../UnityPlayer";
 
@@ -16,8 +16,8 @@ export default function Loader({ children, splashScreenComplete }: Loader) {
   const { sendMessage, loadingProgression } = useUnityReactContext();
 
   useEffect(() => {
-    if (splashScreenComplete && isGameActive) {
-      sendMessage("Receiver", "StartGame");
+    if (isGameActive && splashScreenComplete) {
+      // sendMessage("Receiver", "StartGame");
     }
   }, [isGameActive, splashScreenComplete]);
 

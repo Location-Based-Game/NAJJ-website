@@ -1,7 +1,7 @@
-import { MainMenuState } from "@/app/_main-menu/MainMenuPanel";
 import { mainMenuState } from "@/state/store";
 import { useAnimate } from "framer-motion";
 import { useDispatch } from "react-redux";
+import { MainMenuState } from "./usePanelUI";
 
 export default function usePanelTransition<T extends any[] = []>(
   callback?: (...args: T) => void,

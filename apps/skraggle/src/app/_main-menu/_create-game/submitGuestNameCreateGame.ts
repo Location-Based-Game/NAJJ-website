@@ -43,27 +43,38 @@ const submitGuestNameCreateGame: SubmitGuestNameType = (
       const code = makeid(4);
       dispatch(setCreateCode(code));
 
-      await set(ref(rtdb, `activeGames/${code}`), {
-        name: code,
-        gameState: "Menu",
-        players: [],
-        turnOrder: [],
-        currentTurn: 0
-      });
+      await CreateEmptyRoom(code);
+      await AddPlayerToDatabase(code, values.guestName);
+    } else if (
+      process.env.NODE_ENV === "development" &&
+      process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
+    ) {
+      await CreateEmptyRoom(currentCreateCode.code);
+      await AddPlayerToDatabase(currentCreateCode.code, values.guestName);
 
-      await AddPlayerToDatabase(code, values.guestName)
+      // await AddTestPlayer(currentCreateCode.code, values.guestName);
+    } else {
+      await AddPlayerToDatabase(currentCreateCode.code, values.guestName);
     }
-    else {
-      await AddPlayerToDatabase(currentCreateCode.code, values.guestName)
-    }
-    
+
     animationCallback({ state: "Create Game", slideFrom: "right" });
   };
 
   return { handleSubmit };
 };
 
-async function AddPlayerToDatabase(code:string, name:string) {
+async function CreateEmptyRoom(code: string) {
+  await set(ref(rtdb, `activeGames/${code}`), {
+    name: code,
+    gameState: "Menu",
+    players: [],
+    turnOrder: [],
+    initialDiceData: null,
+    currentTurn: 0,
+  });
+}
+
+async function AddPlayerToDatabase(code: string, name: string) {
   const playersRef = ref(rtdb, `activeGames/${code}/players`);
   const newPlayerRef = await push(playersRef);
   if (!newPlayerRef.key) {
@@ -72,6 +83,11 @@ async function AddPlayerToDatabase(code:string, name:string) {
   }
 
   await set(newPlayerRef, name);
+}
+
+async function AddTestPlayer(code: string, name: string) {
+  const playersRef = ref(rtdb, `activeGames/${code}/players/testPlayer`);
+  await set(playersRef, name);
 }
 
 export default submitGuestNameCreateGame;

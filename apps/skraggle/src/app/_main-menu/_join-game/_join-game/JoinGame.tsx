@@ -36,7 +36,7 @@ export default function JoinGame() {
       />
       <div className="w-full grow">
         <h2 className="my-6 w-full text-center">Players</h2>
-        <PlayerList />
+        <PlayerList joinCode={currentJoinCode.code} />
       </div>
       <Button
         disabled={!enableButtons}

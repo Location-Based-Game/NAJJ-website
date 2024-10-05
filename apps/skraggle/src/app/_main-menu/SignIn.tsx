@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { SubmitGuestNameType } from "./_join-game/submitGuestName";
 import GuestNameInput from "./GuestNameInput";
 import { Loader2 } from "lucide-react";
-import { MainMenuState } from "./MainMenuPanel";
+import { MainMenuState } from "@/hooks/usePanelUI";
 
 interface SignIn {
   back: MainMenuState;

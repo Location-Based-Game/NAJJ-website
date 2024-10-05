@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { QRCode as CreateQRCode } from "react-qrcode-logo";
 
 const QRCode = memo(() => {
-  const currentJoinCode = useSelector((state: RootState) => state.createCode);
+  const currentCreateCode = useSelector((state: RootState) => state.createCode);
   const [url, setURL] = useState<string>("")
 
   useEffect(() => {
@@ -19,11 +19,11 @@ const QRCode = memo(() => {
           ecLevel="M"
           qrStyle="fluid"
           fgColor="#1f1f1f"
-          value={`${url}?code=${currentJoinCode.code}`}
+          value={`${url}?code=${currentCreateCode.code}`}
         />
       </div>
       <div className="mt-4 text-gray-500">join code</div>
-      <div className="text-4xl font-bold">{currentJoinCode.code}</div>
+      <div className="text-4xl font-bold">{currentCreateCode.code}</div>
     </div>
   );
 });
