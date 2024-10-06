@@ -63,7 +63,6 @@ const submitGuestName = (
 
     await set(newPlayerRef, values.guestName);
     dispatch(setGuestKey(newPlayerRef.key));
-
     animationCallback({ state: "Join Game", slideFrom: "right" });
   }
 

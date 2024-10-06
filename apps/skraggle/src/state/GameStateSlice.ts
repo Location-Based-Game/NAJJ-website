@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type GameStates = "Menu" | "TurnsDiceRoll" | "Gameplay";
+export type GameStates = "Menu" | "TurnsDiceRoll" | "Gameplay";
 
 interface GameState {
   state: GameStates;

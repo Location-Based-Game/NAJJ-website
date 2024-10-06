@@ -41,8 +41,9 @@ export default function PlayerData({ children }: PlayerData) {
     if (!joinCode) return;
     const playersRef = ref(rtdb, `activeGames/${joinCode}/players`);
     const unsubscribe = onValue(playersRef, (snapshot) => {
-      console.log(joinCode)
-      if (snapshot.exists() && joinCode) {
+      console.log(snapshot.val());
+      if (joinCode) {
+        if (!snapshot.exists()) return;
         const data = snapshot.val();
         setPlayerData(data);
       } else {
