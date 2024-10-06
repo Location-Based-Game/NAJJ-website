@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import PlayerList from "../PlayerList";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
-import StartGameButton from "./StartGameButton";
+import useStartGame from "./useStartGame";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
   const currentCreateCode = useSelector((state: RootState) => state.createCode);
+  const { handleStartGame } = useStartGame(animationCallback);
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -37,7 +38,16 @@ export default function CreateGame() {
         >
           Back
         </Button>
-        <StartGameButton />
+        <Button
+          disabled={!enableButtons}
+          className="h-12 w-full"
+          onClick={() => {
+            setEnableButtons(false);
+            handleStartGame();
+          }}
+        >
+          Start
+        </Button>
       </div>
     </InnerPanelWrapper>
   );

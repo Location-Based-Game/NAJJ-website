@@ -30,7 +30,6 @@ export default function useSetGameState(
     const unsubscribe = onValue(gameStateRef, (snapshot) => {
       if (snapshot.exists()) {
         const state = snapshot.val();
-        console.log(state);
         dispatch(setGameState(state));
         sendMessage("Receiver", "UpdateGameState", state);
       } else {

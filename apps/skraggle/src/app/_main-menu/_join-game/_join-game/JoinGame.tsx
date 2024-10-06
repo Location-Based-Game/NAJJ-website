@@ -4,27 +4,26 @@ import usePanelTransition from "@/hooks/usePanelTransition";
 import LeaveGameDialogue from "./LeaveGameDialogue";
 import { useState } from "react";
 import PlayerList from "../../PlayerList";
-import { rtdb } from "@/app/firebaseConfig";
 import { RootState } from "@/state/store";
-import { ref, remove, child } from "firebase/database";
 import { useSelector } from "react-redux";
+import removePlayer from "@/firebase/removePlayer";
 
 export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
   const guestName = useSelector((state: RootState) => state.guestName);
-  const currentJoinCode = useSelector((state:RootState) => state.joinCode)
+  const currentJoinCode = useSelector((state: RootState) => state.joinCode);
 
-  const handleOnLeave = () => {
+  const handleOnLeave = async () => {
     animationCallback({
       state: "Sign In to Join",
       slideFrom: "left",
     });
-
-    //remove player from game
-    if (!guestName.key) return;
-    const playersRef = ref(rtdb, `activeGames/${currentJoinCode.code}/players`);
-    remove(child(playersRef, guestName.key));
+    try {
+      await removePlayer(currentJoinCode.code, guestName.key);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -38,10 +37,7 @@ export default function JoinGame() {
         <h2 className="my-6 w-full text-center">Players</h2>
         <PlayerList joinCode={currentJoinCode.code} />
       </div>
-      <Button
-        disabled={!enableButtons}
-        className="h-12 w-full"
-      >
+      <Button disabled={!enableButtons} className="h-12 w-full">
         Ready!
       </Button>
     </InnerPanelWrapper>

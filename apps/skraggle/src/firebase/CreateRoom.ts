@@ -18,7 +18,11 @@ export type GameRoom = {
   currentTurn: number;
 };
 
-export default async function CreateRoom(code: string) {
+export default async function createRoom(code: string | null) {
+  if (!code) {
+    throw new Error("invalid code!")
+  }
+
   const data: GameRoom = {
     name: code,
     gameState: "Menu",

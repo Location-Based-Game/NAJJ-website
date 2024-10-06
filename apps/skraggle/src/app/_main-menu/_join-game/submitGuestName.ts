@@ -1,13 +1,3 @@
-import {
-  get,
-  ref,
-  getDatabase,
-  child,
-  push,
-  set,
-  DataSnapshot,
-} from "firebase/database";
-import { rtdb } from "@/app/firebaseConfig";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { FormSchema } from "../GuestNameInput";
@@ -15,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setGuestKey } from "@/state/GuestNameSlice";
 import { RootState } from "@/state/store";
 import { MainMenuState } from "@/hooks/usePanelUI";
+import { addPlayer } from "@/firebase/addPlayer";
+import getRoom from "@/firebase/getRoom";
 
 export type SubmitGuestNameType = typeof submitGuestName;
 
@@ -24,47 +16,40 @@ const submitGuestName = (
 ) => {
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const currentJoinCode = useSelector((state:RootState) => state.joinCode)
+  const currentJoinCode = useSelector((state: RootState) => state.joinCode);
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     setEnableButtons(false);
-    const dbRef = ref(getDatabase());
 
-    const snapshot = await get(child(dbRef, `activeGames/${currentJoinCode.code}`));
-    if (snapshot.exists()) {
-      await AddPlayerToDatabase(snapshot, values);
-      return;
-    } else {
+    //check if room exists
+    try {
+      await getRoom(currentJoinCode.code);
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Game not available! Try entering a different code.",
+        variant: "destructive",
+        description: `${error}`,
       });
       animationCallback({ state: "Enter Join Code", slideFrom: "left" });
+      return;
     }
+
+    try {
+      const playerKey = await addPlayer(currentJoinCode.code, values.guestName);
+      dispatch(setGuestKey(playerKey));
+      animationCallback({ state: "Join Game", slideFrom: "right" });
+      return;
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: `${error}`,
+      });
+      animationCallback({ state: "Home", slideFrom: "left" });
+    }
+
     setEnableButtons(true);
   };
-
-  async function AddPlayerToDatabase(
-    snapshot: DataSnapshot,
-    values: z.infer<typeof FormSchema>,
-  ) {
-    const playersRef = ref(rtdb, `activeGames/${currentJoinCode.code}/players`);
-
-    if (Object.values(snapshot.val().players).length >= 8) {
-      animationCallback({ state: "Home", slideFrom: "left" });
-      return;
-    }
-
-    const newPlayerRef = await push(playersRef);
-    if (!newPlayerRef.key) {
-      //throw error
-      return;
-    }
-
-    await set(newPlayerRef, values.guestName);
-    dispatch(setGuestKey(newPlayerRef.key));
-    animationCallback({ state: "Join Game", slideFrom: "right" });
-  }
 
   return { handleSubmit };
 };

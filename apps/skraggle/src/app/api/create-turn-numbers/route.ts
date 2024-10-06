@@ -1,5 +1,5 @@
 import { rtdb } from "@/app/firebaseConfig";
-import { InitialDiceData } from "@/firebase/CreateRoom";
+import { InitialDiceData } from "@/firebase/createRoom";
 import { ref, update } from "firebase/database";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     updates[`activeGames/${gameId}/initialDiceData/${playerIds[i]}`] = diceData;
   }
-  update(dbRef, updates);
+  await update(dbRef, updates);
 
   return NextResponse.json({ message: "success" });
 }

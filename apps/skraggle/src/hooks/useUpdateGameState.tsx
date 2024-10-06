@@ -10,7 +10,6 @@ const {addEventListener, removeEventListener} = unityContext
 
   const dispatch = useDispatch()
   const handleUpdateGameState = useCallback((state: any) => {
-    console.log(state)
     // dispatch(setGameState(state))
   }, []);
 

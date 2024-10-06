@@ -6,8 +6,8 @@ import { setGuestKey, setGuestName } from "@/state/GuestNameSlice";
 import { setCreateCode } from "@/state/CreateCodeSlice";
 import { RootState } from "@/state/store";
 import { MainMenuState } from "@/hooks/usePanelUI";
-import CreateRoom from "@/firebase/CreateRoom";
-import { AddPlayer, AddTestPlayer } from "@/firebase/AddPlayer";
+import createRoom from "@/firebase/createRoom";
+import { addPlayer, addTestPlayer } from "@/firebase/addPlayer";
 
 function makeid(length: number): string {
   if (
@@ -30,36 +30,46 @@ function makeid(length: number): string {
 
 const submitGuestNameCreateGame: SubmitGuestNameType = (
   setEnableButtons: React.Dispatch<React.SetStateAction<boolean>>,
-  animationCallback: (state: MainMenuState) => void,
+  animationCallback: (state: MainMenuState, error?: string) => void,
 ) => {
   const dispatch = useDispatch();
   const currentCreateCode = useSelector((state: RootState) => state.createCode);
 
-  let id:string = "";
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     setEnableButtons(false);
     dispatch(setGuestName(values.guestName));
+    
+    let id: string = "";
+    try {
 
-    if (!currentCreateCode.code) {
-      const code = makeid(4);
-      dispatch(setCreateCode(code));
+      //Create Test Room
+      if (
+        process.env.NODE_ENV === "development" &&
+        process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
+      ) {
+        await createRoom(currentCreateCode.code);
+        id = await addTestPlayer(currentCreateCode.code, values.guestName);
+        animationCallback({ state: "Create Game", slideFrom: "right" });
+        return;
+      }
 
-      await CreateRoom(code);
-      id = await AddPlayer(code, values.guestName);
-    } else if (
-      process.env.NODE_ENV === "development" &&
-      process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
-    ) {
-      await CreateRoom(currentCreateCode.code);
-      id = await AddTestPlayer(currentCreateCode.code, values.guestName);
-    } else {
-      id = await AddPlayer(currentCreateCode.code, values.guestName);
+      if (!currentCreateCode.code) {
+        const code = makeid(4);
+        dispatch(setCreateCode(code));
+        await createRoom(code);
+        id = await addPlayer(code, values.guestName);
+      } else {
+        id = await addPlayer(currentCreateCode.code, values.guestName);
+      }
+
+      dispatch(setGuestKey(id));
+      animationCallback({ state: "Create Game", slideFrom: "right" });
+
+    } catch (error) {
+      animationCallback({ state: "Home", slideFrom: "left" }, `${error}`);
     }
-
-    animationCallback({ state: "Create Game", slideFrom: "right" });
   };
 
-  dispatch(setGuestKey(id))
   return { handleSubmit };
 };
 
