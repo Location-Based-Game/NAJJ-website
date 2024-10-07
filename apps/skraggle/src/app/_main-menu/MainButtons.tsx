@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { useState } from "react";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";

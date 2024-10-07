@@ -41,7 +41,7 @@ export default function JoinCodeInput({
     setEnableButtons(false);
 
     try {
-      await getRoom({gameId: codeInput});
+      await getRoom({ gameId: codeInput });
       callback();
     } catch (error) {
       form.setError("code", { message: "Invalid Code!" });
@@ -56,16 +56,17 @@ export default function JoinCodeInput({
         onSubmit={form.handleSubmit(handleSubmit)}
         className="flex w-full grow flex-col items-center"
       >
-        <div className="relative pb-4 flex grow flex-col items-center justify-center gap-4">
+        <div className="relative flex grow flex-col items-center justify-center gap-4 pb-4">
           <FormField
             control={form.control}
             name="code"
             render={() => (
               <FormItem className="pb-5">
-                <FormLabel className="block text-center">
+                <FormLabel className="block text-center" htmlFor="join-code">
                   Enter Join Code
                 </FormLabel>
                 <InputOTP
+                  id="join-code"
                   maxLength={4}
                   value={codeInput}
                   pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
@@ -85,7 +86,9 @@ export default function JoinCodeInput({
                   errors={form.formState.errors}
                   name={"code"}
                   render={({ message }) => (
-                    <div className="absolute text-destructive text-center w-full">{message}</div>
+                    <div className="absolute w-full text-center text-destructive">
+                      {message}
+                    </div>
                   )}
                 />
               </FormItem>

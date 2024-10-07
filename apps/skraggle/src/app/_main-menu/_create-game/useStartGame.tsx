@@ -45,7 +45,7 @@ export default function useStartGame(
 
       await createTurnNumbers({
         gameId: currentCreateCode.code,
-        playerIds: playerData,
+        playerIds: Object.keys(playerData),
       });
 
       const diceDataRef = ref(
