@@ -9,7 +9,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
-import getRoom from "@/firebase/getRoom";
+import getRoom from "@/actions/getRoom";
 
 const FormSchema = z.object({
   code: z.string(),
@@ -41,7 +41,7 @@ export default function JoinCodeInput({
     setEnableButtons(false);
 
     try {
-      await getRoom(codeInput);
+      await getRoom({gameId: codeInput});
       callback();
     } catch (error) {
       form.setError("code", { message: "Invalid Code!" });

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface JoinCode {
-  code: string | null;
+  code: string;
 }
 
 export function SetDefaultCode() {
@@ -11,7 +11,7 @@ export function SetDefaultCode() {
   ) {
     return process.env.NEXT_PUBLIC_PLACEHOLDER_CODE;
   }
-  return null;
+  return "";
 }
 
 const initialState: JoinCode = {

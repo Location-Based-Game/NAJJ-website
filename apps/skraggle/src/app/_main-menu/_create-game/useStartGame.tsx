@@ -2,13 +2,14 @@ import { setGameActive } from "@/state/GameStateSlice";
 import { setJoinCode } from "@/state/JoinCodeSlice";
 import { RootState } from "@/state/store";
 import { useDispatch, useSelector } from "react-redux";
-import { get, ref, set } from "firebase/database";
+import { get, ref } from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
 import { useGetPlayers } from "@/components/GetPlayers";
 import { useUnityReactContext } from "@/app/UnityPlayer";
 import { useEffect } from "react";
 import { MainMenuState } from "@/hooks/usePanelUI";
-import setGameState from "@/firebase/setGameState";
+import setGameState from "@/actions/setGameState";
+import { createTurnNumbers } from "@/actions/createTurnNumbers";
 
 export default function useStartGame(
   animationCallback: (state: MainMenuState, error?: string) => void,
@@ -19,41 +20,32 @@ export default function useStartGame(
   const { playerData } = useGetPlayers();
   const { sendMessage } = useUnityReactContext();
 
-  const handleError = () => {
+  const handleError = (error:string) => {
     animationCallback(
       {
         state: "Home",
         slideFrom: "left",
       },
-      "Join code does not exist",
+      error,
     );
   };
 
   useEffect(() => {
     if (!currentCreateCode.code) {
-      handleError();
+      handleError("Join code does not exist");
     }
   }, []);
 
   const handleStartGame = async () => {
-    if (currentCreateCode.code) {
+    try {
       dispatch(setJoinCode(currentCreateCode.code));
       dispatch(setGameActive(true));
-      
-      try {
-        await setGameState(currentCreateCode.code, "TurnsDiceRoll")
-      } catch (error) {
-        console.error(error)
-      }
 
-      const body = {
+      await setGameState({gameId: currentCreateCode.code, gameState: "TurnsDiceRoll"});
+
+      await createTurnNumbers({
         gameId: currentCreateCode.code,
-        playerIds: Object.keys(playerData),
-      };
-
-      await fetch("/api/create-turn-numbers", {
-        method: "POST",
-        body: JSON.stringify(body),
+        playerIds: playerData,
       });
 
       const diceDataRef = ref(
@@ -63,14 +55,14 @@ export default function useStartGame(
 
       const diceDataSnapshot = await get(diceDataRef);
       if (diceDataSnapshot.exists()) {
-        let playerKey:string = ""
+        let playerKey: string = "";
         if (
           process.env.NODE_ENV === "development" &&
           process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
         ) {
-          playerKey = "testPlayer"
+          playerKey = "testPlayer";
         } else {
-          playerKey = key
+          playerKey = key;
         }
 
         const { dice1, dice2 } = diceDataSnapshot.val()[playerKey];
@@ -79,8 +71,8 @@ export default function useStartGame(
       } else {
         console.error("No data available");
       }
-    } else {
-      handleError();
+    } catch (error) {
+      handleError(`${error}`);
     }
   };
 

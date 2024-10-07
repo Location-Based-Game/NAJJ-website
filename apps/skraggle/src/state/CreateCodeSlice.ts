@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SetDefaultCode } from "./JoinCodeSlice";
 
 interface CreateCode {
-  code: string | null;
+  code: string;
 }
 
 const initialState: CreateCode = {

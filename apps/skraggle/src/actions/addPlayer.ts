@@ -1,12 +1,27 @@
+'use server'
+
 import { push, ref, runTransaction, set } from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
+import { z } from "zod";
+import { gameIdSchema } from "@/schemas/gameIdSchema";
 
-export async function addPlayer(code: string | null, name: string): Promise<string> {
-  if (!code) {
-    throw new Error("invalid code!");
-  }
+const addPlayerSchema = gameIdSchema.extend({
+  playerName: z.string().min(1)
+})
+
+type AddPlayerType = z.infer<typeof addPlayerSchema>
+
+export async function addPlayer(data:AddPlayerType): Promise<string> {
+  const validatedData = addPlayerSchema.safeParse(data)
   
-  const playersRef = ref(rtdb, `activeGames/${code}/players`);
+  if (!validatedData.success) {
+    console.error(validatedData.error)
+    throw new Error("Invalid Data!");
+  }
+
+  const { gameId, playerName } = validatedData.data
+
+  const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
   let playerKey = "";
 
   await runTransaction(playersRef, (currentPlayers) => {
@@ -22,7 +37,7 @@ export async function addPlayer(code: string | null, name: string): Promise<stri
     const newPlayerRef = push(playersRef);
     if (newPlayerRef.key) {
       playerKey = newPlayerRef.key;
-      currentPlayers[playerKey] = name;
+      currentPlayers[playerKey] = playerName;
     } else {
       throw new Error("Player key not created");
     }

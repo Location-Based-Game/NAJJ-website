@@ -1,7 +1,11 @@
+'use server'
+
 import { rtdb } from "@/app/firebaseConfig";
-import { GameStates } from "@/state/GameStateSlice";
+import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
+import { GameStates } from "@/schemas/gameStateSchema";
 import { ref, set } from "firebase/database";
 
+//TODO update player data type
 export type PlayerData = string;
 
 export type InitialDiceData = {
@@ -10,7 +14,7 @@ export type InitialDiceData = {
 };
 
 export type GameRoom = {
-  name: string;
+  id: string;
   gameState: GameStates;
   players: PlayerData | null;
   turnOrder: string[] | null;
@@ -18,13 +22,17 @@ export type GameRoom = {
   currentTurn: number;
 };
 
-export default async function createRoom(code: string | null) {
-  if (!code) {
+export default async function createRoom(data: GameIdType) {
+  const validatedData = gameIdSchema.safeParse(data)
+
+  if (!validatedData.success) {
     throw new Error("invalid code!")
   }
 
-  const data: GameRoom = {
-    name: code,
+  const { gameId } = validatedData.data
+
+  const gameRoomData: GameRoom = {
+    id: gameId,
     gameState: "Menu",
     players: null,
     turnOrder: [],
@@ -32,5 +40,5 @@ export default async function createRoom(code: string | null) {
     currentTurn: 0,
   };
 
-  await set(ref(rtdb, `activeGames/${code}`), data);
+  await set(ref(rtdb, `activeGames/${gameId}`), gameRoomData);
 }

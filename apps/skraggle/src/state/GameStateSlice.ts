@@ -1,6 +1,5 @@
+import { GameStates } from "@/schemas/gameStateSchema";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export type GameStates = "Menu" | "TurnsDiceRoll" | "Gameplay";
 
 interface GameState {
   state: GameStates;

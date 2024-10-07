@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setGuestKey } from "@/state/GuestNameSlice";
 import { RootState } from "@/state/store";
 import { MainMenuState } from "@/hooks/usePanelUI";
-import { addPlayer } from "@/firebase/addPlayer";
-import getRoom from "@/firebase/getRoom";
+import { addPlayer } from "@/actions/addPlayer";
+import getRoom from "@/actions/getRoom";
 
 export type SubmitGuestNameType = typeof submitGuestName;
 
@@ -21,9 +21,9 @@ const submitGuestName = (
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     setEnableButtons(false);
 
-    //check if room exists
+    //first check if room exists
     try {
-      await getRoom(currentJoinCode.code);
+      await getRoom({gameId: currentJoinCode.code});
     } catch (error) {
       toast({
         title: "Error",
@@ -35,7 +35,10 @@ const submitGuestName = (
     }
 
     try {
-      const playerKey = await addPlayer(currentJoinCode.code, values.guestName);
+      const playerKey = await addPlayer({
+        gameId: currentJoinCode.code as string,
+        playerName: values.guestName,
+      });
       dispatch(setGuestKey(playerKey));
       animationCallback({ state: "Join Game", slideFrom: "right" });
       return;

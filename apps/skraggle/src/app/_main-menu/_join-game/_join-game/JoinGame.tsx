@@ -6,7 +6,7 @@ import { useState } from "react";
 import PlayerList from "../../PlayerList";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
-import removePlayer from "@/firebase/removePlayer";
+import removePlayer from "@/actions/removePlayer";
 
 export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
@@ -20,7 +20,10 @@ export default function JoinGame() {
       slideFrom: "left",
     });
     try {
-      await removePlayer(currentJoinCode.code, guestName.key);
+      await removePlayer({
+        gameId: currentJoinCode.code,
+        playerKey: guestName.key,
+      });
     } catch (error) {
       console.error(error);
     }
