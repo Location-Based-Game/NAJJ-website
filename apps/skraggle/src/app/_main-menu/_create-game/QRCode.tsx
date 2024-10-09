@@ -23,7 +23,7 @@ const QRCode = memo(() => {
         />
       </div>
       <div className="mt-4 text-gray-500">join code</div>
-      <div className="text-4xl font-bold">{currentCreateCode.code}</div>
+      <div id="join-code" className="text-4xl font-bold">{currentCreateCode.code}</div>
     </div>
   );
 });

@@ -44,10 +44,11 @@ export default function GuestNameInput({
           name="guestName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="block text-center">
+              <FormLabel className="block text-center" htmlFor="guestName">
                 Enter as Guest
               </FormLabel>
               <Input
+                id="guestName"
                 placeholder="name"
                 maxLength={20}
                 {...field}

@@ -9,10 +9,10 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyASH4ThiERxyYYW8A_TQfLFr_aa5YjAuiY",
   authDomain: "skraggle-2e19f.firebaseapp.com",
-  projectId: "skraggle-2e19f",
+  projectId: "demo-skraggle",
   storageBucket: "skraggle-2e19f.appspot.com",
   messagingSenderId: "280228149737",
   appId: "1:280228149737:web:5a40d025cac04a31ee7378",
@@ -26,8 +26,6 @@ export const db = getFirestore(app);
 export const rtdb = getDatabase(app)
 export const auth = getAuth(app)
 
-if (process.env.NODE_ENV == "development") {
     connectFirestoreEmulator(db, "127.0.0.1", 8080)
     connectDatabaseEmulator(rtdb, "127.0.0.1", 9000)
-    connectAuthEmulator(auth, "http://127.0.0.1:9099")
-}
+    // connectAuthEmulator(auth, "http://127.0.0.1:9099")
