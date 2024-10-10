@@ -1,3 +1,5 @@
+import "jest-canvas-mock"
+
 class ResizeObserver {
   observe() {}
   unobserve() {}

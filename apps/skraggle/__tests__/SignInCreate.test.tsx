@@ -16,7 +16,7 @@ import { firebaseConfig } from "@/app/firebaseConfig";
 import fs from "fs";
 import { child, get, ref } from "firebase/database";
 import PlayerData from "@/components/GetPlayers";
-import MockUnityPlayer from "./mock/MockUnityPlayer";
+import MockUnityPlayer from "../mock/MockUnityPlayer";
 
 describe("Sign In to Create", () => {
   it('renders "Sign In to Create" and checks if "continue" button is disabled', async () => {
@@ -50,14 +50,17 @@ describe("Sign In to Create", () => {
   });
 
   it("creates a room when a name is submitted", async () => {
-    const testEnv = await initializeTestEnvironment({
-      projectId: "demo-skraggle",
-      database: {
-        rules: fs.readFileSync("database.rules.json", "utf8"),
-        host: "127.0.0.1",
-        port: 9000,
-      },
-    });
+    jest.spyOn(localStorage, "setItem");
+    localStorage.setItem = jest.fn();
+
+    // const testEnv = await initializeTestEnvironment({
+    //   projectId: "demo-skraggle",
+    //   database: {
+    //     rules: fs.readFileSync("database.rules.json", "utf8"),
+    //     host: "127.0.0.1",
+    //     port: 9000,
+    //   },
+    // });
 
     renderWithProviders(
       <MockUnityPlayer>
@@ -82,10 +85,12 @@ describe("Sign In to Create", () => {
 
     //does not render if write to firebase fails
     await waitFor(() => {
-      const codeElement = screen.getByText(/join code/i);
+      const codeElement = screen.getByText(/join coddddde/i);
       expect(codeElement).toBeInTheDocument();
     });
 
-    await testEnv!.clearDatabase();
+    // await waitFor(() => {
+    //   testEnv!.clearDatabase();
+    // });
   });
 });
