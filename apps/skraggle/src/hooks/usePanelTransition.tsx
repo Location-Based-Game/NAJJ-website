@@ -23,6 +23,8 @@ export default function usePanelTransition<T extends any[] = []>(
       }, 100);
     }
     
+    if (!scope.current) return;
+
     animate(
       scope.current,
       { opacity: 0, x: state.slideFrom === "left" ? "30%" : "-30%" },

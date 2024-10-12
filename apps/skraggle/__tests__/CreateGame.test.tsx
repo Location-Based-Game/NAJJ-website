@@ -9,12 +9,19 @@ import { Toaster } from "@/components/ui/toaster";
 import createRoom from "@/server-actions/createRoom";
 import { addPlayer } from "@/server-actions/addPlayer";
 import getStartingDice from "@/server-actions/getStartingDice";
+import { rtdb } from "@/app/firebaseConfig";
+import { ref, remove, child } from "firebase/database";
 
 const testCode = "aaaa";
 const testPlayer = "testPlayer";
 let testPlayerKey = "";
 
 describe("Create Game", () => {
+  afterAll(async () => {
+    const gameRef = ref(rtdb, "activeGames");
+    await remove(child(gameRef, testCode));
+  })
+
   it("goes back to main menu when code is unavailable and shows error", async () => {
     renderWithProviders(
       <MockUnityPlayer>
