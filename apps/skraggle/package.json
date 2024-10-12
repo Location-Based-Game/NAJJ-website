@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test-dev": "npm run kill-emulators && npm run test",
     "test": "firebase emulators:exec --only database,firestore,auth \"jest\"",
     "kill-emulators": "npx kill-port 8080 && npx kill-port 9000"
   },
@@ -35,7 +36,6 @@
     "react-unity-webgl": "^9.5.2",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "ts-auto-mock": "^3.7.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {

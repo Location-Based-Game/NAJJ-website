@@ -20,6 +20,10 @@ export async function createTurnNumbers(data: CreateTurnNumbersType) {
 
   const { gameId, playerIds } = validatedBody.data;
 
+  if (playerIds.length === 0) {
+    throw new Error("No Player Id Given!")
+  }
+
   const dbRef = ref(rtdb);
   const updates: any = {};
   for (let i = 0; i < playerIds.length; i++) {

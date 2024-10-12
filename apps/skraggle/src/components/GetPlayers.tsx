@@ -7,16 +7,20 @@ import { useDispatch } from "react-redux";
 
 export const PlayerDataContext = createContext<{
   setJoinCode: React.Dispatch<React.SetStateAction<string | null>>;
-  playerData: string[];
+  playerData: Players;
 } | null>(null);
 
 interface PlayerData {
   children: React.ReactNode;
 }
 
+type Players = {
+  [playerId: string]: string
+}
+
 export default function PlayerData({ children }: PlayerData) {
   const [joinCode, setJoinCode] = useState<string | null>("");
-  const [playerData, setPlayerData] = useState<string[]>([]);
+  const [playerData, setPlayerData] = useState<Players>({});
   const dispatch = useDispatch();
   const { toast } = useToast();
 

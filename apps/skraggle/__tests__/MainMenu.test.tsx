@@ -3,7 +3,7 @@ import { renderWithProviders } from "@/lib/testUtils";
 import { fireEvent, screen } from "@testing-library/react";
 import '@testing-library/jest-dom';
 
-describe('MainMenu', () => {
+describe('Main Menu', () => {
     it('renders "join game" button and navigates to join code', async () => {
         renderWithProviders(<MainMenuPanel />, {
             preloadedState: {

@@ -2,14 +2,13 @@ import { setGameActive } from "@/state/GameStateSlice";
 import { setJoinCode } from "@/state/JoinCodeSlice";
 import { RootState } from "@/state/store";
 import { useDispatch, useSelector } from "react-redux";
-import { get, ref } from "firebase/database";
-import { rtdb } from "@/app/firebaseConfig";
 import { useGetPlayers } from "@/components/GetPlayers";
 import { useUnityReactContext } from "@/app/UnityPlayer";
 import { useEffect } from "react";
 import { MainMenuState } from "@/hooks/usePanelUI";
 import setGameState from "@/actions/setGameState";
 import { createTurnNumbers } from "@/actions/createTurnNumbers";
+import getStartingDice from "@/actions/getStartingDice";
 
 export default function useStartGame(
   animationCallback: (state: MainMenuState, error?: string) => void,
@@ -20,7 +19,7 @@ export default function useStartGame(
   const { playerData } = useGetPlayers();
   const { sendMessage } = useUnityReactContext();
 
-  const handleError = (error:string) => {
+  const handleError = (error: string) => {
     animationCallback(
       {
         state: "Home",
@@ -41,36 +40,25 @@ export default function useStartGame(
       dispatch(setJoinCode(currentCreateCode.code));
       dispatch(setGameActive(true));
 
-      await setGameState({gameId: currentCreateCode.code, gameState: "TurnsDiceRoll"});
+      await setGameState({
+        gameId: currentCreateCode.code,
+        gameState: "TurnsDiceRoll",
+      });
 
       await createTurnNumbers({
         gameId: currentCreateCode.code,
         playerIds: Object.keys(playerData),
       });
 
-      const diceDataRef = ref(
-        rtdb,
-        `activeGames/${currentCreateCode.code}/initialDiceData`,
-      );
+      const diceData = await getStartingDice({
+        gameId: currentCreateCode.code,
+        playerKey: key,
+      });
 
-      const diceDataSnapshot = await get(diceDataRef);
-      if (diceDataSnapshot.exists()) {
-        let playerKey: string = "";
-        if (
-          process.env.NODE_ENV === "development" &&
-          process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
-        ) {
-          playerKey = "testPlayer";
-        } else {
-          playerKey = key;
-        }
+      const { dice1, dice2 } = diceData;
 
-        const { dice1, dice2 } = diceDataSnapshot.val()[playerKey];
-        sendMessage("Receiver", "CreateStartingDice", dice1);
-        sendMessage("Receiver", "CreateStartingDice", dice2);
-      } else {
-        console.error("No data available");
-      }
+      sendMessage("Receiver", "CreateStartingDice", dice1);
+      sendMessage("Receiver", "CreateStartingDice", dice2);
     } catch (error) {
       handleError(`${error}`);
     }

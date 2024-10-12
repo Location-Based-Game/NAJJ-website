@@ -12,7 +12,7 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 export const firebaseConfig = {
   apiKey: "AIzaSyASH4ThiERxyYYW8A_TQfLFr_aa5YjAuiY",
   authDomain: "skraggle-2e19f.firebaseapp.com",
-  projectId: "demo-skraggle",
+  projectId: "skraggle-2e19f",
   storageBucket: "skraggle-2e19f.appspot.com",
   messagingSenderId: "280228149737",
   appId: "1:280228149737:web:5a40d025cac04a31ee7378",
