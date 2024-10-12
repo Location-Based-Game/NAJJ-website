@@ -1,5 +1,5 @@
 import { rtdb } from "@/app/firebaseConfig";
-import { InitialDiceData } from "@/actions/createRoom";
+import { InitialDiceData } from "@/server-actions/createRoom";
 import { gameIdSchema } from "@/schemas/gameIdSchema";
 import { ref, update } from "firebase/database";
 import { z } from "zod";

@@ -1,5 +1,5 @@
 "use client";
-import { RootState } from "@/state/store";
+import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import MainMenuPanel from "../_main-menu/MainMenuPanel";
 import YourTurnUI from "./_your-turn/YourTurnUI";

@@ -1,5 +1,5 @@
 "use client";
-import { RootState } from "@/state/store";
+import { RootState } from "@/store/store";
 import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { QRCode as CreateQRCode } from "react-qrcode-logo";

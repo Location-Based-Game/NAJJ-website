@@ -6,9 +6,9 @@ import MockUnityPlayer from "../mock/MockUnityPlayer";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { Toaster } from "@/components/ui/toaster";
-import createRoom from "@/actions/createRoom";
-import { addPlayer } from "@/actions/addPlayer";
-import getStartingDice from "@/actions/getStartingDice";
+import createRoom from "@/server-actions/createRoom";
+import { addPlayer } from "@/server-actions/addPlayer";
+import getStartingDice from "@/server-actions/getStartingDice";
 
 const testCode = "aaaa";
 const testPlayer = "testPlayer";

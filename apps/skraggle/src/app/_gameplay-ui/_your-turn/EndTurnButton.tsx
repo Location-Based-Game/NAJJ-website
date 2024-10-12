@@ -3,7 +3,7 @@ import { useUnityReactContext } from "../../UnityPlayer";
 import { ref } from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
 import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+import { RootState } from "@/store/store";
 export default function EndTurnButton() {
   const { sendMessage } = useUnityReactContext();
 const currentJoinCode = useSelector((state:RootState) => state.joinCode)

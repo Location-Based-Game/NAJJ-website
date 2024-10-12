@@ -1,6 +1,6 @@
 import { rtdb } from "@/app/firebaseConfig";
 import { useToast } from "@/hooks/use-toast";
-import { mainMenuState } from "@/state/store";
+import { mainMenuState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";

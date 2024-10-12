@@ -1,4 +1,4 @@
-import { RootState } from "@/state/store";
+import { RootState } from "@/store/store";
 import { motion, MotionProps } from "framer-motion";
 import { forwardRef, HTMLAttributes } from "react";
 import { useSelector } from "react-redux";

@@ -4,7 +4,7 @@ import { useState } from "react";
 import QRCode from "./QRCode";
 import { Button } from "@/components/ui/button";
 import PlayerList from "../PlayerList";
-import { RootState } from "@/state/store";
+import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import useStartGame from "./useStartGame";
 

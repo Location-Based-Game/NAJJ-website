@@ -1,6 +1,6 @@
 import { rtdb } from "@/app/firebaseConfig";
-import { setGameState } from "@/state/GameStateSlice";
-import { mainMenuState, RootState } from "@/state/store";
+import { setGameState } from "@/store/GameStateSlice";
+import { mainMenuState, RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

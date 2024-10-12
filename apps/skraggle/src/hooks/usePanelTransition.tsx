@@ -1,4 +1,4 @@
-import { mainMenuState } from "@/state/store";
+import { mainMenuState } from "@/store/store";
 import { useAnimate } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { MainMenuState } from "./usePanelUI";

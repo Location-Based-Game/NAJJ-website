@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react'
 import { render } from '@testing-library/react'
 import type { RenderOptions } from '@testing-library/react'
 import { Provider } from 'react-redux'
-import { RootState, AppStore, setupStore } from '@/state/store'
+import { RootState, AppStore, setupStore } from '@/store/store'
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.

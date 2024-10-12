@@ -4,9 +4,9 @@ import usePanelTransition from "@/hooks/usePanelTransition";
 import LeaveGameDialogue from "./LeaveGameDialogue";
 import { useState } from "react";
 import PlayerList from "../../PlayerList";
-import { RootState } from "@/state/store";
+import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import removePlayer from "@/actions/removePlayer";
+import removePlayer from "@/server-actions/removePlayer";
 
 export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);

@@ -2,11 +2,11 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { FormSchema } from "../GuestNameInput";
 import { useDispatch, useSelector } from "react-redux";
-import { setGuestKey } from "@/state/GuestNameSlice";
-import { RootState } from "@/state/store";
+import { setGuestKey } from "@/store/GuestNameSlice";
+import { RootState } from "@/store/store";
 import { MainMenuState } from "@/hooks/usePanelUI";
-import { addPlayer } from "@/actions/addPlayer";
-import getRoom from "@/actions/getRoom";
+import { addPlayer } from "@/server-actions/addPlayer";
+import getRoom from "@/server-actions/getRoom";
 
 export type SubmitGuestNameType = typeof submitGuestName;
 

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../../state/store";
+import { RootState } from "../../store/store";
 import usePanelUI from "@/hooks/usePanelUI";
 
 export default function MainMenuPanel() {

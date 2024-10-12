@@ -1,6 +1,6 @@
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import usePanelTransition from "@/hooks/usePanelTransition";
-import { RootState } from "@/state/store";
+import { RootState } from "@/store/store";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";

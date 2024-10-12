@@ -2,12 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { SubmitGuestNameType } from "../_join-game/submitGuestName";
 import { FormSchema } from "../GuestNameInput";
 import { z } from "zod";
-import { setGuestKey, setGuestName } from "@/state/GuestNameSlice";
-import { setCreateCode } from "@/state/CreateCodeSlice";
-import { RootState } from "@/state/store";
+import { setGuestKey, setGuestName } from "@/store/GuestNameSlice";
+import { setCreateCode } from "@/store/CreateCodeSlice";
+import { RootState } from "@/store/store";
 import { MainMenuState } from "@/hooks/usePanelUI";
-import createRoom from "@/actions/createRoom";
-import { addPlayer, addTestPlayer } from "@/actions/addPlayer";
+import createRoom from "@/server-actions/createRoom";
+import { addPlayer, addTestPlayer } from "@/server-actions/addPlayer";
 
 function makeid(length: number): string {
   if (

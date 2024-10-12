@@ -3,9 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { setGuestName } from "@/state/GuestNameSlice";
+import { setGuestName } from "@/store/GuestNameSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+import { RootState } from "@/store/store";
 
 export const FormSchema = z.object({
   guestName: z.string().min(1),
