@@ -7,12 +7,33 @@ import PlayerList from "../PlayerList";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import useStartGame from "./useStartGame";
+import LeaveGameDialogue from "../LeaveGameDialogue";
+import removePlayerHost from "@/server-actions/removePlayerHost";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
   const currentCreateCode = useSelector((state: RootState) => state.createCode);
+  const { key } = useSelector((state: RootState) => state.guestName);
   const { handleStartGame } = useStartGame(animationCallback);
+
+  const handleLeaveGame = async () => {
+    try {
+      await removePlayerHost({ gameId: currentCreateCode.code, playerKey: key });
+      animationCallback({
+        state: "Sign In to Create",
+        slideFrom: "left",
+      });
+    } catch (error) {
+      animationCallback(
+        {
+          state: "Sign In to Create",
+          slideFrom: "left",
+        },
+        `${error}`,
+      );
+    }
+  };
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -24,20 +45,11 @@ export default function CreateGame() {
         </div>
       </div>
       <div className="flex w-full gap-4">
-        <Button
-          disabled={!enableButtons}
-          className="h-12 w-full"
-          variant={"outline"}
-          onClick={() => {
-            setEnableButtons(false);
-            animationCallback({
-              state: "Sign In to Create",
-              slideFrom: "left",
-            });
+        <LeaveGameDialogue
+          onLeave={() => {
+            handleLeaveGame();
           }}
-        >
-          Back
-        </Button>
+        />
         <Button
           disabled={!enableButtons}
           className="h-12 w-full"

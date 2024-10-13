@@ -1,9 +1,9 @@
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
 import usePanelTransition from "@/hooks/usePanelTransition";
-import LeaveGameDialogue from "./LeaveGameDialogue";
+import LeaveGameDialogue from "../LeaveGameDialogue";
 import { useState } from "react";
-import PlayerList from "../../PlayerList";
+import PlayerList from "../PlayerList";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import removePlayer from "@/server-actions/removePlayer";

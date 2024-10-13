@@ -2,9 +2,9 @@
 
 import { rtdb } from "@/app/firebaseConfig";
 import { playerKeySchema, PlayerKeyType } from "@/schemas/removePlayerSchema";
-import { child, ref, remove, get } from "firebase/database";
+import { ref, update } from "firebase/database";
 
-export default async function removePlayer(data: PlayerKeyType) {
+export default async function setHost(data: PlayerKeyType) {
   const validatedData = playerKeySchema.safeParse(data);
 
   if (!validatedData.success) {
@@ -14,6 +14,8 @@ export default async function removePlayer(data: PlayerKeyType) {
 
   const { gameId, playerKey } = validatedData.data;
 
-  const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
-  await remove(child(playersRef, playerKey));
+  const gameRef = ref(rtdb, `activeGames/${gameId}`);
+  await update(gameRef, {
+    host: playerKey,
+  });
 }

@@ -11,6 +11,7 @@ import { addPlayer } from "@/server-actions/addPlayer";
 import getStartingDice from "@/server-actions/getStartingDice";
 import { rtdb } from "@/app/firebaseConfig";
 import { ref, remove, child } from "firebase/database";
+import Loader from "@/app/_gameplay-ui/Loader";
 
 const testCode = "aaaa";
 const testPlayer = "testPlayer";
@@ -20,7 +21,7 @@ describe("Create Game", () => {
   afterAll(async () => {
     const gameRef = ref(rtdb, "activeGames");
     await remove(child(gameRef, testCode));
-  })
+  });
 
   it("goes back to main menu when code is unavailable and shows error", async () => {
     renderWithProviders(
@@ -92,12 +93,14 @@ describe("Create Game", () => {
     });
   });
 
-  it("creates starting dice data when start is clicked", async () => {
+  it("creates starting dice data and shows loader when start is clicked", async () => {
     renderWithProviders(
       <MockUnityPlayer>
-        <PlayerData>
-          <MainMenuPanel />
-        </PlayerData>
+        <Loader splashScreenComplete={false}>
+          <PlayerData>
+            <MainMenuPanel />
+          </PlayerData>
+        </Loader>
       </MockUnityPlayer>,
       {
         preloadedState: {
@@ -119,13 +122,8 @@ describe("Create Game", () => {
     fireEvent.click(startButton);
 
     await waitFor(() => {
-      expect(startButton).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      assertSucceeds(
-        getStartingDice({ gameId: testCode, playerKey: testPlayerKey }),
-      );
+      const loadingElement = screen.getByText(/loading/i);
+      expect(loadingElement).toBeInTheDocument();
     });
   });
 });

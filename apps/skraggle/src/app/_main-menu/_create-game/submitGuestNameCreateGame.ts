@@ -8,6 +8,7 @@ import { RootState } from "@/store/store";
 import { MainMenuState } from "@/hooks/usePanelUI";
 import createRoom from "@/server-actions/createRoom";
 import { addPlayer, addTestPlayer } from "@/server-actions/addPlayer";
+import setHost from "@/server-actions/setHost";
 
 function makeid(length: number): string {
   if (
@@ -39,35 +40,30 @@ const submitGuestNameCreateGame: SubmitGuestNameType = (
     setEnableButtons(false);
     dispatch(setGuestName(values.guestName));
 
-    let id: string = "";
+    let playerKey: string = "";
     try {
       //Create Test Room
       if (
         process.env.NODE_ENV === "development" &&
         process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
       ) {
-        await createRoom({gameId: currentCreateCode.code as string});
-        id = await addTestPlayer(currentCreateCode.code, values.guestName);
+        await createRoom({ gameId: currentCreateCode.code as string });
+        playerKey = await addTestPlayer(currentCreateCode.code, values.guestName);
         animationCallback({ state: "Create Game", slideFrom: "right" });
         return;
       }
 
-      if (!currentCreateCode.code) {
-        const code = makeid(4);
-        dispatch(setCreateCode(code));
-        await createRoom({ gameId: code });
-        id = await addPlayer({
-          gameId: code,
-          playerName: values.guestName,
-        });
-      } else {
-        id = await addPlayer({
-          gameId: currentCreateCode.code,
-          playerName: values.guestName,
-        });
-      }
+      const code = makeid(4);
+      dispatch(setCreateCode(code));
+      await createRoom({ gameId: code });
+      playerKey = await addPlayer({
+        gameId: code,
+        playerName: values.guestName,
+      });
 
-      dispatch(setGuestKey(id));
+      await setHost({gameId: code, playerKey})
+
+      dispatch(setGuestKey(playerKey));
       animationCallback({ state: "Create Game", slideFrom: "right" });
     } catch (error) {
       animationCallback({ state: "Home", slideFrom: "left" }, `${error}`);

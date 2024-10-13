@@ -24,9 +24,10 @@ export default function Loader({ children, splashScreenComplete }: Loader) {
   return (
     <div className="pointer-events-none absolute z-10 flex h-dvh w-screen items-center justify-center">
       {isGameActive && state === "Menu" ? (
-        <div className="flex h-2 w-[10rem] bg-gray-900">
+        <div className="relative flex h-2 w-[10rem] bg-background drop-shadow-lg">
+          <div className="absolute top-4 w-full text-center">Loading</div>
           <div
-            className="h-full bg-gray-500"
+            className="h-full bg-primary"
             style={{
               width: `${Math.round(loadingProgression * 100)}%`,
             }}
