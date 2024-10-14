@@ -18,35 +18,35 @@ export async function logIn(data: LogInType) {
     throw new Error("Invalid Data!");
   }
 
-  let { gameId } = validatedData.data
+  let { gameId } = validatedData.data;
 
   if (!gameId) {
-    gameId = makeid(4)
+    gameId = makeid(4);
   }
 
-  const expires = new Date(Date.now() + 100 * 1000)
-  const session = await encryptJWT({gameId, playerId: "", expires})
+  const expires = new Date(Date.now() + 100 * 1000);
+  const session = await encryptJWT({ gameId, playerId: "", expires });
 
-  cookies().set('session', session, {expires, httpOnly: true})
+  cookies().set("session", session, { expires, httpOnly: true });
 
-  return gameId
+  return gameId;
 }
 
 function makeid(length: number): string {
-    if (
-      process.env.NODE_ENV === "development" &&
-      process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
-    ) {
-      return process.env.NEXT_PUBLIC_PLACEHOLDER_CODE;
-    }
-  
-    let result = "";
-    const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
+  ) {
+    return process.env.NEXT_PUBLIC_PLACEHOLDER_CODE;
   }
+
+  let result = "";
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}

@@ -8,7 +8,7 @@ import { gameStateSlice } from "./GameStateSlice";
 import { turnSlice } from "./TurnSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
-  state: "Create Game",
+  state: "Sign In to Create",
   slideFrom: "right",
 });
 
