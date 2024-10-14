@@ -24,6 +24,16 @@ export async function addPlayer(data:AddPlayerType): Promise<string> {
   const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
   let playerKey = "";
 
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
+  ) {
+    const testPlayerRef = ref(rtdb, `activeGames/${gameId}/players/testPlayer`);
+    await set(testPlayerRef, playerName);
+    return "testPlayer";
+  }
+
+
   await runTransaction(playersRef, (currentPlayers) => {
     if (currentPlayers === null) {
       currentPlayers = {};
@@ -46,17 +56,4 @@ export async function addPlayer(data:AddPlayerType): Promise<string> {
   });
 
   return playerKey;
-}
-
-export async function addTestPlayer(
-  code: string | null,
-  name: string,
-): Promise<string> {
-  if (!code) {
-    throw new Error("invalid code!");
-  }
-
-  const playersRef = ref(rtdb, `activeGames/${code}/players/testPlayer`);
-  await set(playersRef, name);
-  return "testPlayer";
 }

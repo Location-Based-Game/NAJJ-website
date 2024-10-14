@@ -14,6 +14,7 @@ export const createCodeSlice = createSlice({
   initialState,
   reducers: {
     setCreateCode: (state: CreateCode, action: PayloadAction<string>) => {
+      console.log(action.payload)
       state.code = action.payload;
     },
   },

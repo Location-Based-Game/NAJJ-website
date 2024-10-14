@@ -30,10 +30,11 @@ export default function useStartGame(
   };
 
   useEffect(() => {
+    console.log(currentCreateCode)
     if (!currentCreateCode.code) {
-      handleError("Join code does not exist");
+      // handleError("Join code does not exist");
     }
-  }, []);
+  }, [currentCreateCode.code]);
 
   const handleStartGame = async () => {
     try {

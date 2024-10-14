@@ -36,7 +36,7 @@ const submitGuestName = (
 
     try {
       const playerKey = await addPlayer({
-        gameId: currentJoinCode.code as string,
+        gameId: currentJoinCode.code,
         playerName: values.guestName,
       });
       dispatch(setGuestKey(playerKey));

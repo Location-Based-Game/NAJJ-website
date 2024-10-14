@@ -1,4 +1,4 @@
-'use server'
+"use server";
 
 import { rtdb } from "@/app/firebaseConfig";
 import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";

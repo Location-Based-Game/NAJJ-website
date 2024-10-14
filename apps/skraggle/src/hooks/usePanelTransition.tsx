@@ -1,14 +1,14 @@
 import { mainMenuState } from "@/store/store";
 import { useAnimate } from "framer-motion";
-import { useDispatch } from "react-redux";
 import { MainMenuState } from "./usePanelUI";
 import { useToast } from "./use-toast";
+import { useAppDispatch } from "./redux-hooks";
 
 export default function usePanelTransition<T extends any[] = []>(
   callback?: (...args: T) => void,
 ) {
   const [scope, animate] = useAnimate();
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {toast} = useToast()
 
   const animationCallback = (state:MainMenuState, error?:string, ...args: T) => {
