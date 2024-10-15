@@ -9,7 +9,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const createRoomSchema = z.object({
-  gameId: z.string().length(4),
   playerName: z.string().min(1),
 });
 
@@ -17,8 +16,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
   const params = {
-    gameId: searchParams.get("gameId"),
-    playerName: searchParams.get("playerName")
+    playerName: searchParams.get("playerName"),
   };
 
   const validatedData = createRoomSchema.safeParse(params);
@@ -28,7 +26,7 @@ export async function GET(request: NextRequest) {
     throw new Error("Invalid Data!");
   }
 
-  const { gameId, playerName } = validatedData.data;
+  const { playerName } = validatedData.data;
 
   //add playerId and playerName to session
   let session = cookies().get("session")?.value;
@@ -37,9 +35,7 @@ export async function GET(request: NextRequest) {
   }
 
   const parsed = (await decryptJWT(session)) as SessionData;
-  if (parsed.gameId !== gameId) {
-    throw new Error("Invalid Game ID!");
-  }
+  const { gameId } = parsed;
 
   await createRoom({ gameId });
 

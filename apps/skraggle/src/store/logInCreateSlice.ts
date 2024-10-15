@@ -4,7 +4,7 @@ export type SessionData = {
   gameId: string;
   playerId: string;
   playerName: string;
-}
+};
 
 type LogInCreate = SessionData & {
   loading: boolean;
@@ -51,9 +51,8 @@ export const logInCreate = createAsyncThunk(
     const gameId = await logIn.json();
 
     const params = new URLSearchParams({
-      gameId,
-      playerName
-    }).toString()
+      playerName,
+    }).toString();
 
     const createRoom = await fetch(`/api/create-room?${params}`);
     const playerId = await createRoom.json();
