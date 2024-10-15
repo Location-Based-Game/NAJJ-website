@@ -1,35 +1,38 @@
-"use server";
-
 import { encryptJWT } from "@/lib/encryptJWT";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const logInSchema = z.object({
-  gameId: z.string().length(4).optional(),
+  gameId: z.string().length(4).nullable()
 });
 
-type LogInType = z.infer<typeof logInSchema>;
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
 
-export async function logIn(data: LogInType) {
-  const validatedData = logInSchema.safeParse(data);
+  const params = {
+    gameId: searchParams.get("gameId")
+  }
+
+  const validatedData = logInSchema.safeParse(params);
 
   if (!validatedData.success) {
     console.error(validatedData.error);
     throw new Error("Invalid Data!");
   }
 
-  let { gameId } = validatedData.data;
+  let {gameId} = validatedData.data;
 
   if (!gameId) {
     gameId = makeid(4);
   }
 
   const expires = new Date(Date.now() + 100 * 1000);
-  const session = await encryptJWT({ gameId, playerId: "", expires });
+  const session = await encryptJWT({ gameId, playerId: "", playerName: "", expires });
 
   cookies().set("session", session, { expires, httpOnly: true });
 
-  return gameId;
+  return new NextResponse(JSON.stringify(gameId));
 }
 
 function makeid(length: number): string {

@@ -1,7 +1,7 @@
 "use server";
 
 import { rtdb } from "@/app/firebaseConfig";
-import { playerKeySchema, PlayerKeyType } from "@/schemas/removePlayerSchema";
+import { playerKeySchema, PlayerKeyType } from "@/schemas/playerIdSchema";
 import { child, ref, remove, get } from "firebase/database";
 
 export default async function removePlayer(data: PlayerKeyType) {

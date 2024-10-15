@@ -1,5 +1,5 @@
-import { setGameActive } from "@/store/GameStateSlice";
-import { setJoinCode } from "@/store/JoinCodeSlice";
+import { setGameActive } from "@/store/gameStateSlice";
+import { setJoinCode } from "@/store/joinCodeSlice";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetPlayers } from "@/components/GetPlayers";
@@ -14,7 +14,7 @@ export default function useStartGame(
   animationCallback: (state: MainMenuState, error?: string) => void,
 ) {
   const dispatch = useDispatch();
-  const currentCreateCode = useSelector((state: RootState) => state.createCode);
+  const { gameId } = useSelector((state: RootState) => state.logInCreate);
   const { key } = useSelector((state: RootState) => state.guestName);
   const { playerData } = useGetPlayers();
   const { sendMessage } = useUnityReactContext();
@@ -30,29 +30,28 @@ export default function useStartGame(
   };
 
   useEffect(() => {
-    console.log(currentCreateCode)
-    if (!currentCreateCode.code) {
-      // handleError("Join code does not exist");
+    if (!gameId) {
+      handleError("Join code does not exist");
     }
-  }, [currentCreateCode.code]);
+  }, [gameId]);
 
   const handleStartGame = async () => {
     try {
-      dispatch(setJoinCode(currentCreateCode.code));
+      dispatch(setJoinCode(gameId));
       dispatch(setGameActive(true));
 
       await setGameState({
-        gameId: currentCreateCode.code,
+        gameId,
         gameState: "TurnsDiceRoll",
       });
 
       await createTurnNumbers({
-        gameId: currentCreateCode.code,
+        gameId,
         playerIds: Object.keys(playerData),
       });
 
       const diceData = await getStartingDice({
-        gameId: currentCreateCode.code,
+        gameId,
         playerKey: key,
       });
 

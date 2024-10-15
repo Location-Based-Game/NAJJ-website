@@ -1,6 +1,6 @@
 "use client"
-import { setGameState } from "@/store/GameStateSlice";
-import { setTurnNumber } from "@/store/TurnSlice";
+import { setGameState } from "@/store/gameStateSlice";
+import { setTurnNumber } from "@/store/turnSlice";
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";

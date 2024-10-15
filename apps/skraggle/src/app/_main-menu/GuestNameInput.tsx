@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { setGuestName } from "@/store/GuestNameSlice";
+import { setGuestName } from "@/store/guestNameSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 

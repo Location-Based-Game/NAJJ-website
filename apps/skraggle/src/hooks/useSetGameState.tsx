@@ -1,5 +1,5 @@
 import { rtdb } from "@/app/firebaseConfig";
-import { setGameState } from "@/store/GameStateSlice";
+import { setGameState } from "@/store/gameStateSlice";
 import { mainMenuState, RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";

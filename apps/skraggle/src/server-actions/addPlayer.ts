@@ -1,28 +1,37 @@
-'use server'
+"use server";
 
-import { push, ref, runTransaction, set } from "firebase/database";
+import {
+  DatabaseReference,
+  push,
+  ref,
+  runTransaction,
+  set,
+} from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
 import { z } from "zod";
 import { gameIdSchema } from "@/schemas/gameIdSchema";
+import { cookies } from "next/headers";
+import { encryptJWT } from "@/lib/encryptJWT";
+import { decryptJWT } from "@/lib/decryptJWT";
 
 const addPlayerSchema = gameIdSchema.extend({
-  playerName: z.string().min(1)
-})
+  playerName: z.string().min(1),
+});
 
-type AddPlayerType = z.infer<typeof addPlayerSchema>
+type AddPlayerType = z.infer<typeof addPlayerSchema>;
 
-export async function addPlayer(data:AddPlayerType): Promise<string> {
-  const validatedData = addPlayerSchema.safeParse(data)
-  
+export async function addPlayer(data: AddPlayerType): Promise<string> {
+  const validatedData = addPlayerSchema.safeParse(data);
+
   if (!validatedData.success) {
-    console.error(validatedData.error)
+    console.error(validatedData.error);
     throw new Error("Invalid Data!");
   }
 
-  const { gameId, playerName } = validatedData.data
+  const { gameId, playerName } = validatedData.data;
 
   const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
-  let playerKey = "";
+  let playerId = "";
 
   if (
     process.env.NODE_ENV === "development" &&
@@ -30,9 +39,32 @@ export async function addPlayer(data:AddPlayerType): Promise<string> {
   ) {
     const testPlayerRef = ref(rtdb, `activeGames/${gameId}/players/testPlayer`);
     await set(testPlayerRef, playerName);
-    return "testPlayer";
+    playerId = "testPlayer";
+  } else {
+    playerId = await addPlayerTransaction(playersRef, playerName);
   }
 
+  //add playerId and playerName to session
+  let session = cookies().get('session')?.value;
+  if (!session) {
+    throw new Error("Session not set!")
+  }
+
+  const parsed = await decryptJWT(session);
+  console.log(parsed)
+
+  const expires = new Date(Date.now() + 100 * 1000);
+  session = await encryptJWT({ gameId, playerId, playerName, expires });
+  cookies().set("session", session, { expires, httpOnly: true });
+
+  return playerId;
+}
+
+async function addPlayerTransaction(
+  playersRef: DatabaseReference,
+  playerName: string,
+) {
+  let playerId = "";
 
   await runTransaction(playersRef, (currentPlayers) => {
     if (currentPlayers === null) {
@@ -46,8 +78,8 @@ export async function addPlayer(data:AddPlayerType): Promise<string> {
 
     const newPlayerRef = push(playersRef);
     if (newPlayerRef.key) {
-      playerKey = newPlayerRef.key;
-      currentPlayers[playerKey] = playerName;
+      playerId = newPlayerRef.key;
+      currentPlayers[playerId] = playerName;
     } else {
       throw new Error("Player key not created");
     }
@@ -55,5 +87,5 @@ export async function addPlayer(data:AddPlayerType): Promise<string> {
     return currentPlayers;
   });
 
-  return playerKey;
+  return playerId;
 }

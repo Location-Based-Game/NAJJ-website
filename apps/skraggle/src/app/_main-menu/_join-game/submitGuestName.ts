@@ -2,7 +2,7 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { FormSchema } from "../GuestNameInput";
 import { useDispatch, useSelector } from "react-redux";
-import { setGuestKey } from "@/store/GuestNameSlice";
+import { setGuestKey } from "@/store/guestNameSlice";
 import { RootState } from "@/store/store";
 import { MainMenuState } from "@/hooks/usePanelUI";
 import { addPlayer } from "@/server-actions/addPlayer";

@@ -1,11 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { UIStateSlice } from "./UIStateSlice";
-import { guestNameSlice } from "./GuestNameSlice";
-import { createCodeSlice } from "./CreateCodeSlice";
-import { joinCodeSlice } from "./JoinCodeSlice";
+import { guestNameSlice } from "./guestNameSlice";
+import { joinCodeSlice } from "./joinCodeSlice";
 import { MainMenuState } from "@/hooks/usePanelUI";
-import { gameStateSlice } from "./GameStateSlice";
-import { turnSlice } from "./TurnSlice";
+import { gameStateSlice } from "./gameStateSlice";
+import { turnSlice } from "./turnSlice";
+import { logInCreateSlice } from "./logInCreateSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
   state: "Sign In to Create",
@@ -15,10 +15,10 @@ export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
 const rootReducer = combineReducers({
   mainMenu: mainMenuState.reducer,
   guestName: guestNameSlice.reducer,
-  createCode: createCodeSlice.reducer,
   joinCode: joinCodeSlice.reducer,
   gameState: gameStateSlice.reducer,
   currentTurn: turnSlice.reducer,
+  logInCreate: logInCreateSlice.reducer
 });
 
 export const setupStore = (preloadedState?: Partial<RootState>) => {
