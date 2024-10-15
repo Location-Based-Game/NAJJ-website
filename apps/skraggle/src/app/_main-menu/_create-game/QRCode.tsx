@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { QRCode as CreateQRCode } from "react-qrcode-logo";
 
 const QRCode = memo(() => {
-  const { gameId } = useSelector((state: RootState) => state.logInCreate);
+  const { gameId } = useSelector((state: RootState) => state.logIn);
   const [url, setURL] = useState<string>("");
 
   useEffect(() => {

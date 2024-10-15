@@ -9,14 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import useStartGame from "./useStartGame";
 import LeaveGameDialogue from "../LeaveGameDialogue";
 import removePlayerHost from "@/server-actions/removePlayerHost";
-import { resetLogInCreate } from "@/store/logInCreateSlice";
+import { resetLogInCreate } from "@/store/logInSlice";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
-  const { gameId, playerId } = useSelector(
-    (state: RootState) => state.logInCreate,
-  );
+  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { handleStartGame } = useStartGame(animationCallback);
   const dispatch = useDispatch();
 

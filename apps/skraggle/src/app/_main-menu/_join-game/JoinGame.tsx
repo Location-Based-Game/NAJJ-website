@@ -11,8 +11,7 @@ import removePlayer from "@/server-actions/removePlayer";
 export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
-  const guestName = useSelector((state: RootState) => state.guestName);
-  const currentJoinCode = useSelector((state: RootState) => state.joinCode);
+  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
 
   const handleOnLeave = async () => {
     animationCallback({
@@ -21,8 +20,8 @@ export default function JoinGame() {
     });
     try {
       await removePlayer({
-        gameId: currentJoinCode.code,
-        playerKey: guestName.key,
+        gameId,
+        playerId,
       });
     } catch (error) {
       console.error(error);
@@ -38,7 +37,7 @@ export default function JoinGame() {
       />
       <div className="w-full grow">
         <h2 className="my-6 w-full text-center">Players</h2>
-        <PlayerList joinCode={currentJoinCode.code} />
+        <PlayerList joinCode={gameId} />
       </div>
       <Button disabled={!enableButtons} className="h-12 w-full">
         Ready!

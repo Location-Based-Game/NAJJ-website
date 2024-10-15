@@ -6,19 +6,19 @@ export type SessionData = {
   playerName: string;
 };
 
-type LogInCreate = SessionData & {
+type LogInType = SessionData & {
   loading: boolean;
   error?: string;
 };
 
-const initialState: LogInCreate = {
+const initialState: LogInType = {
   loading: false,
   gameId: "",
   playerId: "",
   playerName: "",
 };
 
-export const logInCreateSlice = createSlice({
+export const logInSlice = createSlice({
   name: "create room",
   initialState,
   reducers: {
@@ -33,7 +33,7 @@ export const logInCreateSlice = createSlice({
       })
       .addCase(
         logInCreate.fulfilled,
-        (state, action: PayloadAction<LogInCreate>) => {
+        (state, action: PayloadAction<LogInType>) => {
           return action.payload;
         },
       )
@@ -57,7 +57,7 @@ export const logInCreate = createAsyncThunk(
     const createRoom = await fetch(`/api/create-room?${params}`);
     const playerId = await createRoom.json();
 
-    const sessionData: LogInCreate = {
+    const sessionData: LogInType = {
       loading: false,
       gameId,
       playerId,
@@ -68,4 +68,4 @@ export const logInCreate = createAsyncThunk(
   },
 );
 
-export const { resetLogInCreate } = logInCreateSlice.actions;
+export const { resetLogInCreate } = logInSlice.actions;

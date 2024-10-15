@@ -1,45 +1,44 @@
-import InnerPanelWrapper from "@/components/InnerPanelWrapper";
-import usePanelTransition from "@/hooks/usePanelTransition";
-import { RootState } from "@/store/store";
+import type { AnimationCallback } from "@/hooks/usePanelTransition";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
-import { SubmitGuestNameType } from "./_join-game/submitGuestName";
-import GuestNameInput from "./GuestNameInput";
+import GuestNameInput, { GuestNameType } from "./GuestNameInput";
 import { Loader2 } from "lucide-react";
 import { MainMenuState } from "@/hooks/usePanelUI";
 
 interface SignIn {
   back: MainMenuState;
-  submitHandler: SubmitGuestNameType;
+  submitHandler: (values: GuestNameType) => Promise<void>;
+  animationCallback: AnimationCallback;
+  enableButtons: boolean;
 }
 
-export default function SignIn({back, submitHandler}:SignIn) {
-  const guestName = useSelector((state: RootState) => state.guestName);
-  const [enableButtons, setEnableButtons] = useState(true);
-  const { scope, animationCallback } = usePanelTransition();
-
-  const { handleSubmit } = submitHandler(
-    setEnableButtons,
-    animationCallback,
-  );
+export default function SignIn({
+  back,
+  submitHandler,
+  animationCallback,
+  enableButtons
+}: SignIn) {
+  const [nameInput, setNameInput] = useState<string>("");
 
   return (
-    <InnerPanelWrapper ref={scope}>
+    <>
       <Button
         disabled={!enableButtons}
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
           animationCallback(back);
-          setEnableButtons(false);
         }}
       >
         Back
       </Button>
-      <GuestNameInput handleSubmit={handleSubmit}>
+      <GuestNameInput
+        handleSubmit={submitHandler}
+        setNameInput={setNameInput}
+        nameInput={nameInput}
+      >
         <Button
-          disabled={!enableButtons || guestName.name.length < 1}
+          disabled={!enableButtons || nameInput.length < 1}
           className="h-12 w-full"
           type="submit"
         >
@@ -47,6 +46,6 @@ export default function SignIn({back, submitHandler}:SignIn) {
           Continue
         </Button>
       </GuestNameInput>
-    </InnerPanelWrapper>
+    </>
   );
 }

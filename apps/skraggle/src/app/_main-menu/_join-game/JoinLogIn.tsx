@@ -1,29 +1,27 @@
 import { useToast } from "@/hooks/use-toast";
-import { z } from "zod";
-import { FormSchema } from "../GuestNameInput";
-import { useDispatch, useSelector } from "react-redux";
-import { setGuestKey } from "@/store/guestNameSlice";
-import { RootState } from "@/store/store";
-import { MainMenuState } from "@/hooks/usePanelUI";
+import usePanelTransition from "@/hooks/usePanelTransition";
 import { addPlayer } from "@/server-actions/addPlayer";
 import getRoom from "@/server-actions/getRoom";
+import { RootState } from "@/store/store";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { GuestNameType } from "../GuestNameInput";
+import SignIn from "../SignIn";
+import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 
-export type SubmitGuestNameType = typeof submitGuestName;
+export default function JoinLogIn() {
+  const [enableButtons, setEnableButtons] = useState(true);
+  const { scope, animationCallback } = usePanelTransition();
 
-const submitGuestName = (
-  setEnableButtons: React.Dispatch<React.SetStateAction<boolean>>,
-  animationCallback: (state: MainMenuState) => void,
-) => {
   const { toast } = useToast();
-  const dispatch = useDispatch();
   const currentJoinCode = useSelector((state: RootState) => state.joinCode);
 
-  const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
+  const handleSubmit = async (values: GuestNameType) => {
     setEnableButtons(false);
 
     //first check if room exists
     try {
-      await getRoom({gameId: currentJoinCode.code});
+      await getRoom({ gameId: currentJoinCode.code });
     } catch (error) {
       toast({
         title: "Error",
@@ -39,7 +37,7 @@ const submitGuestName = (
         gameId: currentJoinCode.code,
         playerName: values.guestName,
       });
-      dispatch(setGuestKey(playerKey));
+      // dispatch(setGuestKey(playerKey));
       animationCallback({ state: "Join Game", slideFrom: "right" });
       return;
     } catch (error) {
@@ -54,7 +52,17 @@ const submitGuestName = (
     setEnableButtons(true);
   };
 
-  return { handleSubmit };
-};
-
-export default submitGuestName;
+  return (
+    <InnerPanelWrapper ref={scope}>
+      <SignIn
+        back={{
+          state: "Enter Join Code",
+          slideFrom: "left",
+        }}
+        submitHandler={handleSubmit}
+        animationCallback={animationCallback}
+        enableButtons={enableButtons}
+      />
+    </InnerPanelWrapper>
+  );
+}

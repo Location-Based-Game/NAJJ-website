@@ -3,31 +3,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { setGuestName } from "@/store/guestNameSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 
-export const FormSchema = z.object({
+const FormSchema = z.object({
   guestName: z.string().min(1),
 });
 
+export type GuestNameType = z.infer<typeof FormSchema>
+
 interface GuestNameInput {
   children: React.ReactNode;
-  handleSubmit: (values: z.TypeOf<typeof FormSchema>) => Promise<void>;
+  handleSubmit: (values: GuestNameType) => Promise<void>;
+  setNameInput: React.Dispatch<React.SetStateAction<string>>
+  nameInput: string;
 }
 
 export default function GuestNameInput({
   children,
   handleSubmit,
+  setNameInput,
+  nameInput
 }: GuestNameInput) {
-  const guestName = useSelector((state: RootState) => state.guestName);
-  const dispatch = useDispatch();
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      guestName: guestName.name,
-    },
+  const form = useForm<GuestNameType>({
+    resolver: zodResolver(FormSchema)
   });
 
   return (
@@ -36,7 +33,7 @@ export default function GuestNameInput({
         onSubmit={form.handleSubmit(handleSubmit)}
         className="mt-4 flex w-full grow flex-col gap-4"
         onChange={() => {
-          dispatch(setGuestName(form.getValues().guestName));
+          setNameInput(form.getValues().guestName);
         }}
       >
         <FormField
@@ -52,7 +49,7 @@ export default function GuestNameInput({
                 placeholder="name"
                 maxLength={20}
                 {...field}
-                value={guestName.name}
+                value={nameInput}
                 className="text-center"
               />
             </FormItem>

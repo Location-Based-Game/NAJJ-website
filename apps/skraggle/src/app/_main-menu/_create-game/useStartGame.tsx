@@ -14,8 +14,7 @@ export default function useStartGame(
   animationCallback: (state: MainMenuState, error?: string) => void,
 ) {
   const dispatch = useDispatch();
-  const { gameId } = useSelector((state: RootState) => state.logInCreate);
-  const { key } = useSelector((state: RootState) => state.guestName);
+  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { playerData } = useGetPlayers();
   const { sendMessage } = useUnityReactContext();
 
@@ -52,7 +51,7 @@ export default function useStartGame(
 
       const diceData = await getStartingDice({
         gameId,
-        playerKey: key,
+        playerId,
       });
 
       const { dice1, dice2 } = diceData;

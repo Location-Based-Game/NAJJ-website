@@ -3,7 +3,7 @@ import { encryptJWT } from "@/lib/encryptJWT";
 import { addPlayer } from "@/server-actions/addPlayer";
 import createRoom from "@/server-actions/createRoom";
 import setHost from "@/server-actions/setHost";
-import { SessionData } from "@/store/logInCreateSlice";
+import { SessionData } from "@/store/logInSlice";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
