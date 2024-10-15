@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
   cookies().set("session", session, { expires, httpOnly: true });
 
-  return new NextResponse(JSON.stringify(gameId));
+  return NextResponse.json(gameId);
 }
 
 function makeid(length: number): string {

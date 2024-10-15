@@ -1,4 +1,4 @@
-import { renderWithProviders } from "@/lib/testUtils";
+import { renderWithProviders } from "@/lib/reduxTestUtils";
 import "@testing-library/jest-dom";
 import MainMenuPanel from "@/app/_main-menu/MainMenuPanel";
 import { fireEvent, screen, waitFor } from "@testing-library/react";

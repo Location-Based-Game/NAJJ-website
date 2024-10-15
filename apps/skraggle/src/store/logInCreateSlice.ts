@@ -1,21 +1,21 @@
-import { addPlayer } from "@/server-actions/addPlayer";
-import createRoom from "@/server-actions/createRoom";
-import setHost from "@/server-actions/setHost";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type LogInCreate = {
-  loading: boolean;
-  error?: string;
+export type SessionData = {
   gameId: string;
   playerId: string;
   playerName: string;
+}
+
+type LogInCreate = SessionData & {
+  loading: boolean;
+  error?: string;
 };
 
 const initialState: LogInCreate = {
   loading: false,
   gameId: "",
   playerId: "",
-  playerName: ""
+  playerName: "",
 };
 
 export const logInCreateSlice = createSlice({
@@ -40,9 +40,6 @@ export const logInCreateSlice = createSlice({
       .addCase(logInCreate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        state.gameId = "";
-        state.playerId = "";
-        state.playerName = "";
       });
   },
 });
@@ -50,23 +47,22 @@ export const logInCreateSlice = createSlice({
 export const logInCreate = createAsyncThunk(
   "create room/create session data",
   async (playerName: string) => {
-    const res = await fetch(`/api/logIn`);
-    const code = await res.json();
+    const logIn = await fetch(`/api/logIn`);
+    const gameId = await logIn.json();
 
-    await createRoom({ gameId: code });
+    const params = new URLSearchParams({
+      gameId,
+      playerName
+    }).toString()
 
-    const playerId = await addPlayer({
-      gameId: code,
-      playerName,
-    });
-
-    await setHost({ gameId: code, playerId });
+    const createRoom = await fetch(`/api/create-room?${params}`);
+    const playerId = await createRoom.json();
 
     const sessionData: LogInCreate = {
       loading: false,
-      gameId: code,
+      gameId,
       playerId,
-      playerName
+      playerName,
     };
 
     return sessionData;

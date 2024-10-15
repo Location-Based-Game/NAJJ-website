@@ -4,10 +4,10 @@ import { rtdb } from "@/app/firebaseConfig";
 import { ref, remove, get, child, update } from "firebase/database";
 import removePlayer from "./removePlayer";
 import { PlayersType } from "@/components/GetPlayers";
-import { playerKeySchema, PlayerKeyType } from "@/schemas/playerIdSchema";
+import { PlayerIdType, playerIdSchema } from "@/schemas/playerIdSchema";
 
-export default async function removePlayerHost(data: PlayerKeyType) {
-  const validatedData = playerKeySchema.safeParse(data);
+export default async function removePlayerHost(data: PlayerIdType) {
+  const validatedData = playerIdSchema.safeParse(data);
 
   if (!validatedData.success) {
     console.error(validatedData.error);

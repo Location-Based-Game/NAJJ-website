@@ -44,19 +44,6 @@ export async function addPlayer(data: AddPlayerType): Promise<string> {
     playerId = await addPlayerTransaction(playersRef, playerName);
   }
 
-  //add playerId and playerName to session
-  let session = cookies().get('session')?.value;
-  if (!session) {
-    throw new Error("Session not set!")
-  }
-
-  const parsed = await decryptJWT(session);
-  console.log(parsed)
-
-  const expires = new Date(Date.now() + 100 * 1000);
-  session = await encryptJWT({ gameId, playerId, playerName, expires });
-  cookies().set("session", session, { expires, httpOnly: true });
-
   return playerId;
 }
 
