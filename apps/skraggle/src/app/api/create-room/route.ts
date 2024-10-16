@@ -1,5 +1,4 @@
-import { getSessionData } from "@/lib/getSessionData";
-import { setSessionCookie } from "@/lib/setSessionCookie";
+import { getSessionData, setSessionCookie } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { addPlayer } from "@/server-actions/addPlayer";
 import createRoom from "@/server-actions/createRoom";

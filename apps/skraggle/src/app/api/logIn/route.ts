@@ -1,4 +1,4 @@
-import { setSessionCookie } from "@/lib/setSessionCookie";
+import { setSessionCookie } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";

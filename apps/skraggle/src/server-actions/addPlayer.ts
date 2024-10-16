@@ -10,9 +10,6 @@ import {
 import { rtdb } from "@/app/firebaseConfig";
 import { z } from "zod";
 import { gameIdSchema } from "@/schemas/gameIdSchema";
-import { cookies } from "next/headers";
-import { encryptJWT } from "@/lib/encryptJWT";
-import { decryptJWT } from "@/lib/decryptJWT";
 
 const addPlayerSchema = gameIdSchema.extend({
   playerName: z.string().min(1),
