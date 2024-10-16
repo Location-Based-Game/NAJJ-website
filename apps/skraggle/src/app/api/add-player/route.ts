@@ -2,31 +2,26 @@ import { getSessionData } from "@/lib/getSessionData";
 import { setSessionCookie } from "@/lib/setSessionCookie";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { addPlayer } from "@/server-actions/addPlayer";
-import createRoom from "@/server-actions/createRoom";
-import setHost from "@/server-actions/setHost";
+import getRoom from "@/server-actions/getRoom";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-const createRoomSchema = z.object({
+const addPlayerSchema = z.object({
   playerName: z.string().min(1),
 });
 
-//CREATE ROOM
+//ADD PLAYER
 export async function GET(request: NextRequest) {
-  const { playerName } = validateSearchParams<z.infer<typeof createRoomSchema>>(
+  const { playerName } = validateSearchParams<z.infer<typeof addPlayerSchema>>(
     request.url,
-    createRoomSchema,
+    addPlayerSchema,
   );
-
   const { gameId } = await getSessionData();
-  await createRoom({ gameId });
 
-  const playerId = await addPlayer({
-    gameId,
-    playerName,
-  });
+  //first check if room exists
+  await getRoom({ gameId });
 
-  await setHost({ gameId, playerId });
+  const playerId = await addPlayer({ gameId, playerName });
 
   await setSessionCookie(playerName, playerId, gameId);
 

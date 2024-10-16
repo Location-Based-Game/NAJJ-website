@@ -1,10 +1,5 @@
+import { SessionData } from "@/schemas/sessionSchema";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export type SessionData = {
-  gameId: string;
-  playerId: string;
-  playerName: string;
-};
 
 type LogInType = SessionData & {
   loading: boolean;
@@ -19,7 +14,7 @@ const initialState: LogInType = {
 };
 
 export const logInSlice = createSlice({
-  name: "create room",
+  name: "log in",
   initialState,
   reducers: {
     resetLogInCreate: () => {
@@ -33,19 +28,32 @@ export const logInSlice = createSlice({
       })
       .addCase(
         logInCreate.fulfilled,
-        (state, action: PayloadAction<LogInType>) => {
+        (_, action: PayloadAction<LogInType>) => {
           return action.payload;
         },
       )
       .addCase(logInCreate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      });
+      })
+      .addCase(logInJoin.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        logInJoin.fulfilled,
+        (_, action: PayloadAction<LogInType>) => {
+          return action.payload;
+        },
+      )
+      .addCase(logInJoin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
   },
 });
 
 export const logInCreate = createAsyncThunk(
-  "create room/create session data",
+  "log in/create room",
   async (playerName: string) => {
     const logIn = await fetch(`/api/logIn`);
     const gameId = await logIn.json();
@@ -53,9 +61,36 @@ export const logInCreate = createAsyncThunk(
     const params = new URLSearchParams({
       playerName,
     }).toString();
-
     const createRoom = await fetch(`/api/create-room?${params}`);
     const playerId = await createRoom.json();
+
+    const sessionData: LogInType = {
+      loading: false,
+      gameId,
+      playerId,
+      playerName,
+    };
+
+    return sessionData;
+  },
+);
+
+export const logInJoin = createAsyncThunk(
+  "log in/join room",
+  async (payload: { playerName: string; joinCode: string }) => {
+    const { playerName, joinCode } = payload;
+
+    const logInParams = new URLSearchParams({
+      gameId: joinCode
+    }).toString()
+    const logIn = await fetch(`/api/logIn?${logInParams}`);
+    const gameId = await logIn.json();
+
+    const params = new URLSearchParams({
+      playerName,
+    }).toString();
+    const addPlayer = await fetch(`/api/add-player?${params}`);
+    const playerId = await addPlayer.json();
 
     const sessionData: LogInType = {
       loading: false,

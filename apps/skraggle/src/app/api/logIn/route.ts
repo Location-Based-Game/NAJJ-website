@@ -1,36 +1,24 @@
-import { encryptJWT } from "@/lib/encryptJWT";
-import { cookies } from "next/headers";
+import { setSessionCookie } from "@/lib/setSessionCookie";
+import { validateSearchParams } from "@/lib/validateSearchParams";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const logInSchema = z.object({
-  gameId: z.string().length(4).nullable()
+  gameId: z.string().length(4).nullable(),
 });
 
+//LOG IN
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-
-  const params = {
-    gameId: searchParams.get("gameId")
-  }
-
-  const validatedData = logInSchema.safeParse(params);
-
-  if (!validatedData.success) {
-    console.error(validatedData.error);
-    throw new Error("Invalid Data!");
-  }
-
-  let {gameId} = validatedData.data;
+  let { gameId } = validateSearchParams<z.infer<typeof logInSchema>>(
+    request.url,
+    logInSchema,
+  );
 
   if (!gameId) {
     gameId = makeid(4);
   }
 
-  const expires = new Date(Date.now() + 100 * 1000);
-  const session = await encryptJWT({ gameId, playerId: "", playerName: "", expires });
-
-  cookies().set("session", session, { expires, httpOnly: true });
+  await setSessionCookie("", "", gameId);
 
   return NextResponse.json(gameId);
 }
