@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
   await setHost({ gameId, playerId });
 
-  await setSessionCookie(playerName, playerId, gameId);
+  await setSessionCookie({ playerName, playerId, gameId });
 
   return NextResponse.json(playerId);
 }

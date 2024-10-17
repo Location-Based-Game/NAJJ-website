@@ -18,7 +18,11 @@ export async function GET(request: NextRequest) {
     gameId = makeid(4);
   }
 
-  await setSessionCookie("", "", gameId);
+  await setSessionCookie({
+    gameId,
+    playerId: "",
+    playerName: "",
+  });
 
   return NextResponse.json(gameId);
 }

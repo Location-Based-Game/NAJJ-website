@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   const playerId = await addPlayer({ gameId, playerName });
 
-  await setSessionCookie(playerName, playerId, gameId);
+  await setSessionCookie({playerName, playerId, gameId});
 
   return NextResponse.json(playerId);
 }
