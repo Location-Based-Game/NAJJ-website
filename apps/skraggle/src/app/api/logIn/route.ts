@@ -2,10 +2,30 @@ import { setSessionCookie } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import * as admin from "firebase-admin";
+import serviceAccount from "../../../../skraggle-2e19f-firebase-adminsdk-ss9c5-9d01ff3f27.json";
 
 const logInSchema = z.object({
   gameId: z.string().length(4).nullable(),
 });
+
+function getApp() {
+  let app;
+  try {
+    app = admin.initializeApp(
+      {
+        credential: admin.credential.cert(
+          serviceAccount as admin.ServiceAccount,
+        ),
+      },
+      "my-app",
+    );
+  } catch (error) {
+    app = admin.app("my-app");
+  }
+
+  return app;
+}
 
 //LOG IN
 export async function GET(request: NextRequest) {

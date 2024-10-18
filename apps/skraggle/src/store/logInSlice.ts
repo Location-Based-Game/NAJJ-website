@@ -1,7 +1,7 @@
 import { SessionData } from "@/schemas/sessionSchema";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type LogInType = SessionData & {
+export type LogInType = SessionData & {
   loading: boolean;
   error?: string;
 };
@@ -20,6 +20,9 @@ export const logInSlice = createSlice({
     resetLogInCreate: () => {
       return initialState;
     },
+    setLogInSession: (_:LogInType, action:PayloadAction<LogInType>) => {
+      return action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -103,4 +106,4 @@ export const logInJoin = createAsyncThunk(
   },
 );
 
-export const { resetLogInCreate } = logInSlice.actions;
+export const { resetLogInCreate, setLogInSession } = logInSlice.actions;

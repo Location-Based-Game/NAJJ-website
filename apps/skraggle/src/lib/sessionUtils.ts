@@ -41,8 +41,6 @@ export async function updateSession(request: NextRequest) {
     throw new Error("Invalid session data!");
   }
 
-
-
   const expires = new Date(Date.now() + secondsUntilExpiration * 1000);
   const res = NextResponse.next();
   res.cookies.set({

@@ -1,9 +1,22 @@
 import { getSessionData } from "@/lib/sessionUtils";
-import { NextRequest } from "next/server";
+import getHost from "@/server-actions/getHost";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+//REJOIN
+export async function GET() {
+  const { gameId, playerId, playerName } = await getSessionData();
 
-  const { gameId, playerId } = await getSessionData();
+  try {
+    const host = await getHost({ gameId });
+    if (host === playerId) {
+      return NextResponse.json({
+        data: { gameId, playerId, playerName },
+        isHost: true,
+      });
+    }
 
-
+    return NextResponse.json({ data: { gameId, playerId, playerName } });
+  } catch (error) {
+    return NextResponse.json({ data: error });
+  }
 }
