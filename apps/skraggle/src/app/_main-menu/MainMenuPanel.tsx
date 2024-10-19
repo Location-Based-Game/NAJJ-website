@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { LogInType, setLogInSession } from "@/store/logInSlice";
 import { mainMenuState, RootState } from "@/store/store";
 import { Dispatch, UnknownAction } from "@reduxjs/toolkit";
+import { fetchApi } from "@/lib/fetchApi";
 
 export default function MainMenuPanel() {
   const mainMenuUI = useSelector((state: RootState) => state.mainMenu);
@@ -37,7 +38,7 @@ export default function MainMenuPanel() {
 }
 
 async function handleRejoin(dispatch: Dispatch<UnknownAction>) {
-  const data = await fetch("/api/rejoin")
+  const data = await fetchApi("/api/rejoin")
   const res = await data.json()
 
   if (!res.data.gameId) return;

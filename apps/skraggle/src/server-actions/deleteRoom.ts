@@ -1,33 +1,26 @@
-"use server";
+import "server-only"
 
-import { rtdb } from "@/app/firebaseConfig";
-import { gameIdSchema } from "@/schemas/gameIdSchema";
-import { child, get, ref, remove } from "firebase/database";
-import { z } from "zod";
-
-const deleteRoomSchema = gameIdSchema.extend({
-  playerKey: z.string().min(1),
-});
+import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
+import { db } from "@/lib/firebaseAdmin";
 
 export default async function deleteRoom(
-  data: z.infer<typeof deleteRoomSchema>,
+  data: GameIdType,
 ) {
-  const validatedData = deleteRoomSchema.safeParse(data);
+  const validatedData = gameIdSchema.safeParse(data);
 
   if (!validatedData.success) {
     console.error(validatedData.error);
     throw new Error("Invalid Data!");
   }
 
-  const { gameId, playerKey } = validatedData.data;
+  const { gameId } = validatedData.data;
 
-  const playerRef = ref(rtdb, `activeGames/${gameId}/players/${playerKey}`);
-  const snapshot = await get(playerRef);
+  const gameRef = db.ref(`activeGames/${gameId}`);
+  const snapshot = await gameRef.get();
 
   if (!snapshot.exists()) {
     throw new Error("Invalid Data!");
   }
 
-  const gameRef = ref(rtdb, "activeGames");
-  await remove(child(gameRef, gameId));
+  await gameRef.remove();
 }

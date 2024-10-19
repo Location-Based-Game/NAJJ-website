@@ -1,4 +1,4 @@
-import { resetLogInCreate, logInCreate } from "@/store/logInSlice";
+import { resetClientSessionData, logInCreate } from "@/store/logInSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +17,7 @@ export default function CreateLogIn() {
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
-      dispatch(resetLogInCreate());
+      dispatch(resetClientSessionData());
 
       animationCallback(
         { state: "Home", slideFrom: "left" },

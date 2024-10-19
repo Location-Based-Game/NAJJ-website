@@ -8,7 +8,7 @@ if (!admin.apps.length) {
     databaseURL: "https://skraggle-2e19f-default-rtdb.firebaseio.com",
   });
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
     admin.database().useEmulator('localhost', 9000)
   }
 }

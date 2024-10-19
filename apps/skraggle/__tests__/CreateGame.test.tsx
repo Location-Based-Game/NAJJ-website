@@ -8,18 +8,16 @@ import "@testing-library/jest-dom";
 import { Toaster } from "@/components/ui/toaster";
 import createRoom from "@/server-actions/createRoom";
 import { addPlayer } from "@/server-actions/addPlayer";
-import { rtdb } from "@/app/firebaseConfig";
-import { ref, remove, child } from "firebase/database";
 import Loader from "@/app/_gameplay-ui/Loader";
+import deleteRoom from "@/server-actions/deleteRoom";
 
 const testCode = "aaaa";
 const testPlayer = "testPlayer";
-let testPlayerKey = "";
+let testPlayerId = "";
 
 describe("Create Game", () => {
   afterAll(async () => {
-    const gameRef = ref(rtdb, "activeGames");
-    await remove(child(gameRef, testCode));
+    await deleteRoom({gameId: testCode});
   });
 
   it("goes back to main menu when code is unavailable and shows error", async () => {
@@ -55,7 +53,7 @@ describe("Create Game", () => {
     await assertSucceeds(createRoom({ gameId: testCode }));
 
     const testAddPlayer = async () => {
-      testPlayerKey = await addPlayer({
+      testPlayerId = await addPlayer({
         gameId: testCode,
         playerName: testPlayer,
       });
@@ -75,6 +73,12 @@ describe("Create Game", () => {
       {
         preloadedState: {
           mainMenu: { state: "Create Game", slideFrom: "right" },
+          logIn: {
+            loading: false,
+            gameId: testCode,
+            playerId: testPlayerId,
+            playerName: testPlayer,
+          },
         },
       },
     );
@@ -103,7 +107,12 @@ describe("Create Game", () => {
       {
         preloadedState: {
           mainMenu: { state: "Create Game", slideFrom: "right" },
-          guestName: { name: testPlayer, key: testPlayerKey },
+          logIn: {
+            loading: false,
+            gameId: testCode,
+            playerId: testPlayerId,
+            playerName: testPlayer,
+          },
         },
       },
     );

@@ -1,3 +1,4 @@
+import { fetchApi } from "@/lib/fetchApi";
 import { SessionData } from "@/schemas/sessionSchema";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -52,15 +53,13 @@ export const logInSlice = createSlice({
 export const logInCreate = createAsyncThunk(
   "log in/create room",
   async (playerName: string) => {
-    const logIn = await fetch(`/api/logIn`);
+    const logIn = await fetchApi(`/api/logIn`);
     const gameId = await logIn.json();
 
     const params = new URLSearchParams({
       playerName,
     }).toString();
-    const createRoom = await fetch(`/api/create-room?${params}`, {
-      cache: "no-store",
-    });
+    const createRoom = await fetchApi(`/api/create-room?${params}`);
     const playerId = await createRoom.json();
 
     const sessionData: LogInType = {
@@ -82,13 +81,13 @@ export const logInJoin = createAsyncThunk(
     const logInParams = new URLSearchParams({
       gameId: joinCode,
     }).toString();
-    const logIn = await fetch(`/api/logIn?${logInParams}`);
+    const logIn = await fetchApi(`/api/logIn?${logInParams}`);
     const gameId = await logIn.json();
 
     const params = new URLSearchParams({
       playerName,
     }).toString();
-    const addPlayer = await fetch(`/api/add-player?${params}`);
+    const addPlayer = await fetchApi(`/api/add-player?${params}`);
     const playerId = await addPlayer.json();
 
     const sessionData: LogInType = {

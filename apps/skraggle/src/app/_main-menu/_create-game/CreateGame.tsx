@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useStartGame from "./useStartGame";
 import LeaveGameDialogue from "../LeaveGameDialogue";
 import { resetClientSessionData } from "@/store/logInSlice";
+import { fetchApi } from "@/lib/fetchApi";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
@@ -19,7 +20,7 @@ export default function CreateGame() {
 
   const handleLeaveGame = async () => {
     try {
-      await fetch("/api/leave-game")
+      await fetchApi("/api/leave-game")
       animationCallback({
         state: "Sign In to Create",
         slideFrom: "left",

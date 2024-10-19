@@ -7,6 +7,7 @@ import PlayerList from "../PlayerList";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { resetClientSessionData } from "@/store/logInSlice";
+import { fetchApi } from "@/lib/fetchApi";
 
 export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
@@ -16,7 +17,7 @@ export default function JoinGame() {
 
   const handleOnLeave = async () => {
     try {
-      await fetch("/api/leave-game")
+      await fetchApi("/api/leave-game")
     } catch (error) {
       console.error(error);
     }

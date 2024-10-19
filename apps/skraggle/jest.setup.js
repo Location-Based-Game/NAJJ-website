@@ -1,4 +1,5 @@
 import "jest-canvas-mock"
+import "cross-fetch/polyfill"
 
 class ResizeObserver {
   observe() {}
