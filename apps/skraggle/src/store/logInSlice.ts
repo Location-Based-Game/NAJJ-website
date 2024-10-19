@@ -20,21 +20,18 @@ export const logInSlice = createSlice({
     resetLogInCreate: () => {
       return initialState;
     },
-    setLogInSession: (_:LogInType, action:PayloadAction<LogInType>) => {
-      return action.payload
-    }
+    setLogInSession: (_: LogInType, action: PayloadAction<LogInType>) => {
+      return action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(logInCreate.pending, (state) => {
         state.loading = true;
       })
-      .addCase(
-        logInCreate.fulfilled,
-        (_, action: PayloadAction<LogInType>) => {
-          return action.payload;
-        },
-      )
+      .addCase(logInCreate.fulfilled, (_, action: PayloadAction<LogInType>) => {
+        return action.payload;
+      })
       .addCase(logInCreate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
@@ -42,16 +39,13 @@ export const logInSlice = createSlice({
       .addCase(logInJoin.pending, (state) => {
         state.loading = true;
       })
-      .addCase(
-        logInJoin.fulfilled,
-        (_, action: PayloadAction<LogInType>) => {
-          return action.payload;
-        },
-      )
+      .addCase(logInJoin.fulfilled, (_, action: PayloadAction<LogInType>) => {
+        return action.payload;
+      })
       .addCase(logInJoin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      })
+      });
   },
 });
 
@@ -64,7 +58,9 @@ export const logInCreate = createAsyncThunk(
     const params = new URLSearchParams({
       playerName,
     }).toString();
-    const createRoom = await fetch(`/api/create-room?${params}`);
+    const createRoom = await fetch(`/api/create-room?${params}`, {
+      cache: "no-store",
+    });
     const playerId = await createRoom.json();
 
     const sessionData: LogInType = {
@@ -84,8 +80,8 @@ export const logInJoin = createAsyncThunk(
     const { playerName, joinCode } = payload;
 
     const logInParams = new URLSearchParams({
-      gameId: joinCode
-    }).toString()
+      gameId: joinCode,
+    }).toString();
     const logIn = await fetch(`/api/logIn?${logInParams}`);
     const gameId = await logIn.json();
 

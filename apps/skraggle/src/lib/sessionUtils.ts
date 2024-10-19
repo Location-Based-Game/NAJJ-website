@@ -62,4 +62,5 @@ export async function updateSession(request: NextRequest) {
 
 export function deleteSession() {
   cookies().delete("session");
+  cookies().delete("session_data");
 }

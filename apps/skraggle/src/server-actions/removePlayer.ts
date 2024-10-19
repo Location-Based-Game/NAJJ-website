@@ -1,8 +1,6 @@
-"use server";
-
-import { rtdb } from "@/app/firebaseConfig";
+import "server-only";
 import { playerIdSchema, PlayerIdType } from "@/schemas/playerIdSchema";
-import { child, ref, remove, get } from "firebase/database";
+import { db } from "@/lib/firebaseAdmin";
 
 export default async function removePlayer(data: PlayerIdType) {
   const validatedData = playerIdSchema.safeParse(data);
@@ -14,6 +12,6 @@ export default async function removePlayer(data: PlayerIdType) {
 
   const { gameId, playerId } = validatedData.data;
 
-  const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
-  await remove(child(playersRef, playerId));
+  const playersRef = db.ref(`activeGames/${gameId}/players/${playerId}`);
+  await playersRef.remove();
 }

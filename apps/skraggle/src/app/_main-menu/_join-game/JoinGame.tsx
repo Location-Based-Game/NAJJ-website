@@ -19,10 +19,10 @@ export default function JoinGame() {
       slideFrom: "left",
     });
     try {
-      await removePlayer({
-        gameId,
-        playerId,
-      });
+      // await removePlayer({
+      //   gameId,
+      //   playerId,
+      // });
     } catch (error) {
       console.error(error);
     }

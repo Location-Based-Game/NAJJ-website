@@ -1,8 +1,6 @@
-"use server";
-
-import { rtdb } from "@/app/firebaseConfig";
+import "server-only";
 import { playerIdSchema, PlayerIdType } from "@/schemas/playerIdSchema";
-import { ref, update } from "firebase/database";
+import { db } from "@/lib/firebaseAdmin";
 
 export default async function setHost(data: PlayerIdType) {
   const validatedData = playerIdSchema.safeParse(data);
@@ -14,8 +12,8 @@ export default async function setHost(data: PlayerIdType) {
 
   const { gameId, playerId } = validatedData.data;
 
-  const gameRef = ref(rtdb, `activeGames/${gameId}`);
-  await update(gameRef, {
+  const gameRef = db.ref(`activeGames/${gameId}`);
+  await gameRef.update({
     host: playerId,
   });
 }

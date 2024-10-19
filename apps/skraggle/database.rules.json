@@ -2,8 +2,15 @@
   "rules": {
     "activeGames" : {
       "$gameId": {
-        ".read": true,
-        ".write": true
+        ".read": false,
+        "id": {
+          ".read": true,
+          ".write": false
+        },
+        "players": {
+          ".read": true,
+          ".write": false
+        }
       }
     }
   }

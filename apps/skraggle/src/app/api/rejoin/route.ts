@@ -1,4 +1,4 @@
-import { getSessionData } from "@/lib/sessionUtils";
+import { deleteSession, getSessionData } from "@/lib/sessionUtils";
 import getHost from "@/server-actions/getHost";
 import { NextResponse } from "next/server";
 
@@ -8,6 +8,10 @@ export async function GET() {
 
   try {
     const host = await getHost({ gameId });
+    if (!playerId) {
+      throw new Error("No playerId assigned!")
+    }
+
     if (host === playerId) {
       return NextResponse.json({
         data: { gameId, playerId, playerName },
@@ -17,6 +21,7 @@ export async function GET() {
 
     return NextResponse.json({ data: { gameId, playerId, playerName } });
   } catch (error) {
-    return NextResponse.json({ data: error });
+    deleteSession();
+    return NextResponse.json({ data: `${error}` });
   }
 }

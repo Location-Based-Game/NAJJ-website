@@ -16,7 +16,6 @@ export async function GET(request: NextRequest) {
     request.url,
     createRoomSchema,
   );
-
   const { gameId } = await getSessionData();
   await createRoom({ gameId });
 

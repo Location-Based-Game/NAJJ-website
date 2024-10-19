@@ -20,7 +20,7 @@ export default function CreateGame() {
 
   const handleLeaveGame = async () => {
     try {
-      await removePlayerHost({ gameId, playerId });
+      await fetch("/api/leave-game")
       animationCallback({
         state: "Sign In to Create",
         slideFrom: "left",

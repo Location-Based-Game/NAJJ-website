@@ -1,15 +1,7 @@
-"use server";
-
-import {
-  DatabaseReference,
-  push,
-  ref,
-  runTransaction,
-  set,
-} from "firebase/database";
-import { rtdb } from "@/app/firebaseConfig";
+import "server-only";
 import { z } from "zod";
 import { gameIdSchema } from "@/schemas/gameIdSchema";
+import { db, Reference } from "@/lib/firebaseAdmin";
 
 const addPlayerSchema = gameIdSchema.extend({
   playerName: z.string().min(1),
@@ -27,15 +19,15 @@ export async function addPlayer(data: AddPlayerType): Promise<string> {
 
   const { gameId, playerName } = validatedData.data;
 
-  const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
+  const playersRef = db.ref(`activeGames/${gameId}/players`);
   let playerId = "";
 
   if (
     process.env.NODE_ENV === "development" &&
     process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
   ) {
-    const testPlayerRef = ref(rtdb, `activeGames/${gameId}/players/testPlayer`);
-    await set(testPlayerRef, playerName);
+    const testPlayerRef = db.ref(`activeGames/${gameId}/players/testPlayer`);
+    await testPlayerRef.set(playerName);
     playerId = "testPlayer";
   } else {
     playerId = await addPlayerTransaction(playersRef, playerName);
@@ -45,12 +37,12 @@ export async function addPlayer(data: AddPlayerType): Promise<string> {
 }
 
 async function addPlayerTransaction(
-  playersRef: DatabaseReference,
+  playersRef: Reference,
   playerName: string,
 ) {
   let playerId = "";
 
-  await runTransaction(playersRef, (currentPlayers) => {
+  await playersRef.transaction((currentPlayers) => {
     if (currentPlayers === null) {
       currentPlayers = {};
     }
@@ -60,7 +52,7 @@ async function addPlayerTransaction(
       throw new Error("Max players reached!");
     }
 
-    const newPlayerRef = push(playersRef);
+    const newPlayerRef = playersRef.push();
     if (newPlayerRef.key) {
       playerId = newPlayerRef.key;
       currentPlayers[playerId] = playerName;

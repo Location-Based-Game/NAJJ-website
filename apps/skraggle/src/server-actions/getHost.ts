@@ -1,8 +1,6 @@
-"use server"
-
-import { rtdb } from "@/app/firebaseConfig";
+import "server-only"
 import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
-import { get, ref } from "firebase/database";
+import { db } from "@/lib/firebaseAdmin";
 
 export default async function getHost(data: GameIdType) {
   const validatedData = gameIdSchema.safeParse(data);
@@ -14,8 +12,8 @@ export default async function getHost(data: GameIdType) {
 
   const { gameId } = validatedData.data;
 
-  const hostRef = ref(rtdb, `activeGames/${gameId}/host`);
-  const snapshot = await get(hostRef);
+  const hostRef = db.ref(`activeGames/${gameId}/host`);
+  const snapshot = await hostRef.get();
 
   if (!snapshot.exists()) {
     throw new Error("Game not available!");
