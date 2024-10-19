@@ -8,8 +8,7 @@ import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import useStartGame from "./useStartGame";
 import LeaveGameDialogue from "../LeaveGameDialogue";
-import removePlayerHost from "@/server-actions/removePlayerHost";
-import { resetLogInCreate } from "@/store/logInSlice";
+import { resetClientSessionData } from "@/store/logInSlice";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
@@ -25,7 +24,7 @@ export default function CreateGame() {
         state: "Sign In to Create",
         slideFrom: "left",
       });
-      dispatch(resetLogInCreate());
+      dispatch(resetClientSessionData());
     } catch (error) {
       animationCallback(
         {

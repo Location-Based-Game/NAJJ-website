@@ -32,7 +32,7 @@ export default function useStartGame(
     if (!gameId) {
       handleError("Join code does not exist");
     }
-  }, [gameId]);
+  }, []);
 
   const handleStartGame = async () => {
     try {

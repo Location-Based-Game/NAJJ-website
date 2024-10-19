@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GuestNameType } from "../GuestNameInput";
 import SignIn from "../SignIn";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
-import { logInJoin, resetLogInCreate } from "@/store/logInSlice";
+import { logInJoin, resetClientSessionData } from "@/store/logInSlice";
 
 export default function JoinLogIn() {
   const [enableButtons, setEnableButtons] = useState(true);
@@ -17,7 +17,7 @@ export default function JoinLogIn() {
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
-      dispatch(resetLogInCreate());
+      dispatch(resetClientSessionData());
 
       animationCallback(
         { state: "Home", slideFrom: "left" },

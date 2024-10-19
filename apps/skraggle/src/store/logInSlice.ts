@@ -17,7 +17,7 @@ export const logInSlice = createSlice({
   name: "log in",
   initialState,
   reducers: {
-    resetLogInCreate: () => {
+    resetClientSessionData: () => {
       return initialState;
     },
     setLogInSession: (_: LogInType, action: PayloadAction<LogInType>) => {
@@ -102,4 +102,4 @@ export const logInJoin = createAsyncThunk(
   },
 );
 
-export const { resetLogInCreate, setLogInSession } = logInSlice.actions;
+export const { resetClientSessionData, setLogInSession } = logInSlice.actions;

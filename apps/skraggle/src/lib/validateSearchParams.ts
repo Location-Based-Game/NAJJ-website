@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+/**
+ * @param url 
+ * @param schema - zod schema 
+ */
 export function validateSearchParams<T>(url: string, schema: z.ZodObject<any>) {
   const { searchParams } = new URL(url);
 
@@ -17,5 +21,5 @@ export function validateSearchParams<T>(url: string, schema: z.ZodObject<any>) {
     throw new Error("Invalid Data!");
   }
 
-  return validatedData.data as T
+  return validatedData.data as T;
 }

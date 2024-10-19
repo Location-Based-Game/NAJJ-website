@@ -1,6 +1,6 @@
 'use server'
 
-import { ref, get, child } from "firebase/database";
+import { ref, get } from "firebase/database";
 import { GameRoom } from "./createRoom";
 import { rtdb } from "@/app/firebaseConfig";
 import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
@@ -14,8 +14,8 @@ export default async function getRoom(data:GameIdType): Promise<GameRoom> {
 
   const { gameId } = validatedData.data
 
-  const dbRef = ref(rtdb);
-  const snapshot = await get(child(dbRef, `activeGames/${gameId}`));
+  const dbRef = ref(rtdb, `activeGames/${gameId}/id`);
+  const snapshot = await get(dbRef);
 
   if (!snapshot.exists()) {
     throw new Error("Game not available!");

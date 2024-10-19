@@ -5,27 +5,26 @@ import LeaveGameDialogue from "../LeaveGameDialogue";
 import { useState } from "react";
 import PlayerList from "../PlayerList";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
-import removePlayer from "@/server-actions/removePlayer";
+import { useDispatch, useSelector } from "react-redux";
+import { resetClientSessionData } from "@/store/logInSlice";
 
 export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
-  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
+  const { gameId } = useSelector((state: RootState) => state.logIn);
+  const dispatch = useDispatch()
 
   const handleOnLeave = async () => {
+    try {
+      await fetch("/api/leave-game")
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(resetClientSessionData())
     animationCallback({
       state: "Sign In to Join",
       slideFrom: "left",
     });
-    try {
-      // await removePlayer({
-      //   gameId,
-      //   playerId,
-      // });
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (
