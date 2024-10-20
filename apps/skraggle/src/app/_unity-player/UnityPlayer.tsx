@@ -1,11 +1,11 @@
 "use client";
-import useSetGameState from "@/hooks/useSetGameState";
 import { useUnityContext, Unity } from "react-unity-webgl";
-import Loader from "./_gameplay-ui/Loader";
+import Loader from "../_gameplay-ui/Loader";
 import { useState, useEffect, createContext, useContext } from "react";
-import useUpdateGameState from "@/hooks/useUpdateGameState";
+import useUpdateGameState from "@/app/_unity-player/useUpdateGameState";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
 import PlayerData from "@/components/GetPlayers";
+import useSetGameState from "./useSetGameState";
 
 export const UnityReactContext = createContext<UnityContextHook | null>(null);
 

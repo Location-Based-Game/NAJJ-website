@@ -1,7 +1,7 @@
 "use client";
 
 import { useUnityContext } from "react-unity-webgl";
-import { UnityReactContext } from "@/app/UnityPlayer";
+import { UnityReactContext } from "@/app/_unity-player/UnityPlayer";
 
 export default function MockUnityPlayer({
   children,

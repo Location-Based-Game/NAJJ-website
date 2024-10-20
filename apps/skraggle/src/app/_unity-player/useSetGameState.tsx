@@ -1,11 +1,11 @@
 import { rtdb } from "@/app/firebaseConfig";
+import { useToast } from "@/hooks/use-toast";
 import { setGameState } from "@/store/GameStateSlice";
 import { mainMenuState, RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
-import { useToast } from "./use-toast";
 
 export default function useSetGameState(
   sendMessage: (

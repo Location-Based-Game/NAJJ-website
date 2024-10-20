@@ -1,7 +1,7 @@
 import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useUnityReactContext } from "../UnityPlayer";
+import { useUnityReactContext } from "../_unity-player/UnityPlayer";
 
 interface Loader {
   children: React.ReactNode;

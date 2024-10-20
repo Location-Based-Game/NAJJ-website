@@ -3,7 +3,7 @@ import { setJoinCode } from "@/store/JoinCodeSlice";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetPlayers } from "@/components/GetPlayers";
-import { useUnityReactContext } from "@/app/UnityPlayer";
+import { useUnityReactContext } from "@/app/_unity-player/UnityPlayer";
 import { useEffect } from "react";
 import { MainMenuState } from "@/hooks/usePanelUI";
 import setGameState from "@/server-actions/setGameState";
