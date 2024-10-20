@@ -26,4 +26,6 @@ const InnerPanelWrapper = forwardRef<HTMLDivElement, InnerPanelWrapper>(
   },
 );
 
+InnerPanelWrapper.displayName = "InnerPanelWrapper"
+
 export default InnerPanelWrapper;

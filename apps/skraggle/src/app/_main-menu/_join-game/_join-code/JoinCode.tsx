@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Loader2 } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { setJoinCode } from "@/store/JoinCodeSlice";
+import { setJoinCode } from "@/store/joinCodeSlice";
 import JoinCodeInput from "./JoinCodeInput";
 
 export default function JoinCode() {

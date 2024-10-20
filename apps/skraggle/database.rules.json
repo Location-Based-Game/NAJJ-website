@@ -1,6 +1,17 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true
+    "activeGames" : {
+      "$gameId": {
+        ".read": false,
+        "id": {
+          ".read": true,
+          ".write": false
+        },
+        "players": {
+          ".read": true,
+          ".write": false
+        }
+      }
+    }
   }
 }
