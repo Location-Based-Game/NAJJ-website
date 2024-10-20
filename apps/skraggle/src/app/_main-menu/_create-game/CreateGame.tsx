@@ -43,7 +43,7 @@ export default function CreateGame() {
         <QRCode />
         <div className="w-full grow">
           <h2 className="my-6 w-full text-center">Players</h2>
-          <PlayerList joinCode={gameId} />
+          <PlayerList />
         </div>
       </div>
       <div className="flex w-full gap-4">

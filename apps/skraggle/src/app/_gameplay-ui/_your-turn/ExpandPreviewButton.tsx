@@ -1,4 +1,4 @@
-import { useUnityReactContext } from "@/app/_unity-player/UnityPlayer";
+import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { Button } from "@/components/ui/button";
 
 export default function ExpandPreviewButton() {

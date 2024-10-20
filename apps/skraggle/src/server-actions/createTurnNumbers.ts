@@ -1,30 +1,17 @@
-import { rtdb } from "@/app/firebaseConfig";
-import { InitialDiceData } from "@/server-actions/createRoom";
-import { gameIdSchema } from "@/schemas/gameIdSchema";
-import { ref, update } from "firebase/database";
-import { z } from "zod";
+import "server-only"
+import { db } from "@/lib/firebaseAdmin";
+import { PlayersData, InitialDiceData } from "@/components/GetPlayers";
 
-const createTurnNumbersSchema = gameIdSchema.extend({
-  playerIds: z.string().array(),
-});
-
-export type CreateTurnNumbersType = z.infer<typeof createTurnNumbersSchema>
-
-export async function createTurnNumbers(data: CreateTurnNumbersType) {
-  const validatedBody = createTurnNumbersSchema.safeParse(data);
-
-  if (!validatedBody.success) {
-    console.error(validatedBody.error);
-    throw new Error("Invalid Data!")
+export async function createTurnNumbers(gameId:string) {
+  const playersRef = db.ref(`activeGames/${gameId}/players`);
+  const players = await playersRef.get();
+  if (!players.exists()) {
+    throw new Error("No players in game!")
   }
 
-  const { gameId, playerIds } = validatedBody.data;
+  const playerData = players.val() as PlayersData
+  const playerIds = Object.keys(playerData)
 
-  if (playerIds.length === 0) {
-    throw new Error("No Player Id Given!")
-  }
-
-  const dbRef = ref(rtdb);
   const updates: any = {};
   for (let i = 0; i < playerIds.length; i++) {
     const diceData: InitialDiceData = {
@@ -32,7 +19,8 @@ export async function createTurnNumbers(data: CreateTurnNumbersType) {
       dice2: 1 + i,
     };
 
-    updates[`activeGames/${gameId}/initialDiceData/${playerIds[i]}`] = diceData;
+    updates[`${playerIds[i]}`] = {...playerData[playerIds[i]], diceData};
   }
-  await update(dbRef, updates);
+
+  await playersRef.update(updates);
 }

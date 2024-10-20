@@ -1,10 +1,9 @@
-'use server'
+import "server-only";
 
-import { rtdb } from "@/app/firebaseConfig";
 import { gameIdSchema } from "@/schemas/gameIdSchema";
 import { setGameStateSchema } from "@/schemas/gameStateSchema";
-import { ref, set } from "firebase/database";
 import { z } from "zod";
+import { db } from "@/lib/firebaseAdmin";
 
 const schema = gameIdSchema.merge(setGameStateSchema)
 type SetGameState = z.infer<typeof schema>
@@ -19,6 +18,6 @@ export default async function setGameState(data:SetGameState) {
 
   const { gameId, gameState } = validatedData.data
 
-  const gameStateRef = ref(rtdb, `activeGames/${gameId}/gameState`);
-  await set(gameStateRef, gameState);
+  const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
+  await gameStateRef.set(gameState);
 }

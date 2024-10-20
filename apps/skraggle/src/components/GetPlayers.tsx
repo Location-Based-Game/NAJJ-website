@@ -1,26 +1,34 @@
+import useStartingDice from "@/app/_unity-player/useStartingDice";
 import { rtdb } from "@/app/firebaseConfig";
 import { useToast } from "@/hooks/use-toast";
-import { mainMenuState } from "@/store/store";
+import { mainMenuState, RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export const PlayerDataContext = createContext<{
-  setJoinCode: React.Dispatch<React.SetStateAction<string | null>>;
-  playerData: PlayersType;
+  playerData: PlayersData;
 } | null>(null);
 
 interface PlayerData {
   children: React.ReactNode;
 }
 
-export type PlayersType = {
-  [playerId: string]: string
-}
+export type InitialDiceData = {
+  dice1: number;
+  dice2: number;
+};
+
+export type PlayersData = {
+  [playerId: string]: {
+    name: string;
+    diceData: InitialDiceData;
+  };
+};
 
 export default function PlayerData({ children }: PlayerData) {
-  const [joinCode, setJoinCode] = useState<string | null>("");
-  const [playerData, setPlayerData] = useState<PlayersType>({});
+  const { gameId } = useSelector((state: RootState) => state.logIn);
+  const [playerData, setPlayerData] = useState<PlayersData>({});
   const dispatch = useDispatch();
   const { toast } = useToast();
 
@@ -41,13 +49,15 @@ export default function PlayerData({ children }: PlayerData) {
     );
   };
 
+  useStartingDice(playerData);
+
   useEffect(() => {
-    if (!joinCode) return;
-    const playersRef = ref(rtdb, `activeGames/${joinCode}/players`);
+    if (!gameId) return;
+    const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
     const unsubscribe = onValue(playersRef, (snapshot) => {
-      if (joinCode) {
+      if (gameId) {
         if (!snapshot.exists()) return;
-        const data = snapshot.val();
+        const data = snapshot.val() as PlayersData;
         setPlayerData(data);
       } else {
         handleError("Game not available! Try creating a game.");
@@ -55,10 +65,10 @@ export default function PlayerData({ children }: PlayerData) {
     });
 
     return () => unsubscribe();
-  }, [joinCode]);
+  }, [gameId]);
 
   return (
-    <PlayerDataContext.Provider value={{ setJoinCode, playerData }}>
+    <PlayerDataContext.Provider value={{ playerData }}>
       {children}
     </PlayerDataContext.Provider>
   );

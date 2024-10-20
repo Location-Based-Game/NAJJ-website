@@ -26,7 +26,7 @@ export async function addPlayer(data: AddPlayerType): Promise<string> {
     process.env.NODE_ENV === "development" &&
     process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
   ) {
-    const testPlayerRef = db.ref(`activeGames/${gameId}/players/testPlayer`);
+    const testPlayerRef = db.ref(`activeGames/${gameId}/players/testPlayer/name`);
     await testPlayerRef.set(playerName);
     playerId = "testPlayer";
   } else {
@@ -55,7 +55,9 @@ async function addPlayerTransaction(
     const newPlayerRef = playersRef.push();
     if (newPlayerRef.key) {
       playerId = newPlayerRef.key;
-      currentPlayers[playerId] = playerName;
+      currentPlayers[playerId] = {
+        name: playerName
+      };
     } else {
       throw new Error("Player key not created");
     }

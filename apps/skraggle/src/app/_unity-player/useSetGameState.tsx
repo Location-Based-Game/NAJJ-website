@@ -1,6 +1,7 @@
 import { rtdb } from "@/app/firebaseConfig";
 import { useToast } from "@/hooks/use-toast";
-import { setGameState } from "@/store/GameStateSlice";
+import { GameStates } from "@/schemas/gameStateSchema";
+import { setGameState } from "@/store/gameStateSlice";
 import { mainMenuState, RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
@@ -15,7 +16,7 @@ export default function useSetGameState(
   ) => void,
   isLoaded: boolean,
 ) {
-  const currentJoinCode = useSelector((state: RootState) => state.joinCode);
+  const { gameId } = useSelector((state: RootState) => state.logIn);
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const dispatch = useDispatch();
   const { toast } = useToast();
@@ -23,13 +24,11 @@ export default function useSetGameState(
   useEffect(() => {
     if (!isLoaded || !isGameActive) return;
 
-    const gameStateRef = ref(
-      rtdb,
-      `activeGames/${currentJoinCode.code}/gameState`,
-    );
+    const gameStateRef = ref(rtdb, `activeGames/${gameId}/gameState`);
     const unsubscribe = onValue(gameStateRef, (snapshot) => {
       if (snapshot.exists()) {
-        const state = snapshot.val();
+        const state = snapshot.val() as GameStates;
+        console.log(state)
         dispatch(setGameState(state));
         sendMessage("Receiver", "UpdateGameState", state);
       } else {

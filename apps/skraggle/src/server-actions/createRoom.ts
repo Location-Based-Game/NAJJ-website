@@ -2,21 +2,14 @@ import "server-only";
 import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
 import { GameStates } from "@/schemas/gameStateSchema";
 import { db } from "@/lib/firebaseAdmin";
+import { PlayersData } from "@/components/GetPlayers";
 
-//TODO update player data type
-export type PlayerData = string;
-
-export type InitialDiceData = {
-  dice1: number;
-  dice2: number;
-};
 
 export type GameRoom = {
   id: string;
   gameState: GameStates;
-  players: PlayerData | null;
+  players: PlayersData | null;
   turnOrder: string[] | null;
-  initialDiceData: InitialDiceData | null;
   currentTurn: number;
 };
 
@@ -34,7 +27,6 @@ export default async function createRoom(data: GameIdType) {
     gameState: "Menu",
     players: null,
     turnOrder: [],
-    initialDiceData: null,
     currentTurn: 0,
   };
 

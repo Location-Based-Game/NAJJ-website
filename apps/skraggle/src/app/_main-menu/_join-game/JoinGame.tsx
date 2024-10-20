@@ -2,7 +2,7 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import LeaveGameDialogue from "../LeaveGameDialogue";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlayerList from "../PlayerList";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,7 +37,7 @@ export default function JoinGame() {
       />
       <div className="w-full grow">
         <h2 className="my-6 w-full text-center">Players</h2>
-        <PlayerList joinCode={gameId} />
+        <PlayerList />
       </div>
       <Button disabled={!enableButtons} className="h-12 w-full">
         Ready!

@@ -1,5 +1,5 @@
 import GameUI from "./_gameplay-ui/GameUI";
-import UnityPlayer from "./_unity-player/UnityPlayer";
+import UnityPlayer from "./_unity-player/UnityContext";
 
 export default function Home() {
   return (

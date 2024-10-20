@@ -3,6 +3,9 @@
     "activeGames" : {
       "$gameId": {
         ".read": false,
+        "gameState": {
+          ".read":true
+        },
         "id": {
           ".read": true,
           ".write": false

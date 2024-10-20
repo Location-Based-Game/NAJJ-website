@@ -1,13 +1,20 @@
 "use client";
-import { useUnityContext, Unity } from "react-unity-webgl";
+import { useUnityContext } from "react-unity-webgl";
 import Loader from "../_gameplay-ui/Loader";
 import { useState, useEffect, createContext, useContext } from "react";
 import useUpdateGameState from "@/app/_unity-player/useUpdateGameState";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
 import PlayerData from "@/components/GetPlayers";
 import useSetGameState from "./useSetGameState";
+import dynamic from "next/dynamic";
+import useStartingDice from "./useStartingDice";
 
 export const UnityReactContext = createContext<UnityContextHook | null>(null);
+
+const Unity = dynamic(
+  () => import("react-unity-webgl").then((mod) => mod.Unity),
+  { ssr: false },
+);
 
 export default function UnityPlayer({
   children,
@@ -41,15 +48,11 @@ export default function UnityPlayer({
 
   useSetGameState(sendMessage, isLoaded);
   useUpdateGameState(unityContext);
-  
+
   return (
     <UnityReactContext.Provider value={unityContext}>
-      <Loader
-        splashScreenComplete={splashScreenComplete}
-      >
-        <PlayerData>
-          {children}
-        </PlayerData>
+      <Loader splashScreenComplete={splashScreenComplete}>
+        <PlayerData>{children}</PlayerData>
       </Loader>
       <Unity
         unityProvider={unityProvider}
@@ -62,7 +65,9 @@ export default function UnityPlayer({
 export function useUnityReactContext() {
   const context = useContext(UnityReactContext);
   if (!context) {
-    throw new Error("useUnityContext must be used within a UnityReactContextProvider");
+    throw new Error(
+      "useUnityContext must be used within a UnityReactContextProvider",
+    );
   }
   return context;
 }

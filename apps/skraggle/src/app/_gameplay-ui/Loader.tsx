@@ -1,7 +1,7 @@
 import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useUnityReactContext } from "../_unity-player/UnityPlayer";
+import { useUnityReactContext } from "../_unity-player/UnityContext";
 
 interface Loader {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ export default function Loader({ children, splashScreenComplete }: Loader) {
     if (isGameActive && splashScreenComplete) {
       // sendMessage("Receiver", "StartGame");
     }
-  }, [isGameActive, splashScreenComplete]);
+  }, [isGameActive, splashScreenComplete, state]);
 
   return (
     <div className="pointer-events-none absolute z-10 flex h-dvh w-screen items-center justify-center">

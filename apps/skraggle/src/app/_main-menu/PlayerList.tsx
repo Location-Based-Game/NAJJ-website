@@ -1,18 +1,9 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { CrownIcon } from "lucide-react";
 import { useGetPlayers } from "@/components/GetPlayers";
-import { useEffect } from "react";
 
-interface PlayerList {
-  joinCode: string | null;
-}
-
-export default function PlayerList({ joinCode }: PlayerList) {
-  const { playerData, setJoinCode } = useGetPlayers();
-
-  useEffect(() => {
-    setJoinCode(joinCode);
-  }, []);
+export default function PlayerList() {
+  const { playerData } = useGetPlayers();
 
   return (
     <Table>
@@ -23,7 +14,7 @@ export default function PlayerList({ joinCode }: PlayerList) {
               {i === 0 && <CrownIcon size={16} />}
             </TableCell>
             <TableCell className="font-medium">{i + 1}</TableCell>
-            <TableCell className="w-full">{data}</TableCell>
+            <TableCell className="w-full">{data.name}</TableCell>
             <TableCell className="text-right">color</TableCell>
           </TableRow>
         ))}
