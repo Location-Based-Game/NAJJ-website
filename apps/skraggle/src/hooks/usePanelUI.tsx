@@ -1,10 +1,9 @@
 import CreateGame from "@/app/_main-menu/_create-game/CreateGame";
-import submitGuestNameCreateGame from "@/app/_main-menu/_create-game/submitGuestNameCreateGame";
+import CreateLogIn from "@/app/_main-menu/_create-game/CreateLogIn";
 import JoinCode from "@/app/_main-menu/_join-game/_join-code/JoinCode";
 import JoinGame from "@/app/_main-menu/_join-game/JoinGame";
-import submitGuestName from "@/app/_main-menu/_join-game/submitGuestName";
+import JoinLogIn from "@/app/_main-menu/_join-game/JoinLogIn";
 import MainButtons from "@/app/_main-menu/MainButtons";
-import SignIn from "@/app/_main-menu/SignIn";
 
 export type MainMenuState = {
   state:
@@ -36,27 +35,11 @@ export default function usePanelUI() {
         params.component = <MainButtons />;
         break;
       case "Sign In to Create":
-        params.component = (
-          <SignIn
-            back={{
-              state: "Home",
-              slideFrom: "left",
-            }}
-            submitHandler={submitGuestNameCreateGame}
-          />
-        );
+        params.component = <CreateLogIn />;
         params.height = "20rem";
         break;
       case "Sign In to Join":
-        params.component = (
-          <SignIn
-            back={{
-              state: "Enter Join Code",
-              slideFrom: "left",
-            }}
-            submitHandler={submitGuestName}
-          />
-        );
+        params.component = <JoinLogIn />;
         params.height = "20rem";
         break;
       case "Enter Join Code":

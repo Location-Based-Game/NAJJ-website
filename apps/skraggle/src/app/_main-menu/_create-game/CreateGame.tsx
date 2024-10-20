@@ -5,25 +5,27 @@ import QRCode from "./QRCode";
 import { Button } from "@/components/ui/button";
 import PlayerList from "../PlayerList";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useStartGame from "./useStartGame";
 import LeaveGameDialogue from "../LeaveGameDialogue";
-import removePlayerHost from "@/server-actions/removePlayerHost";
+import { resetClientSessionData } from "@/store/logInSlice";
+import { fetchApi } from "@/lib/fetchApi";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
-  const currentCreateCode = useSelector((state: RootState) => state.createCode);
-  const { key } = useSelector((state: RootState) => state.guestName);
+  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { handleStartGame } = useStartGame(animationCallback);
+  const dispatch = useDispatch();
 
   const handleLeaveGame = async () => {
     try {
-      await removePlayerHost({ gameId: currentCreateCode.code, playerKey: key });
+      await fetchApi("/api/leave-game")
       animationCallback({
         state: "Sign In to Create",
         slideFrom: "left",
       });
+      dispatch(resetClientSessionData());
     } catch (error) {
       animationCallback(
         {
@@ -41,7 +43,7 @@ export default function CreateGame() {
         <QRCode />
         <div className="w-full grow">
           <h2 className="my-6 w-full text-center">Players</h2>
-          <PlayerList joinCode={currentCreateCode.code} />
+          <PlayerList joinCode={gameId} />
         </div>
       </div>
       <div className="flex w-full gap-4">

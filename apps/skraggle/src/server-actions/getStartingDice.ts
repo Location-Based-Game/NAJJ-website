@@ -7,7 +7,7 @@ import { z } from "zod";
 import { InitialDiceData } from "./createRoom";
 
 const getStartingDiceSchema = gameIdSchema.extend({
-  playerKey: z.string(),
+  playerId: z.string(),
 });
 
 export default async function getStartingDice(
@@ -19,7 +19,7 @@ export default async function getStartingDice(
     throw new Error("invalid code!");
   }
 
-  const { gameId, playerKey } = validatedData.data;
+  const { gameId, playerId } = validatedData.data;
 
   const diceDataRef = ref(rtdb, `activeGames/${gameId}/initialDiceData`);
 
@@ -28,16 +28,16 @@ export default async function getStartingDice(
     throw new Error("No dice data available!");
   }
 
-  let key: string = "";
+  let id: string = "";
   if (
     process.env.NODE_ENV === "development" &&
     process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
   ) {
-    key = "testPlayer";
+    id = "testPlayer";
   } else {
-    key = playerKey;
+    id = playerId;
   }
 
-  const diceData = diceDataSnapshot.val()[key] as InitialDiceData;
+  const diceData = diceDataSnapshot.val()[id] as InitialDiceData;
   return diceData;
 }

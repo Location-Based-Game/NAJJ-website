@@ -1,16 +1,14 @@
-import { renderWithProviders } from "@/lib/testUtils";
+import { renderWithProviders } from "@/lib/reduxTestUtils";
 import "@testing-library/jest-dom";
 import MainMenuPanel from "@/app/_main-menu/MainMenuPanel";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import createRoom from "@/server-actions/createRoom";
 import { assertSucceeds } from "@firebase/rules-unit-testing";
-import { rtdb } from "@/app/firebaseConfig";
-import { ref, remove, child } from "firebase/database";
+import deleteRoom from "@/server-actions/deleteRoom";
 
 describe("Enter Join Code", () => {
   afterAll(async () => {
-    const gameRef = ref(rtdb, "activeGames");
-    await remove(child(gameRef, "bbbb"));
+    await deleteRoom({gameId: "bbbb"})
   })
 
   it('renders "Enter Join Code" and checks if the "continue" button is disabled', async () => {

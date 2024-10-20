@@ -1,19 +1,17 @@
-"use server";
+import "server-only";
+import { playerIdSchema, PlayerIdType } from "@/schemas/playerIdSchema";
+import { db } from "@/lib/firebaseAdmin";
 
-import { rtdb } from "@/app/firebaseConfig";
-import { playerKeySchema, PlayerKeyType } from "@/schemas/removePlayerSchema";
-import { child, ref, remove, get } from "firebase/database";
-
-export default async function removePlayer(data: PlayerKeyType) {
-  const validatedData = playerKeySchema.safeParse(data);
+export default async function removePlayer(data: PlayerIdType) {
+  const validatedData = playerIdSchema.safeParse(data);
 
   if (!validatedData.success) {
     console.error(validatedData.error);
     throw new Error("Invalid Data!");
   }
 
-  const { gameId, playerKey } = validatedData.data;
+  const { gameId, playerId } = validatedData.data;
 
-  const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
-  await remove(child(playersRef, playerKey));
+  const playersRef = db.ref(`activeGames/${gameId}/players/${playerId}`);
+  await playersRef.remove();
 }

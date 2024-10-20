@@ -1,9 +1,7 @@
-'use server'
-
-import { rtdb } from "@/app/firebaseConfig";
+import "server-only";
 import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
 import { GameStates } from "@/schemas/gameStateSchema";
-import { ref, set } from "firebase/database";
+import { db } from "@/lib/firebaseAdmin";
 
 //TODO update player data type
 export type PlayerData = string;
@@ -40,5 +38,5 @@ export default async function createRoom(data: GameIdType) {
     currentTurn: 0,
   };
 
-  await set(ref(rtdb, `activeGames/${gameId}`), gameRoomData);
+  await db.ref(`activeGames/${gameId}`).set(gameRoomData)
 }

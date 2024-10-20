@@ -1,11 +1,8 @@
 import "server-only"
-
 import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
 import { db } from "@/lib/firebaseAdmin";
 
-export default async function deleteRoom(
-  data: GameIdType,
-) {
+export default async function getHost(data: GameIdType) {
   const validatedData = gameIdSchema.safeParse(data);
 
   if (!validatedData.success) {
@@ -15,12 +12,12 @@ export default async function deleteRoom(
 
   const { gameId } = validatedData.data;
 
-  const gameRef = db.ref(`activeGames/${gameId}`);
-  const snapshot = await gameRef.get();
+  const hostRef = db.ref(`activeGames/${gameId}/host`);
+  const snapshot = await hostRef.get();
 
   if (!snapshot.exists()) {
-    throw new Error("Invalid Data!");
+    throw new Error("Game not available!");
+  } else {
+    return snapshot.val() as string;
   }
-
-  await gameRef.remove();
 }

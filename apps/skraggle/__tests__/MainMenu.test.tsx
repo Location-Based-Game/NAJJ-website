@@ -1,5 +1,5 @@
 import MainMenuPanel from "@/app/_main-menu/MainMenuPanel";
-import { renderWithProviders } from "@/lib/testUtils";
+import { renderWithProviders } from "@/lib/reduxTestUtils";
 import { fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 

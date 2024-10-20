@@ -1,30 +1,48 @@
-'use server'
-
-import { push, ref, runTransaction, set } from "firebase/database";
-import { rtdb } from "@/app/firebaseConfig";
+import "server-only";
 import { z } from "zod";
 import { gameIdSchema } from "@/schemas/gameIdSchema";
+import { db, Reference } from "@/lib/firebaseAdmin";
 
 const addPlayerSchema = gameIdSchema.extend({
-  playerName: z.string().min(1)
-})
+  playerName: z.string().min(1),
+});
 
-type AddPlayerType = z.infer<typeof addPlayerSchema>
+type AddPlayerType = z.infer<typeof addPlayerSchema>;
 
-export async function addPlayer(data:AddPlayerType): Promise<string> {
-  const validatedData = addPlayerSchema.safeParse(data)
-  
+export async function addPlayer(data: AddPlayerType): Promise<string> {
+  const validatedData = addPlayerSchema.safeParse(data);
+
   if (!validatedData.success) {
-    console.error(validatedData.error)
+    console.error(validatedData.error);
     throw new Error("Invalid Data!");
   }
 
-  const { gameId, playerName } = validatedData.data
+  const { gameId, playerName } = validatedData.data;
 
-  const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
-  let playerKey = "";
+  const playersRef = db.ref(`activeGames/${gameId}/players`);
+  let playerId = "";
 
-  await runTransaction(playersRef, (currentPlayers) => {
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
+  ) {
+    const testPlayerRef = db.ref(`activeGames/${gameId}/players/testPlayer`);
+    await testPlayerRef.set(playerName);
+    playerId = "testPlayer";
+  } else {
+    playerId = await addPlayerTransaction(playersRef, playerName);
+  }
+
+  return playerId;
+}
+
+async function addPlayerTransaction(
+  playersRef: Reference,
+  playerName: string,
+) {
+  let playerId = "";
+
+  await playersRef.transaction((currentPlayers) => {
     if (currentPlayers === null) {
       currentPlayers = {};
     }
@@ -34,10 +52,10 @@ export async function addPlayer(data:AddPlayerType): Promise<string> {
       throw new Error("Max players reached!");
     }
 
-    const newPlayerRef = push(playersRef);
+    const newPlayerRef = playersRef.push();
     if (newPlayerRef.key) {
-      playerKey = newPlayerRef.key;
-      currentPlayers[playerKey] = playerName;
+      playerId = newPlayerRef.key;
+      currentPlayers[playerId] = playerName;
     } else {
       throw new Error("Player key not created");
     }
@@ -45,18 +63,5 @@ export async function addPlayer(data:AddPlayerType): Promise<string> {
     return currentPlayers;
   });
 
-  return playerKey;
-}
-
-export async function addTestPlayer(
-  code: string | null,
-  name: string,
-): Promise<string> {
-  if (!code) {
-    throw new Error("invalid code!");
-  }
-
-  const playersRef = ref(rtdb, `activeGames/${code}/players/testPlayer`);
-  await set(playersRef, name);
-  return "testPlayer";
+  return playerId;
 }

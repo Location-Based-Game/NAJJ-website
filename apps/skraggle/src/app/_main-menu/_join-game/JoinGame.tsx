@@ -5,28 +5,27 @@ import LeaveGameDialogue from "../LeaveGameDialogue";
 import { useState } from "react";
 import PlayerList from "../PlayerList";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
-import removePlayer from "@/server-actions/removePlayer";
+import { useDispatch, useSelector } from "react-redux";
+import { resetClientSessionData } from "@/store/logInSlice";
+import { fetchApi } from "@/lib/fetchApi";
 
 export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
-  const guestName = useSelector((state: RootState) => state.guestName);
-  const currentJoinCode = useSelector((state: RootState) => state.joinCode);
+  const { gameId } = useSelector((state: RootState) => state.logIn);
+  const dispatch = useDispatch()
 
   const handleOnLeave = async () => {
+    try {
+      await fetchApi("/api/leave-game")
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(resetClientSessionData())
     animationCallback({
       state: "Sign In to Join",
       slideFrom: "left",
     });
-    try {
-      await removePlayer({
-        gameId: currentJoinCode.code,
-        playerKey: guestName.key,
-      });
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (
@@ -38,7 +37,7 @@ export default function JoinGame() {
       />
       <div className="w-full grow">
         <h2 className="my-6 w-full text-center">Players</h2>
-        <PlayerList joinCode={currentJoinCode.code} />
+        <PlayerList joinCode={gameId} />
       </div>
       <Button disabled={!enableButtons} className="h-12 w-full">
         Ready!
