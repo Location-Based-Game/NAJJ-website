@@ -12,15 +12,41 @@ export async function createTurnNumbers(gameId:string) {
   const playerData = players.val() as PlayersData
   const playerIds = Object.keys(playerData)
 
+  const turnValues:number[] = []
   const updates: any = {};
   for (let i = 0; i < playerIds.length; i++) {
-    const diceData: InitialDiceData = {
-      dice1: 1 + i,
-      dice2: 1 + i,
-    };
-
+    const diceData = getDiceData(turnValues)
+    turnValues.push(diceData.dice1 + diceData.dice2)
     updates[`${playerIds[i]}`] = {...playerData[playerIds[i]], diceData};
   }
 
   await playersRef.update(updates);
+}
+
+function getDiceData(turnValues:number[]): InitialDiceData {
+  //get random values for 2 D6's
+  let dice1 = 0;
+  let dice2 = 0;
+
+  function assignValues() {
+    dice1 = getRandomInt(6)
+    dice2 = getRandomInt(6)
+    const total = dice1 + dice2;
+    if (turnValues.includes(total)) {
+      assignValues()
+    }
+  }
+
+  assignValues()
+
+  const diceData: InitialDiceData = {
+    dice1,
+    dice2
+  };
+
+  return diceData
+}
+
+function getRandomInt(max:number) {
+  return Math.ceil(Math.random() * max)
 }
