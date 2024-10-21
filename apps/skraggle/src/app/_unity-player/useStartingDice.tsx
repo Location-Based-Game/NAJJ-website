@@ -7,14 +7,14 @@ import { ref, onValue } from "firebase/database";
 import { rtdb } from "../firebaseConfig";
 
 export default function useStartingDice(playerData: PlayersData) {
-  const { isGameActive } = useSelector((state: RootState) => state.gameState);
-  const { isLoaded, sendMessage } = useUnityReactContext();
+  const { isGameActive, state:gameState } = useSelector((state: RootState) => state.gameState);
+  const { sendMessage } = useUnityReactContext();
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
 
   const isStartingDiceSet = useRef(false);
 
   useEffect(() => {
-    if (!isLoaded || !isGameActive) return;
+    if (!isGameActive) return;
     if (!gameId) return;
     if (isStartingDiceSet.current) return;
 
@@ -32,5 +32,5 @@ export default function useStartingDice(playerData: PlayersData) {
     });
 
     return () => unsubscribe();
-  }, [isLoaded, isGameActive, playerData]);
+  }, [isGameActive, playerData, gameState]);
 }

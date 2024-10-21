@@ -1,7 +1,7 @@
 import { rtdb } from "@/app/firebaseConfig";
 import { useToast } from "@/hooks/use-toast";
 import { GameStates } from "@/schemas/gameStateSchema";
-import { setGameState } from "@/store/gameStateSlice";
+import { setGameActive, setGameState } from "@/store/gameStateSlice";
 import { mainMenuState, RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
@@ -14,23 +14,25 @@ export default function useSetGameState(
     methodName: string,
     parameter?: ReactUnityEventParameter,
   ) => void,
-  isLoaded: boolean,
+  splashScreenComplete: boolean,
 ) {
   const { gameId } = useSelector((state: RootState) => state.logIn);
-  const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!isLoaded || !isGameActive) return;
+    if (!splashScreenComplete || !gameId) return;
 
     const gameStateRef = ref(rtdb, `activeGames/${gameId}/gameState`);
     const unsubscribe = onValue(gameStateRef, (snapshot) => {
       if (snapshot.exists()) {
         const state = snapshot.val() as GameStates;
-        console.log(state)
         dispatch(setGameState(state));
         sendMessage("Receiver", "UpdateGameState", state);
+
+        if (state !== "Menu") {
+          dispatch(setGameActive(true));
+        }
       } else {
         console.error("Game no longer exists!");
         toast({
@@ -49,5 +51,5 @@ export default function useSetGameState(
     });
 
     return () => unsubscribe();
-  }, [isLoaded, isGameActive]);
+  }, [splashScreenComplete, gameId]);
 }

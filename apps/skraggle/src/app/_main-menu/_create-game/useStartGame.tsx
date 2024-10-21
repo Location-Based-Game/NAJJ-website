@@ -1,4 +1,3 @@
-import { setGameActive } from "@/store/gameStateSlice";
 import { setJoinCode } from "@/store/joinCodeSlice";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +31,6 @@ export default function useStartGame(
     try {
       dispatch(setJoinCode(gameId));
       await fetchApi("/api/start-game");
-      dispatch(setGameActive(true));
     } catch (error) {
       handleError(`${error}`);
     }

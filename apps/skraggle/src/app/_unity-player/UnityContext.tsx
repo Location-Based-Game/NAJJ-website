@@ -1,15 +1,17 @@
 "use client";
 import { useUnityContext } from "react-unity-webgl";
-import Loader from "../_gameplay-ui/Loader";
 import { useState, useEffect, createContext, useContext } from "react";
 import useUpdateGameState from "@/app/_unity-player/useUpdateGameState";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
 import PlayerData from "@/components/GetPlayers";
 import useSetGameState from "./useSetGameState";
 import dynamic from "next/dynamic";
-import useStartingDice from "./useStartingDice";
 
-export const UnityReactContext = createContext<UnityContextHook | null>(null);
+type UnityData = UnityContextHook & {
+  splashScreenComplete: boolean;
+}
+
+export const UnityReactContext = createContext<UnityData | null>(null);
 
 const Unity = dynamic(
   () => import("react-unity-webgl").then((mod) => mod.Unity),
@@ -46,14 +48,14 @@ export default function UnityPlayer({
     }, 2500);
   }, [isLoaded]);
 
-  useSetGameState(sendMessage, isLoaded);
+  useSetGameState(sendMessage, splashScreenComplete);
   useUpdateGameState(unityContext);
 
   return (
-    <UnityReactContext.Provider value={unityContext}>
-      <Loader splashScreenComplete={splashScreenComplete}>
+    <UnityReactContext.Provider value={{...unityContext, splashScreenComplete }}>
+      <div className="pointer-events-none absolute z-10 flex h-dvh w-screen items-center justify-center">
         <PlayerData>{children}</PlayerData>
-      </Loader>
+      </div>
       <Unity
         unityProvider={unityProvider}
         className={`h-dvh w-screen transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
