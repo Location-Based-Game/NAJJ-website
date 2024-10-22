@@ -6,6 +6,7 @@ import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-con
 import PlayerData from "@/components/GetPlayers";
 import useSetGameState from "./useSetGameState";
 import dynamic from "next/dynamic";
+import useWebRTC from "./useWebRTC";
 
 type UnityData = UnityContextHook & {
   splashScreenComplete: boolean;
@@ -50,6 +51,7 @@ export default function UnityPlayer({
 
   useSetGameState(sendMessage, splashScreenComplete);
   useUpdateGameState(unityContext);
+  useWebRTC(splashScreenComplete)
 
   return (
     <UnityReactContext.Provider value={{...unityContext, splashScreenComplete }}>
