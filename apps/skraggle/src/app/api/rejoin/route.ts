@@ -32,6 +32,6 @@ export async function GET() {
   } catch (error) {
     deleteSession();
     console.error(error)
-    return NextResponse.json({ data: `${error}` });
+    return NextResponse.json({ error: `${error}` });
   }
 }

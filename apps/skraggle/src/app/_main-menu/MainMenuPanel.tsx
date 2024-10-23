@@ -6,24 +6,48 @@ import { mainMenuState, RootState } from "@/store/store";
 import { Dispatch, UnknownAction } from "@reduxjs/toolkit";
 import { fetchApi } from "@/lib/fetchApi";
 import { setJoinCode } from "@/store/joinCodeSlice";
+import { useToast } from "@/hooks/use-toast";
+import { sessionSchema } from "@/schemas/sessionSchema";
 
 export default function MainMenuPanel() {
   const mainMenuUI = useSelector((state: RootState) => state.mainMenu);
   const { handlePanelUI } = usePanelUI();
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   useEffect(() => {
     const sessionCookie = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('session_data='))
-      ?.split('=')[1];
+      .split("; ")
+      .find((row) => row.startsWith("session_data="))
+      ?.split("=")[1];
 
-    
     if (!sessionCookie) return;
 
-    handleRejoin(dispatch)
+    dispatch(
+      mainMenuState.updateState({
+        state: "Rejoining",
+        slideFrom: "right",
+      }),
+    );
 
-  }, [])
+    handleRejoin(dispatch, (error) => {
+      console.error(error)
+      setTimeout(() => {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error,
+        });
+      }, 100);
+
+      dispatch(
+        mainMenuState.updateState({
+          state: "Home",
+          slideFrom: "right",
+        }),
+      );
+    });
+  }, []);
 
   return (
     <div
@@ -38,13 +62,19 @@ export default function MainMenuPanel() {
   );
 }
 
-async function handleRejoin(dispatch: Dispatch<UnknownAction>) {
-  const data = await fetchApi("/api/rejoin")
-  const res = await data.json()
+async function handleRejoin(
+  dispatch: Dispatch<UnknownAction>,
+  onError: (error: string) => void,
+) {
+  const data = await fetchApi("/api/rejoin");
+  const res = await data.json();
 
-  if (!res.data.gameId) return;
+  if (res.error) {
+    onError(res.error);
+    return;
+  }
 
-  const {gameId, playerId, playerName} = res.data;
+  const { gameId, playerId, playerName } = sessionSchema.parse(res.data);
   const sessionData: LogInType = {
     loading: false,
     gameId,
@@ -52,18 +82,22 @@ async function handleRejoin(dispatch: Dispatch<UnknownAction>) {
     playerName,
   };
 
-  dispatch(setLogInSession(sessionData))
-  dispatch(setJoinCode(sessionData.gameId))
+  dispatch(setLogInSession(sessionData));
+  dispatch(setJoinCode(sessionData.gameId));
 
   if (res.isHost) {
-    dispatch(mainMenuState.updateState({
-      state: "Create Game",
-      slideFrom: "right"
-    }));
+    dispatch(
+      mainMenuState.updateState({
+        state: "Create Game",
+        slideFrom: "right",
+      }),
+    );
   } else {
-    dispatch(mainMenuState.updateState({
-      state: "Join Game",
-      slideFrom: "right"
-    }));
+    dispatch(
+      mainMenuState.updateState({
+        state: "Join Game",
+        slideFrom: "right",
+      }),
+    );
   }
 }
