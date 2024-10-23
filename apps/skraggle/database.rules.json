@@ -18,6 +18,9 @@
               "$playerId": {
                 ".write": true
               }
+            },
+            "peer-offer": {
+              ".write": true
             }
           }
         },

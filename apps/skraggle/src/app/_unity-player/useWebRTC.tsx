@@ -1,27 +1,9 @@
-import {
-  child,
-  DatabaseReference,
-  onValue,
-  push,
-  ref,
-  set,
-  update,
-  get,
-} from "firebase/database";
-import { useEffect, useRef, useState } from "react";
+import { onValue, ref, set, get } from "firebase/database";
+import { useEffect, useRef } from "react";
 import { rtdb } from "../firebaseConfig";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Peer from "simple-peer";
-
-const configuration: RTCConfiguration = {
-  iceServers: [
-    {
-      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
-    },
-  ],
-  iceCandidatePoolSize: 10,
-};
 
 type HostPeer = {
   [playerId: string]: {
@@ -30,18 +12,25 @@ type HostPeer = {
   };
 };
 
+type RemotePeer = {
+  [playerId: string]: Peer.Instance;
+}
+
 export default function useWebRTC() {
   const { gameId, playerId, playerName } = useSelector(
     (state: RootState) => state.logIn,
   );
 
   const hostPeer = useRef<HostPeer>({});
-  const remotePeers = useRef<string[]>([])
+  const remotePeers = useRef<RemotePeer>({})
 
   useEffect(() => {
     if (!playerId) return;
 
-    const signalingRef = ref(rtdb, `activeGames/${gameId}/webrtc-signaling`);
+    const offerRef = ref(
+      rtdb,
+      `activeGames/${gameId}/players/${playerId}/peer-offer`,
+    );
     const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
     const answerRef = ref(
       rtdb,
@@ -55,28 +44,21 @@ export default function useWebRTC() {
       const data = snapshot.val();
       Object.keys(data).forEach((key) => {
         if (key === playerId) return;
-        console.log("peer created: ", key);
         hostPeer.current[key] = {
-          peer: createPeer(true, playerId),
+          peer: createPeer(true, key),
           connected: false,
         };
       });
     })();
 
-    
     //listen for offers and create a remote peer & answer for each offer
-    onValue(signalingRef, (snapshot) => {
+    onValue(offerRef, (snapshot) => {
       if (!snapshot.exists()) return;
       const data = snapshot.val();
-      const key = Object.keys(data)[0]
-      console.log(key)
-      if (key === playerId) return;
-      if (remotePeers.current.includes(key)) return;
-      remotePeers.current.push(key);
-      const remotePeer = createPeer(false, key);
-      const peerData = data[key];
-      console.log(peerData);
-      remotePeer.signal(peerData);
+      const remotePeer = createPeer(false, data.playerId);
+      console.log(data);
+      remotePeer.signal(data.signal);
+      remotePeers.current[data.playerId] = remotePeer;
     });
 
     //listen for answers and assign signals to their respective player ID's host peer
@@ -104,9 +86,9 @@ export default function useWebRTC() {
       if (initiator) {
         const signalingRef = ref(
           rtdb,
-          `activeGames/${gameId}/webrtc-signaling`,
+          `activeGames/${gameId}/players/${id}/peer-offer`,
         );
-        set(signalingRef, { [id]:signal });
+        set(signalingRef, { signal, playerId });
       } else {
         const answerRef = ref(
           rtdb,
@@ -120,6 +102,10 @@ export default function useWebRTC() {
       peer.send(`connected to ${playerName}`);
     });
 
+    peer.on('close', () => {
+      console.log(`disconnected from ${playerName}`)
+    });
+
     peer.on("data", (data) => {
       if (data instanceof Uint8Array) {
         const decodedData = new TextDecoder().decode(data);
@@ -131,101 +117,4 @@ export default function useWebRTC() {
 
     return peer;
   }
-
-  //   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
-  //   const [localConnection, setLocalConnection] = useState<RTCPeerConnection>();
-  //   const [remoteConnection, setRemoteConnection] = useState<RTCPeerConnection>();
-  //   const dataChannelRef = useRef<RTCDataChannel>();
-  //   const localChannelRef = useRef<RTCDataChannel>();
-
-  //   useEffect(() => {
-  //     if (!gameId) return;
-  //     const signalingRef = ref(rtdb, `activeGames/${gameId}/webrtc-signaling`);
-  //     const peerConnection = new RTCPeerConnection(configuration);
-
-  //     const dataChannel = peerConnection.createDataChannel("test");
-  //     dataChannel.onopen = () => console.log("Data channel is open");
-  //     dataChannel.onmessage = (e) => console.log("Message from peer:", e.data);
-  //     localChannelRef.current = dataChannel;
-
-  //     peerConnection.onicecandidate = (event) => {
-  //       if (event.candidate) {
-  //         update(child(signalingRef, playerId), { candidate: event.candidate });
-  //       }
-  //     };
-
-  //     peerConnection.ondatachannel = (event) => {
-  //       const receiveChannel = event.channel;
-  //       receiveChannel.onmessage = (e) =>
-  //         console.log("Received Message:", e.data);
-  //       dataChannelRef.current = receiveChannel;
-  //     };
-
-  //     setLocalConnection(peerConnection);
-  //   }, [gameId]);
-
-  //   const offerSent = useRef(false);
-  //   useEffect(() => {
-  //     if (!splashScreenComplete || !localConnection) return;
-  //     if (!gameId || !playerId) return;
-  //     if (offerSent.current) return;
-  //     offerSent.current = true;
-  //     const signalingRef = ref(rtdb, `activeGames/${gameId}/webrtc-signaling`);
-
-  //     (async () => {
-  //       const offer = await localConnection.createOffer();
-  //       await localConnection.setLocalDescription(offer);
-  //       const offerObj:any = {}
-  //       offerObj[playerId] = {offer}
-  //       update(child(signalingRef, "offers"), offerObj);
-
-  //       // Listen for answer
-  //       onValue(signalingRef, (snapshot) => {
-  //         const data = snapshot.val();
-  //         if (!data) return;
-  //         if (data[playerId].answer) {
-  //           localConnection.setRemoteDescription(
-  //             new RTCSessionDescription(data[playerId].answer),
-  //           );
-  //         }
-  //       });
-  //     })();
-  //   }, [splashScreenComplete, localConnection, gameId, playerId]);
-
-  //   useEffect(() => {
-  //     if (!localConnection) return;
-  //     if (!gameId) return;
-  //     const signalingRef = ref(rtdb, `activeGames/${gameId}/webrtc-signaling`);
-
-  //     onValue(signalingRef, (snapshot) => {
-  //       const data = snapshot.val();
-  //       if (!data) return;
-  //       const keys = Object.keys(data);
-  //       if (data[keys[0]]?.offer) {
-  //         console.log("made it here")
-  //         const peerConnection = new RTCPeerConnection(configuration);
-  //         setRemoteConnection(peerConnection);
-  //         peerConnection.setRemoteDescription(
-  //           new RTCSessionDescription(data[keys[0]]?.offer),
-  //         );
-
-  //         // Create answer
-  //         peerConnection.createAnswer().then(async (answer) => {
-  //           await peerConnection.setLocalDescription(answer);
-  //           update(child(signalingRef, keys[0]), { answer });
-  //         });
-
-  //         peerConnection.onicecandidate = (event) => {
-  //           if (event.candidate) {
-  //             update(child(signalingRef, keys[0]), { candidate: event.candidate });
-  //           }
-  //         };
-  //       }
-
-  //       // Handle ICE candidates
-  //       if (data?.candidate) {
-  //         localConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-  //       }
-  //     });
-  //   }, [localConnection, gameId]);
 }
