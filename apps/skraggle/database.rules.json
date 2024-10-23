@@ -12,7 +12,14 @@
         },
         "players": {
           ".read": true,
-          ".write": false
+          ".write": false,
+          "$playerId": {
+            "peer-answer": {
+              "$playerId": {
+                ".write": true
+              }
+            }
+          }
         },
         "webrtc-signaling": {
           ".read": true,
