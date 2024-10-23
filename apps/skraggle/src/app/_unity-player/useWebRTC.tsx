@@ -4,6 +4,7 @@ import { rtdb } from "../firebaseConfig";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Peer from "simple-peer";
+import { fetchApi } from "@/lib/fetchApi";
 
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
@@ -57,26 +58,20 @@ export default function useWebRTC() {
     });
   }, [playerId]);
 
-  function createPeer(initiator: boolean, id: string) {
+  function createPeer(initiator: boolean, peerId: string) {
     const peer = new Peer({
       initiator,
       trickle: false,
     });
 
     peer.on("signal", (signal) => {
-      if (initiator) {
-        const offerRef = ref(
-          rtdb,
-          `activeGames/${gameId}/players/${id}/peer-offer`,
-        );
-        set(offerRef, { signal, playerId });
-      } else {
-        const answerRef = ref(
-          rtdb,
-          `activeGames/${gameId}/players/${id}/peer-answer`,
-        );
-        set(answerRef, { signal, playerId });
-      }
+      const params = new URLSearchParams({
+        isInitiator: initiator.toString(),
+        peerId,
+        signal: JSON.stringify(signal)
+      }).toString();
+
+      fetchApi(`/api/send-peer-signal?${params}`)
     });
 
     peer.on("connect", () => {
@@ -84,7 +79,7 @@ export default function useWebRTC() {
     });
 
     peer.on("close", () => {
-      delete playerPeers.current[id]
+      delete playerPeers.current[peerId]
     });
 
     peer.on("error", (error) => {

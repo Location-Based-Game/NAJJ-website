@@ -5,6 +5,7 @@ import { LogInType, setLogInSession } from "@/store/logInSlice";
 import { mainMenuState, RootState } from "@/store/store";
 import { Dispatch, UnknownAction } from "@reduxjs/toolkit";
 import { fetchApi } from "@/lib/fetchApi";
+import { setJoinCode } from "@/store/joinCodeSlice";
 
 export default function MainMenuPanel() {
   const mainMenuUI = useSelector((state: RootState) => state.mainMenu);
@@ -52,6 +53,7 @@ async function handleRejoin(dispatch: Dispatch<UnknownAction>) {
   };
 
   dispatch(setLogInSession(sessionData))
+  dispatch(setJoinCode(sessionData.gameId))
 
   if (res.isHost) {
     dispatch(mainMenuState.updateState({
