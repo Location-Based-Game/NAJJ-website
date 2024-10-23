@@ -2,26 +2,31 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import LeaveGameDialogue from "../LeaveGameDialogue";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PlayerList from "../PlayerList";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { resetClientSessionData } from "@/store/logInSlice";
 import { fetchApi } from "@/lib/fetchApi";
+import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 
 export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
+  const { playerPeers } = useUnityReactContext();
   const { gameId } = useSelector((state: RootState) => state.logIn);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleOnLeave = async () => {
     try {
-      await fetchApi("/api/leave-game")
+      await fetchApi("/api/leave-game");
+      Object.keys(playerPeers.current).forEach((key) => {
+        playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
+      });
     } catch (error) {
       console.error(error);
     }
-    dispatch(resetClientSessionData())
+    dispatch(resetClientSessionData());
     animationCallback({
       state: "Sign In to Join",
       slideFrom: "left",

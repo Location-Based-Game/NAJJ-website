@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Peer from "simple-peer";
 
-type PlayerPeers = {
+export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
 };
 
@@ -87,6 +87,10 @@ export default function useWebRTC() {
       delete playerPeers.current[id]
     });
 
+    peer.on("error", (error) => {
+      console.log(error.message)
+    })
+
     peer.on("data", (data) => {
       if (data instanceof Uint8Array) {
         const decodedData = new TextDecoder().decode(data);
@@ -98,4 +102,6 @@ export default function useWebRTC() {
 
     return peer;
   }
+
+  return {playerPeers}
 }

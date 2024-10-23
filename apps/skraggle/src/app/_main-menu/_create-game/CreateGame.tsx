@@ -10,6 +10,7 @@ import useStartGame from "./useStartGame";
 import LeaveGameDialogue from "../LeaveGameDialogue";
 import { resetClientSessionData } from "@/store/logInSlice";
 import { fetchApi } from "@/lib/fetchApi";
+import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
@@ -17,10 +18,14 @@ export default function CreateGame() {
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { handleStartGame } = useStartGame(animationCallback);
   const dispatch = useDispatch();
+  const { playerPeers } = useUnityReactContext();
 
   const handleLeaveGame = async () => {
     try {
       await fetchApi("/api/leave-game")
+      Object.keys(playerPeers.current).forEach(key => {
+        playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
+      })
       animationCallback({
         state: "Sign In to Create",
         slideFrom: "left",

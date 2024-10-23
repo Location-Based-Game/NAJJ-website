@@ -6,11 +6,12 @@ import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-con
 import PlayerData from "@/components/GetPlayers";
 import useSetGameState from "./useSetGameState";
 import dynamic from "next/dynamic";
-import useWebRTC from "./useWebRTC";
+import useWebRTC, { PlayerPeers } from "./useWebRTC";
 
 type UnityData = UnityContextHook & {
   splashScreenComplete: boolean;
-}
+  playerPeers: React.MutableRefObject<PlayerPeers>;
+};
 
 export const UnityReactContext = createContext<UnityData | null>(null);
 
@@ -51,10 +52,12 @@ export default function UnityPlayer({
 
   useSetGameState(sendMessage, splashScreenComplete);
   useUpdateGameState(unityContext);
-  useWebRTC(splashScreenComplete)
+  const { playerPeers } = useWebRTC();
 
   return (
-    <UnityReactContext.Provider value={{...unityContext, splashScreenComplete }}>
+    <UnityReactContext.Provider
+      value={{ ...unityContext, splashScreenComplete, playerPeers }}
+    >
       <div className="pointer-events-none absolute z-10 flex h-dvh w-screen items-center justify-center">
         <PlayerData>{children}</PlayerData>
       </div>
