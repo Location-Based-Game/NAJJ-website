@@ -64,14 +64,18 @@ export default function useWebRTC() {
       trickle: false,
     });
 
-    peer.on("signal", (signal) => {
+    peer.on("signal", async (signal) => {
       const params = new URLSearchParams({
         isInitiator: initiator.toString(),
         peerId,
-        signal: JSON.stringify(signal)
+        signalString: JSON.stringify(signal)
       }).toString();
 
-      fetchApi(`/api/send-peer-signal?${params}`)
+      const data = await fetchApi(`/api/send-peer-signal?${params}`)
+      const res = await data.json();
+      if (res.error) {
+        console.error(res.error)
+      }
     });
 
     peer.on("connect", () => {

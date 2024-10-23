@@ -4,8 +4,7 @@ import usePanelTransition from "@/hooks/usePanelTransition";
 import LeaveGameDialogue from "../LeaveGameDialogue";
 import { useState } from "react";
 import PlayerList from "../PlayerList";
-import { RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { resetClientSessionData } from "@/store/logInSlice";
 import { fetchApi } from "@/lib/fetchApi";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
@@ -14,7 +13,6 @@ export default function JoinGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
   const { playerPeers } = useUnityReactContext();
-  const { gameId } = useSelector((state: RootState) => state.logIn);
   const dispatch = useDispatch();
 
   const handleOnLeave = async () => {
