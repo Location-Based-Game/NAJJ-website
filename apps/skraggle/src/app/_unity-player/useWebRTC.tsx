@@ -44,7 +44,6 @@ export default function useWebRTC() {
       if (!snapshot.exists()) return;
       const data = snapshot.val();
       const remotePeer = createPeer(false, data.playerId);
-      console.log(data);
       remotePeer.signal(data.signal);
       playerPeers.current[data.playerId] = remotePeer;
     });
@@ -53,7 +52,6 @@ export default function useWebRTC() {
     onValue(answerRef, (snapshot) => {
       if (!snapshot.exists()) return;
       const data = snapshot.val();
-      console.log(data);
       const key = data.playerId;
       playerPeers.current[key].signal(data.signal);
     });
@@ -67,11 +65,11 @@ export default function useWebRTC() {
 
     peer.on("signal", (signal) => {
       if (initiator) {
-        const signalingRef = ref(
+        const offerRef = ref(
           rtdb,
           `activeGames/${gameId}/players/${id}/peer-offer`,
         );
-        set(signalingRef, { signal, playerId });
+        set(offerRef, { signal, playerId });
       } else {
         const answerRef = ref(
           rtdb,
@@ -86,7 +84,7 @@ export default function useWebRTC() {
     });
 
     peer.on("close", () => {
-      console.log(`disconnected from ${playerName}`);
+      delete playerPeers.current[id]
     });
 
     peer.on("data", (data) => {

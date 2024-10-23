@@ -1,3 +1,4 @@
+import { db } from "@/lib/firebaseAdmin";
 import { deleteSession, getSessionData } from "@/lib/sessionUtils";
 import getHost from "@/server-actions/getHost";
 import { NextResponse } from "next/server";
@@ -8,6 +9,14 @@ export async function GET() {
 
   try {
     const host = await getHost({ gameId });
+
+    //reestablish webRTC peers
+    const playerRef = db.ref(`activeGames/${gameId}/players/${playerId}`)
+    const playerData = (await playerRef.get()).val()
+    delete playerData["peer-answer"]
+    delete playerData["peer-offer"]
+    await playerRef.set(playerData)
+
     if (!playerId) {
       throw new Error("No playerId assigned!")
     }
@@ -22,6 +31,7 @@ export async function GET() {
     return NextResponse.json({ data: { gameId, playerId, playerName } });
   } catch (error) {
     deleteSession();
+    console.error(error)
     return NextResponse.json({ data: `${error}` });
   }
 }
