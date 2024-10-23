@@ -15,18 +15,12 @@
           ".write": false,
           "$playerId": {
             "peer-answer": {
-              "$playerId": {
-                ".write": true
-              }
+              ".write": true
             },
             "peer-offer": {
               ".write": true
             }
           }
-        },
-        "webrtc-signaling": {
-          ".read": true,
-          ".write": true
         }
       }
     }
