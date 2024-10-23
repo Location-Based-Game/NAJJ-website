@@ -1,6 +1,6 @@
 import { renderWithProviders } from "@/lib/reduxTestUtils";
 import "@testing-library/jest-dom";
-import MainMenuPanel from "@/app/_main-menu/MainMenuPanel";
+import MainMenuPanel from "@/app/_main-menu/_home/MainMenuPanel";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import createRoom from "@/server-actions/createRoom";
 import { assertSucceeds } from "@firebase/rules-unit-testing";

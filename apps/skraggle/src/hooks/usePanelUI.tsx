@@ -3,8 +3,8 @@ import CreateLogIn from "@/app/_main-menu/_create-game/CreateLogIn";
 import JoinCode from "@/app/_main-menu/_join-game/_join-code/JoinCode";
 import JoinGame from "@/app/_main-menu/_join-game/JoinGame";
 import JoinLogIn from "@/app/_main-menu/_join-game/JoinLogIn";
-import MainButtons from "@/app/_main-menu/MainButtons";
-import Rejoining from "@/app/_main-menu/Rejoining";
+import MainButtons from "@/app/_main-menu/_home/MainButtons";
+import Rejoining from "@/app/_main-menu/_home/Rejoining";
 
 export type MainMenuState = {
   state:

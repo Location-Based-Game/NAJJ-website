@@ -1,5 +1,5 @@
 import { assertSucceeds } from "@firebase/rules-unit-testing";
-import MainMenuPanel from "@/app/_main-menu/MainMenuPanel";
+import MainMenuPanel from "@/app/_main-menu/_home/MainMenuPanel";
 import PlayerData from "@/components/GetPlayers";
 import { renderWithProviders } from "@/lib/reduxTestUtils";
 import MockUnityPlayer from "../mock/MockUnityPlayer";

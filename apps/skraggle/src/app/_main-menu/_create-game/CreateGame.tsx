@@ -4,43 +4,13 @@ import { useState } from "react";
 import QRCode from "./QRCode";
 import { Button } from "@/components/ui/button";
 import PlayerList from "../PlayerList";
-import { RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
 import useStartGame from "./useStartGame";
-import LeaveGameDialogue from "../LeaveGameDialogue";
-import { resetClientSessionData } from "@/store/logInSlice";
-import { fetchApi } from "@/lib/fetchApi";
-import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
+import HostLeaveGame from "./HostLeaveGame";
 
 export default function CreateGame() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
-  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
-  const { handleStartGame } = useStartGame(animationCallback);
-  const dispatch = useDispatch();
-  const { playerPeers } = useUnityReactContext();
-
-  const handleLeaveGame = async () => {
-    try {
-      await fetchApi("/api/leave-game")
-      Object.keys(playerPeers.current).forEach(key => {
-        playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
-      })
-      animationCallback({
-        state: "Sign In to Create",
-        slideFrom: "left",
-      });
-      dispatch(resetClientSessionData());
-    } catch (error) {
-      animationCallback(
-        {
-          state: "Sign In to Create",
-          slideFrom: "left",
-        },
-        `${error}`,
-      );
-    }
-  };
+  const { handleStartGame } = useStartGame();
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -52,11 +22,7 @@ export default function CreateGame() {
         </div>
       </div>
       <div className="flex w-full gap-4">
-        <LeaveGameDialogue
-          onLeave={() => {
-            handleLeaveGame();
-          }}
-        />
+        <HostLeaveGame animationCallback={animationCallback} />
         <Button
           disabled={!enableButtons}
           className="h-12 w-full"

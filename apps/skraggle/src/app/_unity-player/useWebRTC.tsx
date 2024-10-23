@@ -68,13 +68,13 @@ export default function useWebRTC() {
       const params = new URLSearchParams({
         isInitiator: initiator.toString(),
         peerId,
-        signalString: JSON.stringify(signal)
+        signalString: JSON.stringify(signal),
       }).toString();
 
-      const data = await fetchApi(`/api/send-peer-signal?${params}`)
+      const data = await fetchApi(`/api/send-peer-signal?${params}`);
       const res = await data.json();
       if (res.error) {
-        console.error(res.error)
+        console.error(res.error);
       }
     });
 
@@ -83,12 +83,17 @@ export default function useWebRTC() {
     });
 
     peer.on("close", () => {
-      delete playerPeers.current[peerId]
+      if (process.env.NODE_ENV === "development") {
+        console.log(`disconnected from ${peerId}`);
+      }
+      delete playerPeers.current[peerId];
     });
 
     peer.on("error", (error) => {
-      console.log(error.message)
-    })
+      if (process.env.NODE_ENV === "development") {
+        console.log(error.message);
+      }
+    });
 
     peer.on("data", (data) => {
       if (data instanceof Uint8Array) {
@@ -102,5 +107,5 @@ export default function useWebRTC() {
     return peer;
   }
 
-  return {playerPeers}
+  return { playerPeers };
 }
