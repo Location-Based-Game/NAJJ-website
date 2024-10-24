@@ -5,24 +5,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { GuestNameType } from "../GuestNameInput";
 import SignIn from "../SignIn";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
-import { logInJoin, resetClientSessionData } from "@/store/logInSlice";
+import { logInJoin } from "@/store/logInSlice";
+import useLogOutOnError from "@/hooks/useLogOutOnError";
 
 export default function JoinLogIn() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
   const currentJoinCode = useSelector((state: RootState) => state.joinCode);
   const sessionData = useSelector((state: RootState) => state.logIn);
-
+  const { logOutOnError } = useLogOutOnError();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
-      dispatch(resetClientSessionData());
-
-      animationCallback(
-        { state: "Home", slideFrom: "left" },
-        sessionData.error,
-      );
+      logOutOnError(sessionData.error)
     }
 
     if (!sessionData.error && sessionData.gameId) {

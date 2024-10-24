@@ -18,13 +18,18 @@ export async function GET(request: NextRequest) {
     gameId = makeid(4);
   }
 
-  await setSessionCookie({
-    gameId,
-    playerId: "",
-    playerName: "",
-  });
-
-  return NextResponse.json(gameId);
+  try {
+    await setSessionCookie({
+      gameId,
+      playerId: "",
+      playerName: "",
+    });
+  
+    return NextResponse.json(gameId);
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json({ error: `${error}` });
+  }
 }
 
 function makeid(length: number): string {

@@ -35,18 +35,6 @@ export default function useSetGameState(
         }
       } else {
         console.error("Game no longer exists!");
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Game no longer exists!",
-        });
-
-        dispatch(
-          mainMenuState.updateState({
-            state: "Home",
-            slideFrom: "left",
-          }),
-        );
       }
     });
 

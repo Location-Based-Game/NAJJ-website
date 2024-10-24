@@ -53,14 +53,12 @@ export const logInSlice = createSlice({
 export const logInCreate = createAsyncThunk(
   "log in/create room",
   async (playerName: string) => {
-    const logIn = await fetchApi(`/api/logIn`);
-    const gameId = await logIn.json();
+    const gameId = await fetchApi(`/api/logIn`);
 
     const params = new URLSearchParams({
       playerName,
     }).toString();
-    const createRoom = await fetchApi(`/api/create-room?${params}`);
-    const playerId = await createRoom.json();
+    const playerId = await fetchApi(`/api/create-room?${params}`);
 
     const sessionData: LogInType = {
       loading: false,
@@ -81,14 +79,12 @@ export const logInJoin = createAsyncThunk(
     const logInParams = new URLSearchParams({
       gameId: joinCode,
     }).toString();
-    const logIn = await fetchApi(`/api/logIn?${logInParams}`);
-    const gameId = await logIn.json();
+    const gameId = await fetchApi(`/api/logIn?${logInParams}`);
 
     const params = new URLSearchParams({
       playerName,
     }).toString();
-    const addPlayer = await fetchApi(`/api/add-player?${params}`);
-    const playerId = await addPlayer.json();
+    const playerId = await fetchApi(`/api/add-player?${params}`);
 
     const sessionData: LogInType = {
       loading: false,

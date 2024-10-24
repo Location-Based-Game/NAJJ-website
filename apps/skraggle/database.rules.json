@@ -1,10 +1,10 @@
 {
   "rules": {
-    "activeGames" : {
+    "activeGames": {
       "$gameId": {
         ".read": false,
         "gameState": {
-          ".read":true
+          ".read": true
         },
         "id": {
           ".read": true,

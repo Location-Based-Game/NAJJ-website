@@ -1,4 +1,4 @@
-import MainMenuPanel from "@/app/_main-menu/MainMenuPanel";
+import MainMenuPanel from "@/app/_main-menu/_home/MainMenuPanel";
 import { renderWithProviders } from "@/lib/reduxTestUtils";
 import {
   fireEvent,

@@ -1,4 +1,4 @@
-import { resetClientSessionData, logInCreate } from "@/store/logInSlice";
+import { logInCreate } from "@/store/logInSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,23 +6,18 @@ import SignIn from "../SignIn";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { GuestNameType } from "../GuestNameInput";
+import useLogOutOnError from "@/hooks/useLogOutOnError";
 
 export default function CreateLogIn() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
-
   const dispatch = useDispatch<AppDispatch>();
-
   const sessionData = useSelector((state: RootState) => state.logIn);
+  const { logOutOnError } = useLogOutOnError();
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
-      dispatch(resetClientSessionData());
-
-      animationCallback(
-        { state: "Home", slideFrom: "left" },
-        sessionData.error,
-      );
+      logOutOnError(sessionData.error);
     }
 
     if (!sessionData.error && sessionData.gameId) {

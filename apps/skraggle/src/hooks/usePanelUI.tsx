@@ -3,7 +3,8 @@ import CreateLogIn from "@/app/_main-menu/_create-game/CreateLogIn";
 import JoinCode from "@/app/_main-menu/_join-game/_join-code/JoinCode";
 import JoinGame from "@/app/_main-menu/_join-game/JoinGame";
 import JoinLogIn from "@/app/_main-menu/_join-game/JoinLogIn";
-import MainButtons from "@/app/_main-menu/MainButtons";
+import MainButtons from "@/app/_main-menu/_home/MainButtons";
+import Rejoining from "@/app/_main-menu/_home/Rejoining";
 
 export type MainMenuState = {
   state:
@@ -12,7 +13,8 @@ export type MainMenuState = {
     | "Sign In to Join"
     | "Create Game"
     | "Enter Join Code"
-    | "Join Game";
+    | "Join Game"
+    | "Rejoining"
   slideFrom: "left" | "right";
 };
 
@@ -53,6 +55,10 @@ export default function usePanelUI() {
       case "Create Game":
         params.component = <CreateGame />;
         params.width = "40rem";
+        break;
+      case "Rejoining":
+        params.component = <Rejoining />;
+        params.height = "26rem";
         break;
     }
 

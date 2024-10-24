@@ -7,7 +7,7 @@ import { turnSlice } from "./turnSlice";
 import { logInSlice } from "./logInSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
-  state: "Sign In to Create",
+  state: "Home",
   slideFrom: "right",
 });
 
