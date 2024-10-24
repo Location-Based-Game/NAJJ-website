@@ -1,4 +1,4 @@
-import { getSessionData, setSessionCookie } from "@/lib/sessionUtils";
+import { deleteSession, getSessionData, setSessionCookie } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { addPlayer } from "@/server-actions/addPlayer";
 import getRoom from "@/server-actions/getRoom";
@@ -15,14 +15,21 @@ export async function GET(request: NextRequest) {
     request.url,
     addPlayerSchema,
   );
-  const { gameId } = await getSessionData();
-
-  //first check if room exists
-  await getRoom({ gameId });
-
-  const playerId = await addPlayer({ gameId, playerName });
-
-  await setSessionCookie({playerName, playerId, gameId});
-
-  return NextResponse.json(playerId);
+  
+  try {
+    const { gameId } = await getSessionData();
+  
+    //first check if room exists
+    await getRoom({ gameId });
+  
+    const playerId = await addPlayer({ gameId, playerName });
+  
+    await setSessionCookie({playerName, playerId, gameId});
+  
+    return NextResponse.json(playerId);
+  } catch (error) {
+    deleteSession();
+    console.error(error)
+    return NextResponse.json({ error: `${error}` });
+  }
 }

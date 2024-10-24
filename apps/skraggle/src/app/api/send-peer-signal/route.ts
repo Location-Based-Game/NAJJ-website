@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebaseAdmin";
-import { getSessionData } from "@/lib/sessionUtils";
+import { deleteSession, getSessionData } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { NextRequest } from "next/dist/server/web/spec-extension/request";
 import { NextResponse } from "next/server";
@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ data: "Success" });
   } catch (error) {
+    deleteSession();
     console.error(error)
     return NextResponse.json({ error: `${error}` });
   }

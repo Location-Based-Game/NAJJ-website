@@ -1,10 +1,9 @@
 import useStartingDice from "@/app/_unity-player/useStartingDice";
 import { rtdb } from "@/app/firebaseConfig";
-import { useToast } from "@/hooks/use-toast";
-import { mainMenuState, RootState } from "@/store/store";
+import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const PlayerDataContext = createContext<{
   playerData: PlayersData;
@@ -29,25 +28,6 @@ export type PlayersData = {
 export default function PlayerData({ children }: PlayerData) {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const [playerData, setPlayerData] = useState<PlayersData>({});
-  const dispatch = useDispatch();
-  const { toast } = useToast();
-
-  const handleError = (message: string) => {
-    console.error(message);
-
-    toast({
-      title: "Error",
-      variant: "destructive",
-      description: message,
-    });
-
-    dispatch(
-      mainMenuState.updateState({
-        state: "Home",
-        slideFrom: "left",
-      }),
-    );
-  };
 
   useStartingDice(playerData);
 
@@ -55,13 +35,9 @@ export default function PlayerData({ children }: PlayerData) {
     if (!gameId) return;
     const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
     const unsubscribe = onValue(playersRef, (snapshot) => {
-      if (gameId) {
-        if (!snapshot.exists()) return;
-        const data = snapshot.val() as PlayersData;
-        setPlayerData(data);
-      } else {
-        handleError("Game not available! Try creating a game.");
-      }
+      if (!snapshot.exists()) return;
+      const data = snapshot.val() as PlayersData;
+      setPlayerData(data);
     });
 
     return () => unsubscribe();

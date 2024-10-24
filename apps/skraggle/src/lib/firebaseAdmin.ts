@@ -5,7 +5,7 @@ if (!admin.apps.length) {
   const serviceAccount = JSON.parse(process.env.SKRAGGLE_FIREBASE_ADMIN!)
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
-    databaseURL: "https://skraggle-2e19f-default-rtdb.firebaseio.com",
+    databaseURL: process.env.SKRAGGLE_FIREBASE_DATABASE_URL,
   });
 
   if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {

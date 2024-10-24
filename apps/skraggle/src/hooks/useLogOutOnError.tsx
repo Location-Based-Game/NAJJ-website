@@ -29,7 +29,7 @@ export default function useLogOutOnError(disconnectPeers: boolean = true) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: `${error}`,
+        description: `${error}`.replace("Error: ", ""),
       });
     }, 100);
 

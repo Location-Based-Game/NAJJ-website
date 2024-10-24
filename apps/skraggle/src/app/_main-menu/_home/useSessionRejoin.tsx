@@ -30,39 +30,38 @@ export default function useSessionRejoin() {
   }, []);
 
   const handleRejoin = async () => {
-    const data = await fetchApi("/api/rejoin");
-    const res = await data.json();
+    try {
+      const res = await fetchApi("/api/rejoin");
 
-    if (res.error) {
-      logOutOnError(res.error);
-      return;
+      const { gameId, playerId, playerName } = sessionSchema.parse(res.data);
+      const sessionData: LogInType = {
+        loading: false,
+        gameId,
+        playerId,
+        playerName,
+      };
+  
+      dispatch(setLogInSession(sessionData));
+      dispatch(setJoinCode(sessionData.gameId));
+  
+      if (res.isHost) {
+        dispatch(
+          mainMenuState.updateState({
+            state: "Create Game",
+            slideFrom: "right",
+          }),
+        );
+      } else {
+        dispatch(
+          mainMenuState.updateState({
+            state: "Join Game",
+            slideFrom: "right",
+          }),
+        );
+      }
+    } catch (error) {
+      logOutOnError(error);
     }
 
-    const { gameId, playerId, playerName } = sessionSchema.parse(res.data);
-    const sessionData: LogInType = {
-      loading: false,
-      gameId,
-      playerId,
-      playerName,
-    };
-
-    dispatch(setLogInSession(sessionData));
-    dispatch(setJoinCode(sessionData.gameId));
-
-    if (res.isHost) {
-      dispatch(
-        mainMenuState.updateState({
-          state: "Create Game",
-          slideFrom: "right",
-        }),
-      );
-    } else {
-      dispatch(
-        mainMenuState.updateState({
-          state: "Join Game",
-          slideFrom: "right",
-        }),
-      );
-    }
   };
 }

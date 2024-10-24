@@ -79,10 +79,10 @@ export default function useWebRTC() {
         signalString: JSON.stringify(signal),
       }).toString();
 
-      const data = await fetchApi(`/api/send-peer-signal?${params}`);
-      const res = await data.json();
-      if (res.error) {
-        logOutOnError(res.error)
+      try {
+        await fetchApi(`/api/send-peer-signal?${params}`);
+      } catch (error) {
+        logOutOnError(error)
         Object.keys(playerPeers.current).forEach((key) => {
           playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
         });

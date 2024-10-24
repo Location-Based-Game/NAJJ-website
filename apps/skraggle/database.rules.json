@@ -12,15 +12,7 @@
         },
         "players": {
           ".read": true,
-          ".write": false,
-          "$playerId": {
-            "peer-answer": {
-              ".write": true
-            },
-            "peer-offer": {
-              ".write": true
-            }
-          }
+          ".write": false
         }
       }
     }
