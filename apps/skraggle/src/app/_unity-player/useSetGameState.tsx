@@ -1,19 +1,14 @@
 import { rtdb } from "@/app/firebaseConfig";
-import { useToast } from "@/hooks/use-toast";
 import { GameStates } from "@/schemas/gameStateSchema";
 import { setGameActive, setGameState } from "@/store/gameStateSlice";
 import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+import { CallUnityFunctionType } from "./UnityContext";
 
 export default function useSetGameState(
-  sendMessage: (
-    gameObjectName: string,
-    methodName: string,
-    parameter?: ReactUnityEventParameter,
-  ) => void,
+  callUnityFunction: CallUnityFunctionType,
   splashScreenComplete: boolean,
 ) {
   const { gameId } = useSelector((state: RootState) => state.logIn);
@@ -27,7 +22,7 @@ export default function useSetGameState(
       if (snapshot.exists()) {
         const state = snapshot.val() as GameStates;
         dispatch(setGameState(state));
-        sendMessage("Receiver", "UpdateGameState", state);
+        callUnityFunction("UpdateGameState", state);
 
         if (state !== "Menu") {
           dispatch(setGameActive(true));

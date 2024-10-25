@@ -7,10 +7,17 @@ import PlayerData from "@/components/GetPlayers";
 import useSetGameState from "./useSetGameState";
 import dynamic from "next/dynamic";
 import useWebRTC, { PlayerPeers } from "./useWebRTC";
+import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+
+export type CallUnityFunctionType = (
+  functionName: string,
+  param?: ReactUnityEventParameter | object,
+) => void;
 
 type UnityData = UnityContextHook & {
   splashScreenComplete: boolean;
   playerPeers: React.MutableRefObject<PlayerPeers>;
+  callUnityFunction: CallUnityFunctionType;
 };
 
 export const UnityReactContext = createContext<UnityData | null>(null);
@@ -39,6 +46,22 @@ export default function UnityPlayer({
 
   const { sendMessage, isLoaded, unityProvider } = unityContext;
 
+  const callUnityFunction = (
+    functionName: string,
+    param?: ReactUnityEventParameter | object,
+  ) => {
+    if (!param) {
+      sendMessage("Receiver", functionName);
+      return;
+    }
+
+    if (typeof param === "object") {
+      sendMessage("Receiver", functionName, JSON.stringify(param));
+    } else {
+      sendMessage("Receiver", functionName, param);
+    }
+  };
+
   const [splashScreenComplete, setSplashScreenComplete] = useState(false);
 
   useEffect(() => {
@@ -50,13 +73,18 @@ export default function UnityPlayer({
     }, 2500);
   }, [isLoaded]);
 
-  useSetGameState(sendMessage, splashScreenComplete);
+  useSetGameState(callUnityFunction, splashScreenComplete);
   useUpdateGameState(unityContext);
   const { playerPeers } = useWebRTC();
 
   return (
     <UnityReactContext.Provider
-      value={{ ...unityContext, splashScreenComplete, playerPeers }}
+      value={{
+        ...unityContext,
+        splashScreenComplete,
+        playerPeers,
+        callUnityFunction,
+      }}
     >
       <div className="pointer-events-none absolute z-10 flex h-dvh w-screen items-center justify-center">
         <PlayerData>{children}</PlayerData>
