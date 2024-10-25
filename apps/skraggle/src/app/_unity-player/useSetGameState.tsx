@@ -2,7 +2,7 @@ import { rtdb } from "@/app/firebaseConfig";
 import { useToast } from "@/hooks/use-toast";
 import { GameStates } from "@/schemas/gameStateSchema";
 import { setGameActive, setGameState } from "@/store/gameStateSlice";
-import { mainMenuState, RootState } from "@/store/store";
+import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,6 @@ export default function useSetGameState(
 ) {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const dispatch = useDispatch();
-  const { toast } = useToast();
 
   useEffect(() => {
     if (!splashScreenComplete || !gameId) return;

@@ -22,6 +22,7 @@ export type PlayersData = {
   [playerId: string]: {
     name: string;
     diceData: InitialDiceData;
+    turn: number;
   };
 };
 

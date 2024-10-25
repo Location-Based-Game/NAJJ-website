@@ -12,18 +12,37 @@ export async function createTurnNumbers(gameId:string) {
   const playerData = players.val() as PlayersData
   const playerIds = Object.keys(playerData)
 
-  const turnValues:number[] = []
-  const updates: any = {};
+  const totalValues:number[] = []
+  const updates: PlayersData = {};
   for (let i = 0; i < playerIds.length; i++) {
-    const diceData = getDiceData(turnValues)
-    turnValues.push(diceData.dice1 + diceData.dice2)
-    updates[`${playerIds[i]}`] = {...playerData[playerIds[i]], diceData};
+    const diceData = getDiceData(totalValues)
+    totalValues.push(diceData.dice1 + diceData.dice2)
+    updates[playerIds[i]] = {...playerData[playerIds[i]], diceData};
   }
+
+  const turnValues = getSortedIndices(totalValues)
+  Object.keys(updates).forEach((key, i) => {
+    updates[key].turn = turnValues[i]
+  })
 
   await playersRef.update(updates);
 }
 
-function getDiceData(turnValues:number[]): InitialDiceData {
+function getSortedIndices(arr: number[]): number[] {
+  const indices = arr.map((_, index) => index);
+  // Sort the indices based on the values in the original array
+  indices.sort((a, b) => arr[a] - arr[b]);
+
+  // Create a result array that stores the rank of each number based on its sorted position
+  const result:number[] = [];
+  indices.forEach((index, sortedIndex) => {
+      result[index] = sortedIndex + 1;
+  });
+
+  return result;
+}
+
+function getDiceData(totalValues:number[]): InitialDiceData {
   //get random values for 2 D6's
   let dice1 = 0;
   let dice2 = 0;
@@ -32,7 +51,7 @@ function getDiceData(turnValues:number[]): InitialDiceData {
     dice1 = getRandomInt(6)
     dice2 = getRandomInt(6)
     const total = dice1 + dice2;
-    if (turnValues.includes(total)) {
+    if (totalValues.includes(total)) {
       assignValues()
     }
   }

@@ -7,8 +7,8 @@ import useLogOutOnError from "@/hooks/useLogOutOnError";
 
 export default function useStartGame() {
   const dispatch = useDispatch();
-  const { gameId, } = useSelector((state: RootState) => state.logIn);
-  const {logOutOnError} = useLogOutOnError()
+  const { gameId } = useSelector((state: RootState) => state.logIn);
+  const { logOutOnError } = useLogOutOnError();
 
   useEffect(() => {
     if (!gameId) {
@@ -21,7 +21,7 @@ export default function useStartGame() {
       dispatch(setJoinCode(gameId));
       await fetchApi("/api/start-game");
     } catch (error) {
-      logOutOnError(error)
+      logOutOnError(error);
     }
   };
 

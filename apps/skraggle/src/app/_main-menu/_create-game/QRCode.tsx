@@ -30,6 +30,6 @@ const QRCode = memo(() => {
   );
 });
 
-QRCode.displayName = "QRCode"
+QRCode.displayName = "QRCode";
 
 export default QRCode;
