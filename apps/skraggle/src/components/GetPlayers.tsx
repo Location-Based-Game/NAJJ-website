@@ -13,15 +13,19 @@ interface PlayerData {
   children: React.ReactNode;
 }
 
-export type InitialDiceData = {
-  dice1: number;
-  dice2: number;
+export type ItemType<T> = {
+  name: string;
+  data: T
+}
+
+export type Inventory = {
+  [itemId:string]: ItemType<any>
 };
 
 export type PlayersData = {
   [playerId: string]: {
     name: string;
-    diceData: InitialDiceData;
+    inventory: Inventory;
     turn: number;
   };
 };
