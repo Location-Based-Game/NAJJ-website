@@ -75,7 +75,7 @@ export default function UnityPlayer({
 
   useSetGameState(callUnityFunction, splashScreenComplete);
   useUpdateGameState(unityContext);
-  const { playerPeers } = useWebRTC();
+  const { playerPeers } = useWebRTC(splashScreenComplete, callUnityFunction);
 
   return (
     <UnityReactContext.Provider

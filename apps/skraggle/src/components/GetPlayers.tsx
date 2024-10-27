@@ -1,3 +1,4 @@
+import useSendBoardItemData from "@/app/_unity-player/useSendBoardItemData";
 import useStartingDice from "@/app/_unity-player/useStartingDice";
 import { rtdb } from "@/app/firebaseConfig";
 import { RootState } from "@/store/store";
@@ -15,11 +16,11 @@ interface PlayerData {
 
 export type ItemType<T> = {
   name: string;
-  data: T
-}
+  data: T;
+};
 
 export type Inventory = {
-  [itemId:string]: ItemType<any>
+  [itemId: string]: ItemType<any>;
 };
 
 export type PlayersData = {
@@ -35,6 +36,7 @@ export default function PlayerData({ children }: PlayerData) {
   const [playerData, setPlayerData] = useState<PlayersData>({});
 
   useStartingDice(playerData);
+  useSendBoardItemData();
 
   useEffect(() => {
     if (!gameId) return;

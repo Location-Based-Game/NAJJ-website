@@ -43,6 +43,7 @@ export default function useStartingDice(players: PlayersData) {
     Object.keys(inventory).forEach((itemId) => {
       callUnityFunction("CreateStartingDice", {
         playerId: key,
+        itemId,
         value: inventory[itemId].data,
       });
     });

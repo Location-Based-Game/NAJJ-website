@@ -6,20 +6,28 @@ import { RootState } from "@/store/store";
 import Peer from "simple-peer";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
+import { CallUnityFunctionType } from "./UnityContext";
 
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
 };
 
-export default function useWebRTC() {
+export default function useWebRTC(
+  splashScreenComplete: boolean,
+  callUnityFunction: CallUnityFunctionType,
+) {
   const { gameId, playerId, playerName } = useSelector(
     (state: RootState) => state.logIn,
   );
   const { logOutOnError } = useLogOutOnError(false);
   const playerPeers = useRef<PlayerPeers>({});
+  const setPeers = useRef(false);
 
   useEffect(() => {
     if (!playerId) return;
+    if (!splashScreenComplete) return;
+    if (setPeers.current) return;
+    setPeers.current = true;
 
     const offerRef = ref(
       rtdb,
@@ -55,6 +63,7 @@ export default function useWebRTC() {
       if (!snapshot.exists()) return;
       const data = snapshot.val();
       const key = data.playerId;
+      if (playerPeers.current[key].connected) return;
       playerPeers.current[key].signal(data.signal);
     });
 
@@ -62,14 +71,14 @@ export default function useWebRTC() {
     return () => {
       offerListener();
       answerListener();
-    }
-  }, [playerId]);
+    };
+  }, [playerId, splashScreenComplete]);
 
   function createPeer(initiator: boolean, peerId: string) {
     const peer = new Peer({
       initiator,
       trickle: false,
-      objectMode: true
+      objectMode: true,
     });
 
     peer.on("signal", async (signal) => {
@@ -82,9 +91,11 @@ export default function useWebRTC() {
       try {
         await fetchApi(`/api/send-peer-signal?${params}`);
       } catch (error) {
-        logOutOnError(error)
+        logOutOnError(error);
         Object.keys(playerPeers.current).forEach((key) => {
-          playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
+          playerPeers.current[key].destroy(
+            new Error(`disconnected from ${key}`),
+          );
         });
       }
     });
@@ -119,7 +130,13 @@ export default function useWebRTC() {
     });
 
     peer.on("data", (data) => {
-      console.log(data)
+      try {
+        const parsedData = JSON.parse(data)
+        if (!('action' in parsedData)) return;
+        callUnityFunction("ControlBoardItem", data)
+      } catch (error) {
+        console.log(data);
+      }
     });
 
     return peer;
