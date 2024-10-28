@@ -70,6 +70,8 @@ export default function JoinCodeInput({
                   maxLength={4}
                   value={codeInput}
                   pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                  inputMode="text"
+                  autoCapitalize="none"
                   spellCheck="false"
                   onChange={(value) => {
                     setCodeInput(value);

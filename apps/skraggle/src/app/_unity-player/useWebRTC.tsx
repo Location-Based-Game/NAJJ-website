@@ -113,27 +113,23 @@ export default function useWebRTC(
         playerPeers.current[peerId].destroy(new Error(`${peerId} timed out`));
         delete playerPeers.current[peerId];
       }
-    }, 5000);
+    }, 20000);
 
     peer.on("close", () => {
-      if (process.env.NODE_ENV === "development") {
-        console.log(`${peerId} left the game`);
-      }
+      console.log(`${peerId} left the game`);
       delete playerPeers.current[peerId];
     });
 
     peer.on("error", (error) => {
-      if (process.env.NODE_ENV === "development") {
-        console.log(error.message);
-      }
+      console.log(error.message);
       delete playerPeers.current[peerId];
     });
 
     peer.on("data", (data) => {
       try {
-        const parsedData = JSON.parse(data)
-        if (!('action' in parsedData)) return;
-        callUnityFunction("ControlBoardItem", data)
+        const parsedData = JSON.parse(data);
+        if (!("action" in parsedData)) return;
+        callUnityFunction("ControlBoardItem", data);
       } catch (error) {
         console.log(data);
       }
