@@ -1,6 +1,6 @@
 import "server-only"
 import removePlayer from "./removePlayer";
-import { PlayersType } from "@/components/GetPlayers";
+import type { PlayersData } from "@/components/GetPlayers";
 import { PlayerIdType, playerIdSchema } from "@/schemas/playerIdSchema";
 import { db } from "@/lib/firebaseAdmin";
 
@@ -21,7 +21,7 @@ export default async function removePlayerHost(data: PlayerIdType) {
   const players = await playersRef.get();
 
   if (players.exists()) {
-    const playerData = players.val() as PlayersType;
+    const playerData = players.val() as PlayersData;
     await gameRef.update({
       host: Object.keys(playerData)[0],
     });

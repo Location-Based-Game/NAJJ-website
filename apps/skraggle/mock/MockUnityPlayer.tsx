@@ -2,6 +2,8 @@
 
 import { useUnityContext } from "react-unity-webgl";
 import { UnityReactContext } from "@/app/_unity-player/UnityContext";
+import useWebRTC from "@/app/_unity-player/useWebRTC";
+import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 
 export default function MockUnityPlayer({
   children,
@@ -19,9 +21,29 @@ export default function MockUnityPlayer({
     frameworkUrl: `./${buildDir}/Build/${name}.framework.js${extension}`,
     codeUrl: `./${buildDir}/Build/${name}.wasm${extension}`,
   });
-  
+
+  const { sendMessage, isLoaded, unityProvider } = mockUnityContext;
+
+  const callUnityFunction = (
+    functionName: string,
+    param?: ReactUnityEventParameter | object,
+  ) => {
+    if (!param) {
+      sendMessage("Receiver", functionName);
+      return;
+    }
+
+    if (typeof param === "object") {
+      sendMessage("Receiver", functionName, JSON.stringify(param));
+    } else {
+      sendMessage("Receiver", functionName, param);
+    }
+  };
+
+  const { playerPeers } = useWebRTC(false, callUnityFunction);
+
   return (
-    <UnityReactContext.Provider value={mockUnityContext}>
+    <UnityReactContext.Provider value={{...mockUnityContext, splashScreenComplete: false, playerPeers, callUnityFunction }}>
       {children}
     </UnityReactContext.Provider>
   );
