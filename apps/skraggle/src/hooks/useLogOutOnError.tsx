@@ -17,6 +17,7 @@ export default function useLogOutOnError(disconnectPeers: boolean = true) {
   let playerPeers: React.MutableRefObject<PlayerPeers>;
 
   if (disconnectPeers) {
+    // eslint-disable-next-line
     playerPeers = useUnityReactContext().playerPeers;
   }
 
