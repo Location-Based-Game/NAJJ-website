@@ -1,6 +1,6 @@
 export async function fetchApi(route: string) {
   const isDev = process.env.NODE_ENV === "development" || "test";
-  const path = isDev ? "http://localhost:3000" : "";
+  const path = isDev ? "http://localhost:3000" : "https://skraggle.netlify.app";
   const data = await fetch(`${path}${route}`);
   const res = await data.json();
   if (res.error) {
