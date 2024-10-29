@@ -36,6 +36,17 @@ export async function addPlayer(data: AddPlayerType): Promise<string> {
   return playerId;
 }
 
+const pastelColors:string[] = [
+  "#E6F0FF", // Light blue
+  "#FFCCE5", // Light pink
+  "#D9EAD3", // Light green
+  "#F4CCCC", // Light red
+  "#FFF2CC", // Light yellow
+  "#D0CCEB", // Light purple
+  "#C9DAF8", // Light periwinkle 
+  "#B6D7A8", // Light mint
+];
+
 async function addPlayerTransaction(
   playersRef: Reference,
   playerName: string,
@@ -56,7 +67,8 @@ async function addPlayerTransaction(
     if (newPlayerRef.key) {
       playerId = newPlayerRef.key;
       currentPlayers[playerId] = {
-        name: playerName
+        name: playerName,
+        color: pastelColors[playerCount]
       };
     } else {
       throw new Error("Player key not created");
