@@ -30,10 +30,11 @@ export default function useStartingDice(players: PlayersData) {
   }, [isGameActive, gameId, players]);
 
   function SpawnPlayer(players: PlayersData, key: string) {
-    const { turn } = players[key];
+    const { turn, color } = players[key];
     callUnityFunction("AddPlayer", {
       turn,
       playerId: key,
+      color,
       isMainPlayer: key === playerId,
     });
   }

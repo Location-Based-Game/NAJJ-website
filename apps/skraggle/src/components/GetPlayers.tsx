@@ -26,6 +26,7 @@ export type Inventory = {
 export type PlayersData = {
   [playerId: string]: {
     name: string;
+    color: string;
     inventory: Inventory;
     turn: number;
   };
