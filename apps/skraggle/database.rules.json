@@ -6,6 +6,9 @@
         "gameState": {
           ".read": true
         },
+        "host": {
+          ".read": true
+        },
         "id": {
           ".read": true,
           ".write": false
