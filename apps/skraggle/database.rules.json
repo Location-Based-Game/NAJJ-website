@@ -18,6 +18,9 @@
           ".write": false
         },
         "signaling": {
+          "players": {
+            ".read": true
+          },
           "$playerId": {
             ".read": true
           }

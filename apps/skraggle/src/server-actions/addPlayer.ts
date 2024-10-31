@@ -33,6 +33,10 @@ export async function addPlayer(data: AddPlayerType): Promise<string> {
     playerId = await addPlayerTransaction(playersRef, playerName);
   }
 
+  //add player to webRTC peers list
+  const signalingRef = db.ref(`activeGames/${gameId}/signaling/players/${playerId}`)
+  await signalingRef.set(playerName)
+
   return playerId;
 }
 

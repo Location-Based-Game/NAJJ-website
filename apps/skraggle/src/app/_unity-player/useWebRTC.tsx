@@ -7,15 +7,18 @@ import Peer from "simple-peer";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
 import { CallUnityFunctionType } from "./UnityContext";
+import { useGetPlayers } from "@/components/GetPlayers";
 
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
+
 };
 
 export default function useWebRTC(
   splashScreenComplete: boolean,
   callUnityFunction: CallUnityFunctionType,
 ) {
+  const { playerData } = useGetPlayers()
   const { gameId, playerId, playerName } = useSelector(
     (state: RootState) => state.logIn,
   );
@@ -33,42 +36,72 @@ export default function useWebRTC(
       rtdb,
       `activeGames/${gameId}/signaling/${playerId}/peer-offer`,
     );
-    const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
+    const playersRef = ref(rtdb, `activeGames/${gameId}/signaling/players`);
     const answerRef = ref(
       rtdb,
       `activeGames/${gameId}/signaling/${playerId}/peer-answer`,
     );
 
-    //Create a host peer for every other player in the room
-    get(playersRef).then((snapshot) => {
-      if (!snapshot.exists()) return;
-      const data = snapshot.val();
-      Object.keys(data).forEach((key) => {
-        if (key === playerId) return;
-        playerPeers.current[key] = createPeer(true, key);
-      });
-    });
+    const delay = Object.keys(playerData).indexOf(playerId) * 1000
 
-    //TODO if offer is received, cancel creating an offer for the peer. This *only* happens if players join at the exact same time 
+    //Create a host peer for every other player in the room
+    setTimeout(() => {      
+      get(playersRef).then((snapshot) => {
+        if (!snapshot.exists()) return;
+        const data = snapshot.val();
+        Object.keys(data).forEach((key) => {
+          if (key === playerId) return;
+          playerPeers.current[key] = createPeer(true, key);
+        });
+      });
+    }, delay);
+
     //listen for offers and create a remote peer & answer for each offer
-    const offerListener = onValue(offerRef, (snapshot) => {
+    const offerListener = onValue(offerRef, async (snapshot) => {
       if (!snapshot.exists()) return;
-      const data = snapshot.val();
+      const data = snapshot.val() as {
+        playerId: string;
+        signal: Peer.SignalData
+      }
+
+      // if (playerPeers.current[data.playerId]) {
+      //   console.log(data.playerId.localeCompare(playerId, "en", { numeric: true }))
+      //   if (data.playerId.localeCompare(playerId, "en", { numeric: true }) > 0) {
+      //     await deleteOfferPeer(data.playerId)
+      //   } else {
+      //     console.log("made it here")
+      //     return;
+      //   }
+      // }
+
       const remotePeer = createPeer(false, data.playerId);
       remotePeer.signal(data.signal);
       playerPeers.current[data.playerId] = remotePeer;
     });
 
+    //if offer is received, cancel creating an offer for the peer. This *only* happens if players join at the exact same time
+    // async function deleteOfferPeer(peerId:string) {
+    //   await new Promise<void>((resolve) => {
+    //     const interval = setInterval(() => {
+    //       if (!playerPeers.current[peerId]) {
+    //         clearInterval(interval);
+    //         resolve();
+    //       }
+    //     }, 50)
+    //   });
+    // }
+
     //listen for answers and assign signals to their respective player ID's host peer
     const answerListener = onValue(answerRef, (snapshot) => {
       if (!snapshot.exists()) return;
       const data = snapshot.val();
-      const key = data.playerId;
+      const key = data.playerId as string;
+      if (!playerPeers.current[key]) return;
       if (playerPeers.current[key].connected) return;
       playerPeers.current[key].signal(data.signal);
     });
 
-    //unsubscribe listeners
+    //unsubscribe listeners 
     return () => {
       offerListener();
       answerListener();
@@ -105,7 +138,7 @@ export default function useWebRTC(
         logOutOnError(error);
         Object.keys(playerPeers.current).forEach((key) => {
           playerPeers.current[key].destroy(
-            new Error(`disconnected from ${key}`),
+            new Error(`disconnected from ${playerData[key].name}`),
           );
         });
       }
@@ -121,13 +154,16 @@ export default function useWebRTC(
     //removes peer if player is not connected within a certain time
     setTimeout(() => {
       if (!isConnected && playerPeers.current[peerId]) {
-        playerPeers.current[peerId].destroy(new Error(`${peerId} timed out`));
+        if (playerPeers.current[peerId].connected) return;
+        playerPeers.current[peerId].destroy(
+          new Error(`${playerData[peerId].name} timed out`),
+        );
         delete playerPeers.current[peerId];
       }
     }, 20000);
 
     peer.on("close", () => {
-      console.log(`${peerId} left the game`);
+      console.log(`${playerData[peerId].name} left the game`);
       delete playerPeers.current[peerId];
     });
 
