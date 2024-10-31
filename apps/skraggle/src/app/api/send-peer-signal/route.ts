@@ -32,12 +32,12 @@ export async function GET(request: NextRequest) {
 
     if (isInitiator === "true") {
       const offerRef = db.ref(
-        `activeGames/${gameId}/players/${peerId}/peer-offer`,
+        `activeGames/${gameId}/signaling/${peerId}/peer-offer`,
       );
       await offerRef.set({ signal, playerId });
     } else {
       const answerRef = db.ref(
-        `activeGames/${gameId}/players/${peerId}/peer-answer`,
+        `activeGames/${gameId}/signaling/${peerId}/peer-answer`,
       );
       await answerRef.set({ signal, playerId });
     }

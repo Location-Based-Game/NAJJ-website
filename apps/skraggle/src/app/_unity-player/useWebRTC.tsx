@@ -31,12 +31,12 @@ export default function useWebRTC(
 
     const offerRef = ref(
       rtdb,
-      `activeGames/${gameId}/players/${playerId}/peer-offer`,
+      `activeGames/${gameId}/signaling/${playerId}/peer-offer`,
     );
     const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
     const answerRef = ref(
       rtdb,
-      `activeGames/${gameId}/players/${playerId}/peer-answer`,
+      `activeGames/${gameId}/signaling/${playerId}/peer-answer`,
     );
 
     //Create a host peer for every other player in the room
@@ -49,7 +49,7 @@ export default function useWebRTC(
       });
     });
 
-    //TODO if offer is received, cancel creating an offer for the peer. This *only* happens if players join at the exact same time
+    //TODO if offer is received, cancel creating an offer for the peer. This *only* happens if players join at the exact same time 
     //listen for offers and create a remote peer & answer for each offer
     const offerListener = onValue(offerRef, (snapshot) => {
       if (!snapshot.exists()) return;

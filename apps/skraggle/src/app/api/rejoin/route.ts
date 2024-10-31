@@ -10,12 +10,9 @@ export async function GET() {
   try {
     const host = await getHost({ gameId });
 
-    //reestablish webRTC peers
-    const playerRef = db.ref(`activeGames/${gameId}/players/${playerId}`)
-    const playerData = (await playerRef.get()).val()
-    delete playerData["peer-answer"]
-    delete playerData["peer-offer"]
-    await playerRef.set(playerData)
+    //remove signaling data to reestablish webRTC peers
+    const playerRef = db.ref(`activeGames/${gameId}/signaling/${playerId}`)
+    await playerRef.remove();
 
     if (!playerId) {
       throw new Error("No playerId assigned!")
