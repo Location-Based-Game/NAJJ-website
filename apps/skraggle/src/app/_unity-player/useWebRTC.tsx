@@ -49,6 +49,7 @@ export default function useWebRTC(
       });
     });
 
+    //TODO if offer is received, cancel creating an offer for the peer. This *only* happens if players join at the exact same time
     //listen for offers and create a remote peer & answer for each offer
     const offerListener = onValue(offerRef, (snapshot) => {
       if (!snapshot.exists()) return;
@@ -79,6 +80,16 @@ export default function useWebRTC(
       initiator,
       trickle: false,
       objectMode: true,
+      config: {
+        iceServers: [
+          {
+            urls: [
+              "stun:stun1.l.google.com:19302",
+              "stun:stun2.l.google.com:19302",
+            ],
+          },
+        ],
+      },
     });
 
     peer.on("signal", async (signal) => {
