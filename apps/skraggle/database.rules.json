@@ -18,11 +18,16 @@
           ".write": false
         },
         "signaling": {
-          "players": {
-            ".read": true
-          },
           "$playerId": {
             ".read": true
+          },
+          "players": {
+            ".read": true,
+            "$playerId": {
+              "signalStatus": {
+                ".write": "newData.val() === 'pending' || newData.val() === 'offline' || newData.val() === 'sent'"
+              }
+            }
           }
         }
       }
