@@ -3,6 +3,10 @@
     "activeGames": {
       "$gameId": {
         ".read": false,
+        "currentTurn": {
+          ".read": true,
+          ".write": "newData.isNumber()"
+        },
         "gameState": {
           ".read": true
         },

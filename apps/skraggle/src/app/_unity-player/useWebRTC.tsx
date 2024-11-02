@@ -1,4 +1,4 @@
-import { onValue, ref, get, set, onDisconnect } from "firebase/database";
+import { onValue, ref, set, onDisconnect } from "firebase/database";
 import { useEffect, useRef } from "react";
 import { rtdb } from "../firebaseConfig";
 import { useSelector } from "react-redux";
@@ -7,7 +7,6 @@ import Peer from "simple-peer";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
 import { CallUnityFunctionType } from "./UnityContext";
-import { useGetPlayers } from "@/components/GetPlayers";
 
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
@@ -34,7 +33,11 @@ export default function useWebRTC(
   const offersSent = useRef(false);
 
   useEffect(() => {
-    if (!playerId) return;
+    if (!playerId) {
+      setPeers.current = false;
+      offersSent.current = false;
+      return;
+    };
     if (!splashScreenComplete) return;
     if (setPeers.current) return;
     setPeers.current = true;
@@ -55,52 +58,14 @@ export default function useWebRTC(
       `activeGames/${gameId}/signaling/${playerId}/peer-answer`,
     );
 
-    //Create a host peer for every other player in the room
-    // get(playersRef).then((snapshot) => {
-    //   if (!snapshot.exists()) return;
-    //   const data = snapshot.val();
-    //   Object.keys(data).forEach((key) => {
-    //     if (key === playerId) return;
-    //     playerPeers.current[key] = createPeer(true, key);
-    //   });
-    // });
-
     const playersListener = onValue(playersRef, (snapshot) => {
       if (offersSent.current) return;
       if (!snapshot.exists()) return;
       const data = snapshot.val() as SignalStatusType;
 
-      // const oldestPeerId = Object.entries(data).reduce((oldest, [peerId, info]) => {
-      //   return info.timestamp < (data[oldest]?.timestamp ?? Infinity) ? peerId : oldest;
-      // }, "");
-
-      // if (playerId === oldestPeerId) {
-      //   //mark first player for signaling
-      //   offersSent.current = true;
-      //   const hasSignaledRef = ref(
-      //     rtdb,
-      //     `activeGames/${gameId}/signaling/players/${playerId}/signalStatus`,
-      //   );
-      //   set(hasSignaledRef, "sent");
-      //   return;
-      // }
-
-      // const currentTimestamp = data[playerId].timestamp;
-      // delete data[playerId];
-      // console.log(data);
-
-      // const latestPeerId = Object.entries(data)
-      //   .filter(([, info]) => info.signalStatus === "sent")
-      //   .reduce((latest, [peerId, info]) => {
-      //     return info.timestamp > (data[latest]?.timestamp ?? -Infinity)
-      //       ? peerId
-      //       : latest;
-      //   }, "");
-      //   console.log(latestPeerId)
-
       const previousPeerId = getPreviousPeerId(data, playerId);
       if (!previousPeerId) {
-        console.log("first");
+        //set up first player
         offersSent.current = true;
         const hasSignaledRef = ref(
           rtdb,
@@ -109,11 +74,9 @@ export default function useWebRTC(
         set(hasSignaledRef, "sent");
         return;
       }
-      console.log(data)
 
       if (!data[previousPeerId]) return;
       if (data[previousPeerId].signalStatus === "pending") return;
-      console.log("previous id: ", data[previousPeerId].name);
 
       offersSent.current = true;
       setTimeout(() => {        
@@ -127,25 +90,9 @@ export default function useWebRTC(
       Object.keys(data).forEach((key) => {
         if (key === playerId) return;
         if (playerPeers.current[key]) return;
-        playerPeers.current[key] = createPeer(true, key, data[key].name);
+        playerPeers.current[key] = createPeer(true, key, playerName);
       });
     });
-
-    function getPreviousPeerId(data: SignalStatusType, targetPeerId: string): string | null {
-      // Convert data to an array of entries and sort by timestamp
-      const sortedPeers = Object.entries(data).sort(([, a], [, b]) => a.timestamp - b.timestamp);
-    
-      // Find the index of the target peerId
-      const targetIndex = sortedPeers.findIndex(([peerId]) => peerId === targetPeerId);
-    
-      // If targetPeerId is the oldest or not found, return null
-      if (targetIndex <= 0) {
-        return null;
-      }
-    
-      // Return the peerId of the previous entry
-      return sortedPeers[targetIndex - 1][0];
-    }
 
     //listen for offers and create a remote peer & answer for each offer
     const offerListener = onValue(offerRef, (snapshot) => {
@@ -255,4 +202,18 @@ export default function useWebRTC(
   }
 
   return { playerPeers };
+}
+
+function getPreviousPeerId(data: SignalStatusType, targetPeerId: string): string | null {
+  // Convert data to an array of entries and sort by timestamp
+  const sortedPeers = Object.entries(data)
+    .filter(([, data]) => data.signalStatus !== "offline")
+    .sort(([, a], [, b]) => a.timestamp - b.timestamp);
+
+  const targetIndex = sortedPeers.findIndex(([peerId]) => peerId === targetPeerId);
+  if (targetIndex <= 0) {
+    return null;
+  }
+
+  return sortedPeers[targetIndex - 1][0];
 }

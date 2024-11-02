@@ -50,14 +50,14 @@ export async function addPlayer(data: AddPlayerType): Promise<string> {
 }
 
 const pastelColors: string[] = [
-  "#E6F0FF", // Light blue
-  "#FFCCE5", // Light pink
-  "#D9EAD3", // Light green
-  "#F4CCCC", // Light red
-  "#FFF2CC", // Light yellow
-  "#D0CCEB", // Light purple
-  "#C9DAF8", // Light periwinkle
-  "#B6D7A8", // Light mint
+  "#91a2ff", // Light blue
+  "#f491ff", // Light pink
+  "#91ff95", // Light green
+  "#ff919c", // Light red
+  "#fff691", // Light yellow
+  "#c591ff", // Light purple
+  "#ffba91", // Light orange
+  "#91ffd1", // Light mint
 ];
 
 async function addPlayerTransaction(playersRef: Reference, playerName: string) {
