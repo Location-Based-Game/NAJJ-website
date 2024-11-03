@@ -1,13 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type TurnState = {
+  currentTurn:number;
+  playerTurn: number | null;
+}
+
+const initialState:TurnState = {
+  currentTurn: 0,
+  playerTurn: null
+}
+
 export const turnSlice = createSlice({
   name: "Turn Number",
-  initialState: 0,
+  initialState,
   reducers: {
-    setTurnNumber: (state: number, action: PayloadAction<number>) => {
-      return action.payload;
+    setCurrentTurn: (state: TurnState, action: PayloadAction<number>) => {
+      state.currentTurn = action.payload;
+    },
+    setPlayerTurn: (state: TurnState, action: PayloadAction<number>) => {
+      state.playerTurn = action.payload;
     },
   },
 });
 
-export const { setTurnNumber } = turnSlice.actions;
+export const { setCurrentTurn, setPlayerTurn } = turnSlice.actions;

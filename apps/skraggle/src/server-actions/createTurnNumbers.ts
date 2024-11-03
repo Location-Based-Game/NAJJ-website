@@ -22,12 +22,12 @@ export async function createTurnNumbers(gameId: string) {
     totalValues.push(diceData.dice1 + diceData.dice2);
 
     const startingDice1: StartingDice = {
-      name: "startingDice1",
+      type: "StartingDice",
       data: diceData.dice1,
     };
 
     const startingDice2: StartingDice = {
-      name: "startingDice2",
+      type: "StartingDice",
       data: diceData.dice2,
     };
 
@@ -56,7 +56,7 @@ function getSortedIndices(arr: number[]): number[] {
   // Create a result array that stores the rank of each number based on its sorted position
   const result: number[] = [];
   indices.forEach((index, sortedIndex) => {
-    result[index] = sortedIndex + 1;
+    result[index] = sortedIndex;
   });
 
   return result;

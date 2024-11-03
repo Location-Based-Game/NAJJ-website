@@ -14,7 +14,7 @@ interface PlayerData {
 }
 
 export type ItemType<T> = {
-  name: string;
+  type: string;
   data: T;
 };
 

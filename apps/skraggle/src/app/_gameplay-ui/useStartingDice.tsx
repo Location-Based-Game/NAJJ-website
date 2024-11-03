@@ -1,14 +1,15 @@
 import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import { useUnityReactContext } from "./UnityContext";
+import { useDispatch, useSelector } from "react-redux";
+import { useUnityReactContext } from "../_unity-player/UnityContext";
 import type { PlayersData } from "@/components/GetPlayers";
 import type { RootState } from "@/store/store";
+import { setPlayerTurn } from "@/store/turnSlice";
 
 export default function useStartingDice(players: PlayersData) {
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const { callUnityFunction } = useUnityReactContext();
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
-
+  const dispatch = useDispatch();
   const isStartingDiceSet = useRef(false);
 
   useEffect(() => {
@@ -25,6 +26,8 @@ export default function useStartingDice(players: PlayersData) {
     Object.keys(players).forEach((key) => {
       AddDice(players, key);
     });
+
+    dispatch(setPlayerTurn(players[playerId].turn))
 
     isStartingDiceSet.current = true;
   }, [isGameActive, gameId, players]);
