@@ -3,7 +3,14 @@
     "activeGames": {
       "$gameId": {
         ".read": false,
+        "currentTurn": {
+          ".read": true,
+          ".write": "newData.isNumber()"
+        },
         "gameState": {
+          ".read": true
+        },
+        "host": {
           ".read": true
         },
         "id": {
@@ -13,6 +20,19 @@
         "players": {
           ".read": true,
           ".write": false
+        },
+        "signaling": {
+          "$playerId": {
+            ".read": true
+          },
+          "players": {
+            ".read": true,
+            "$playerId": {
+              "signalStatus": {
+                ".write": "newData.val() === 'pending' || newData.val() === 'offline' || newData.val() === 'sent'"
+              }
+            }
+          }
         }
       }
     }

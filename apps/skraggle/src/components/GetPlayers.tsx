@@ -1,5 +1,4 @@
-import useSendBoardItemData from "@/app/_unity-player/useSendBoardItemData";
-import useStartingDice from "@/app/_unity-player/useStartingDice";
+"use client"
 import { rtdb } from "@/app/firebaseConfig";
 import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
@@ -15,7 +14,7 @@ interface PlayerData {
 }
 
 export type ItemType<T> = {
-  name: string;
+  type: string;
   data: T;
 };
 
@@ -35,9 +34,6 @@ export type PlayersData = {
 export default function PlayerData({ children }: PlayerData) {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const [playerData, setPlayerData] = useState<PlayersData>({});
-
-  useStartingDice(playerData);
-  useSendBoardItemData();
 
   useEffect(() => {
     if (!gameId) return;

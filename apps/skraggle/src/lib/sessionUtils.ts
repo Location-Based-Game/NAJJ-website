@@ -21,7 +21,7 @@ export async function getSessionData() {
   return validatedData.data;
 }
 
-const secondsUntilExpiration = 100;
+const secondsUntilExpiration = 10000;
 
 export async function setSessionCookie(
   sessionData: SessionData

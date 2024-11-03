@@ -14,4 +14,7 @@ export default async function removePlayer(data: PlayerIdType) {
 
   const playersRef = db.ref(`activeGames/${gameId}/players/${playerId}`);
   await playersRef.remove();
+
+  const playerSignalingRef = db.ref(`activeGames/${gameId}/signaling/players/${playerId}`)
+  await playerSignalingRef.remove();
 }

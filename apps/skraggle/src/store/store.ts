@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   mainMenu: mainMenuState.reducer,
   joinCode: joinCodeSlice.reducer,
   gameState: gameStateSlice.reducer,
-  currentTurn: turnSlice.reducer,
+  turnState: turnSlice.reducer,
   logIn: logInSlice.reducer
 });
 

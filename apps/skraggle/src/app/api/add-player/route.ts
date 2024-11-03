@@ -1,3 +1,4 @@
+import { db } from "@/lib/firebaseAdmin";
 import { deleteSession, getSessionData, setSessionCookie } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { addPlayer } from "@/server-actions/addPlayer";
@@ -23,7 +24,6 @@ export async function GET(request: NextRequest) {
     await getRoom({ gameId });
   
     const playerId = await addPlayer({ gameId, playerName });
-  
     await setSessionCookie({playerName, playerId, gameId});
   
     return NextResponse.json(playerId);

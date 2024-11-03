@@ -3,11 +3,13 @@ import { useUnityContext } from "react-unity-webgl";
 import { useState, useEffect, createContext, useContext } from "react";
 import useUpdateGameState from "@/app/_unity-player/useUpdateGameState";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
-import PlayerData from "@/components/GetPlayers";
-import useSetGameState from "./useSetGameState";
+import useSetGameState from "../_gameplay-ui/useSetGameState";
 import dynamic from "next/dynamic";
 import useWebRTC, { PlayerPeers } from "./useWebRTC";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+import useSendBoardItemData from "../_gameplay-ui/useSendBoardItemData";
+import useStartingDice from "../_gameplay-ui/useStartingDice";
+import { useGetPlayers } from "@/components/GetPlayers";
 
 export type CallUnityFunctionType = (
   functionName: string,
@@ -50,7 +52,7 @@ export default function UnityPlayer({
     functionName: string,
     param?: ReactUnityEventParameter | object,
   ) => {
-    if (!param) {
+    if (!param && param !== 0) {
       sendMessage("Receiver", functionName);
       return;
     }
@@ -73,7 +75,6 @@ export default function UnityPlayer({
     }, 2500);
   }, [isLoaded]);
 
-  useSetGameState(callUnityFunction, splashScreenComplete);
   useUpdateGameState(unityContext);
   const { playerPeers } = useWebRTC(splashScreenComplete, callUnityFunction);
 
@@ -87,7 +88,7 @@ export default function UnityPlayer({
       }}
     >
       <div className="pointer-events-none absolute z-10 flex h-dvh w-screen items-center justify-center">
-        <PlayerData>{children}</PlayerData>
+        {children}
       </div>
       <Unity
         unityProvider={unityProvider}

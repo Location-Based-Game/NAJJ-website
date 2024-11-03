@@ -10,13 +10,14 @@ const sendPeerSignalSchema = z.object({
   isInitiator: z.enum(["true", "false"]),
   peerId: z.string().min(1),
   signalString: z.string().min(1),
+  name: z.string().min(1)
 });
 
 const signalSchema = z.custom<SignalData>();
 
 //SEND PEER SIGNAL
 export async function GET(request: NextRequest) {
-  const { isInitiator, signalString, peerId } = validateSearchParams<
+  const { isInitiator, signalString, peerId, name } = validateSearchParams<
     z.infer<typeof sendPeerSignalSchema>
   >(request.url, sendPeerSignalSchema);
 
@@ -32,12 +33,12 @@ export async function GET(request: NextRequest) {
 
     if (isInitiator === "true") {
       const offerRef = db.ref(
-        `activeGames/${gameId}/players/${peerId}/peer-offer`,
+        `activeGames/${gameId}/signaling/${peerId}/peer-offer`,
       );
-      await offerRef.set({ signal, playerId });
+      await offerRef.set({ signal, playerId, name });
     } else {
       const answerRef = db.ref(
-        `activeGames/${gameId}/players/${peerId}/peer-answer`,
+        `activeGames/${gameId}/signaling/${peerId}/peer-answer`,
       );
       await answerRef.set({ signal, playerId });
     }
