@@ -3,13 +3,9 @@ import { useUnityContext } from "react-unity-webgl";
 import { useState, useEffect, createContext, useContext } from "react";
 import useUpdateGameState from "@/app/_unity-player/useUpdateGameState";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
-import useSetGameState from "../_gameplay-ui/useSetGameState";
 import dynamic from "next/dynamic";
-import useWebRTC, { PeerStatus, PlayerPeers } from "./useWebRTC";
+import useWebRTC, { PlayerPeers } from "./useWebRTC";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
-import useSendBoardItemData from "../_gameplay-ui/useSendBoardItemData";
-import useStartingDice from "../_gameplay-ui/useStartingDice";
-import { useGetPlayers } from "@/components/GetPlayers";
 
 export type CallUnityFunctionType = (
   functionName: string,
@@ -19,7 +15,6 @@ export type CallUnityFunctionType = (
 type UnityData = UnityContextHook & {
   splashScreenComplete: boolean;
   playerPeers: React.MutableRefObject<PlayerPeers>;
-  peerStatuses: Record<string, PeerStatus>;
   callUnityFunction: CallUnityFunctionType;
 };
 
@@ -77,7 +72,7 @@ export default function UnityPlayer({
   }, [isLoaded]);
 
   useUpdateGameState(unityContext);
-  const { playerPeers, peerStatuses } = useWebRTC(splashScreenComplete, callUnityFunction);
+  const { playerPeers } = useWebRTC(splashScreenComplete, callUnityFunction);
 
   return (
     <UnityReactContext.Provider
@@ -85,7 +80,6 @@ export default function UnityPlayer({
         ...unityContext,
         splashScreenComplete,
         playerPeers,
-        peerStatuses,
         callUnityFunction,
       }}
     >

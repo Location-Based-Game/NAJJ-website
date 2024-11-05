@@ -8,12 +8,11 @@ import { fetchApi } from "@/lib/fetchApi";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
 import HostIcon from "./HostIcon";
 import ConnectionIcon from "./ConnectionIcon";
-import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 
 export default function PlayerList() {
   const { playerData } = useGetPlayers();
-  const { peerStatuses } = useUnityReactContext();
   const { playerId } = useSelector((state: RootState) => state.logIn);
+  const peerStatus = useSelector((state:RootState) => state.peerStatus)
 
   return (
     <Table>
@@ -26,7 +25,7 @@ export default function PlayerList() {
             <TableCell className="font-medium">
               <ConnectionIcon
                 peerStatus={
-                  key === playerId ? "Main Player" : peerStatuses[key]
+                  key === playerId ? "Main Player" : peerStatus[key]
                 }
                 name={playerData[key].name}
               />

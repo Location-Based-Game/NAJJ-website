@@ -1,9 +1,10 @@
 "use client"
 import { rtdb } from "@/app/firebaseConfig";
+import { addInitialStatus, setStatus } from "@/store/peerStatusSlice";
 import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export const PlayerDataContext = createContext<{
   playerData: PlayersData;
@@ -34,6 +35,7 @@ export type PlayersData = {
 export default function PlayerData({ children }: PlayerData) {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const [playerData, setPlayerData] = useState<PlayersData>({});
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!gameId) return;
@@ -42,6 +44,10 @@ export default function PlayerData({ children }: PlayerData) {
       if (!snapshot.exists()) return;
       const data = snapshot.val() as PlayersData;
       setPlayerData(data);
+
+      Object.keys(data).forEach(key => {
+        dispatch(addInitialStatus(key))
+      })
     });
 
     return () => unsubscribe();
