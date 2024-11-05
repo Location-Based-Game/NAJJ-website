@@ -1,3 +1,4 @@
+import deleteRoom from "@/server-actions/deleteRoom";
 import { test, expect, Page } from "@playwright/test";
 
 test("Skraggle with different sessions", async ({ browser }) => {
@@ -16,7 +17,7 @@ test("Skraggle with different sessions", async ({ browser }) => {
   await Promise.all(playerPages.map(page => page.goto("http://localhost:3000")))
   const p1 = playerPages[0]
 
-  const hostName = "host player"
+  const hostName = "host-player"
   await expect(
     p1.getByRole("button", { name: "Create Game" }),
   ).toBeVisible();
@@ -36,7 +37,7 @@ test("Skraggle with different sessions", async ({ browser }) => {
   await Promise.all(otherPlayers.map((page, index) => SignInOtherPlayer(page, index)))
 
   async function SignInOtherPlayer(page: Page, index: number) {
-    const playerName = `player ${index}`
+    const playerName = `player-${index}`
     await page.getByRole("button", { name: "Join Game" }).click();
     await expect(page.getByLabel("Enter Join Code")).toBeVisible();
     await page.getByLabel("Enter Join Code").fill(code!);
@@ -46,6 +47,13 @@ test("Skraggle with different sessions", async ({ browser }) => {
     await expect(page.getByRole("cell", { name: playerName })).toBeVisible();
     await expect(page.getByRole("cell", { name: hostName })).toBeVisible();
   }
+
+  await Promise.all(otherPlayers.map(async (page, index) => {
+    await expect(page.locator(`#connected-host-player`)).toBeVisible({timeout: 20000})
+    if (index !== 0) {
+      await expect(page.locator(`#connected-player-${index - 1}`)).toBeVisible({timeout: 20000})
+    }
+  }))
 
   await p1.getByRole("button", { name: "Start" }).click();
   await expect(p1.getByRole("button", { name: "Start" })).toBeHidden({timeout: 20000});
@@ -58,16 +66,23 @@ test("Skraggle with different sessions", async ({ browser }) => {
   }
 
   async function PlaceDice(page: Page) {
-    await page.mouse.move(605, 658, {steps: 15});
+    const steps = 2
+    await page.mouse.move(605, 658, {steps});
     await page.mouse.down();
   
-    await page.mouse.move(589, 315, {steps: 15});
+    await page.mouse.move(589, 315, {steps});
     await page.mouse.up();
   
-    await page.mouse.move(671, 654, {steps: 15});
+    await page.mouse.move(671, 654, {steps});
     await page.mouse.down();
   
-    await page.mouse.move(687, 319, {steps: 15});
+    await page.mouse.move(687, 319, {steps});
     await page.mouse.up();
   }
+
+  await Promise.all(playerPages.map(async (page) => {
+    await page.waitForTimeout(7000);
+    await page.mouse.click(687, 319);
+    await page.waitForTimeout(7000);
+  }))
 });

@@ -87,7 +87,7 @@ export default function useWebRTC(
           `activeGames/${gameId}/signaling/players/${playerId}/signalStatus`,
         );
         set(hasSignaledRef, "sent");
-      }, 3000);
+      }, 1000);
 
       Object.keys(data).forEach((key) => {
         if (key === playerId) return;

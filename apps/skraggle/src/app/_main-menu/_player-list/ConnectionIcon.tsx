@@ -29,37 +29,58 @@ export default function ConnectionIcon({ peerStatus, name }: ConnectionIcon) {
   switch (peerStatus) {
     case "Main Player":
       statusIndicator.icon = (
-        <SignalHigh size={18} className="stroke-green-500 w-5" />
+        <SignalHigh
+          id={`connected-${name}`}
+          size={18}
+          className="w-5 stroke-green-500"
+        />
       );
       statusIndicator.tooltip = "connected!";
-      statusIndicator.tooltipStyling = "bg-primary text-primary-foreground"
+      statusIndicator.tooltipStyling = "bg-primary text-primary-foreground";
       break;
     case "connected":
       statusIndicator.icon = (
-        <SignalHigh size={18} className="stroke-green-500 w-5" />
+        <SignalHigh
+          id={`connected-${name}`}
+          size={18}
+          className="w-5 stroke-green-500"
+        />
       );
       statusIndicator.tooltip = `connected to ${name}`;
-      statusIndicator.tooltipStyling = "bg-primary text-primary-foreground"
+      statusIndicator.tooltipStyling = "bg-primary text-primary-foreground";
       break;
     case "not connected":
       statusIndicator.icon = (
-        <SignalHigh size={18} className="stroke-gray-700-500 w-5" />
+        <SignalHigh
+          id={`not-connected-${name}`}
+          size={18}
+          className="w-5 stroke-gray-700"
+        />
       );
       statusIndicator.tooltip = `not connected to ${name}`;
       break;
     case "pending":
       statusIndicator.icon = (
-        <Loader2 size={18} className="animate-spin w-5" />
+        <Loader2
+          id={`pending-${name}`}
+          size={18}
+          className="w-5 animate-spin"
+        />
       );
       statusIndicator.tooltip = `connecting to ${name}`;
       break;
     case undefined:
     case "error":
       statusIndicator.icon = (
-        <CircleAlert size={16} className="stroke-destructive w-5" />
+        <CircleAlert
+          id={`error-${name}`}
+          size={16}
+          className="w-5 stroke-destructive"
+        />
       );
       statusIndicator.tooltip = `unable to connect to ${name}`;
-      statusIndicator.tooltipStyling = "bg-destructive text-destructive-foreground"
+      statusIndicator.tooltipStyling =
+        "bg-destructive text-destructive-foreground";
       break;
   }
 
