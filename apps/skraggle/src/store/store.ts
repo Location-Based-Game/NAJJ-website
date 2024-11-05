@@ -5,6 +5,7 @@ import { MainMenuState } from "@/hooks/usePanelUI";
 import { gameStateSlice } from "./gameStateSlice";
 import { turnSlice } from "./turnSlice";
 import { logInSlice } from "./logInSlice";
+import { playerPeersSlice } from "./playerPeersSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
   state: "Home",
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   joinCode: joinCodeSlice.reducer,
   gameState: gameStateSlice.reducer,
   turnState: turnSlice.reducer,
-  logIn: logInSlice.reducer
+  logIn: logInSlice.reducer,
+  playerPeers: playerPeersSlice.reducer
 });
 
 export const setupStore = (preloadedState?: Partial<RootState>) => {

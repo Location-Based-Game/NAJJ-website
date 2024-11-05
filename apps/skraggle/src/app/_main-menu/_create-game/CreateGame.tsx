@@ -3,7 +3,7 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { useState } from "react";
 import QRCode from "./QRCode";
 import { Button } from "@/components/ui/button";
-import PlayerList from "../PlayerList";
+import PlayerList from "../_player-list/PlayerList";
 import useStartGame from "./useStartGame";
 import HostLeaveGame from "./HostLeaveGame";
 

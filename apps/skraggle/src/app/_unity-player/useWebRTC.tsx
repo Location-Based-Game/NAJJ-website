@@ -1,5 +1,5 @@
 import { onValue, ref, set, onDisconnect } from "firebase/database";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { rtdb } from "../firebaseConfig";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -11,6 +11,8 @@ import { CallUnityFunctionType } from "./UnityContext";
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
 };
+
+export type PeerStatus = "pending" | "connected" | "not connected";
 
 type SignalStatusType = {
   [peerId: string]: {
@@ -29,6 +31,7 @@ export default function useWebRTC(
   );
   const { logOutOnError } = useLogOutOnError(false);
   const playerPeers = useRef<PlayerPeers>({});
+  const [peerStatuses, setPeerStatuses] = useState<Record<string, PeerStatus>>({})
   const setPeers = useRef(false);
   const offersSent = useRef(false);
 
@@ -91,6 +94,9 @@ export default function useWebRTC(
         if (key === playerId) return;
         if (playerPeers.current[key]) return;
         playerPeers.current[key] = createPeer(true, key, playerName);
+        setPeerStatuses(prev => {
+          return {...prev, [key]: "pending"}
+        })
       });
     });
 
@@ -105,6 +111,9 @@ export default function useWebRTC(
       const remotePeer = createPeer(false, data.playerId, data.name);
       remotePeer.signal(data.signal);
       playerPeers.current[data.playerId] = remotePeer;
+      setPeerStatuses(prev => {
+        return {...prev, [data.playerId]: "pending"}
+      })
     });
 
     //listen for answers and assign signals to their respective player ID's host peer
@@ -166,6 +175,9 @@ export default function useWebRTC(
 
     peer.on("connect", () => {
       peer.send(`connected to ${playerName}`);
+      setPeerStatuses(prev => {
+        return {...prev, [peerId]: "connected"}
+      })
       isConnected = true;
     });
 
@@ -174,18 +186,25 @@ export default function useWebRTC(
       if (!isConnected && playerPeers.current[peerId]) {
         if (playerPeers.current[peerId].connected) return;
         playerPeers.current[peerId].destroy(new Error(`${name} timed out`));
-        delete playerPeers.current[peerId];
       }
     }, 20000);
 
     peer.on("close", () => {
       console.log(`${name} left the game`);
       delete playerPeers.current[peerId];
+      setPeerStatuses(prev => {
+        const { [peerId]: _, ...rest} = prev
+        return rest
+      })
     });
 
     peer.on("error", (error) => {
       console.log(error.message);
       delete playerPeers.current[peerId];
+      setPeerStatuses(prev => {
+        const { [peerId]: _, ...rest} = prev
+        return rest
+      })
     });
 
     peer.on("data", (data) => {
@@ -201,7 +220,7 @@ export default function useWebRTC(
     return peer;
   }
 
-  return { playerPeers };
+  return { playerPeers, peerStatuses };
 }
 
 function getPreviousPeerId(data: SignalStatusType, targetPeerId: string): string | null {

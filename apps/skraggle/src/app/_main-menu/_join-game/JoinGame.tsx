@@ -2,7 +2,7 @@ import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import { useEffect, useState } from "react";
-import PlayerList from "../PlayerList";
+import PlayerList from "../_player-list/PlayerList";
 import LeaveGame from "./LeaveGame";
 import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
