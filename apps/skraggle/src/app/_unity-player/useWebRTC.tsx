@@ -40,7 +40,6 @@ export default function useWebRTC(
       offersSent.current = false;
       return;
     };
-    if (!splashScreenComplete) return;
     if (setPeers.current) return;
     setPeers.current = true;
 
@@ -127,7 +126,7 @@ export default function useWebRTC(
       offerListener();
       answerListener();
     };
-  }, [playerId, splashScreenComplete]);
+  }, [playerId]);
 
   function createPeer(initiator: boolean, peerId: string, name: string) {
     const peer = new Peer({
@@ -198,6 +197,7 @@ export default function useWebRTC(
       try {
         const parsedData = JSON.parse(data);
         if (!("action" in parsedData)) return;
+        if (!splashScreenComplete) return;
         callUnityFunction("ControlBoardItem", data);
       } catch (error) {
         console.log(data);

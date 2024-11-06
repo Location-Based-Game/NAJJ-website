@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "./ReduxProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -52,10 +53,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ReduxProvider>
-        <body className={inter.className}>
-          {children}
-          <Toaster />
-        </body>
+        <TooltipProvider>
+          <body className={inter.className}>
+            {children}
+            <Toaster />
+          </body>
+        </TooltipProvider>
       </ReduxProvider>
     </html>
   );
