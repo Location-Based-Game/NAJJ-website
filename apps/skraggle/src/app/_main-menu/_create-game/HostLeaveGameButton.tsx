@@ -6,7 +6,7 @@ import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
 import { useDispatch } from "react-redux";
 
-export default function HostLeaveGame({
+export default function HostLeaveGameButton({
   animationCallback,
 }: {
   animationCallback: AnimationCallback;

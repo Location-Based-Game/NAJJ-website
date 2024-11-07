@@ -1,12 +1,13 @@
 import { onValue, ref, set, onDisconnect } from "firebase/database";
 import { useEffect, useRef } from "react";
 import { rtdb } from "../firebaseConfig";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Peer from "simple-peer";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
 import { CallUnityFunctionType } from "./UnityContext";
+import { setStatus } from "@/store/peerStatusSlice";
 
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
@@ -27,8 +28,10 @@ export default function useWebRTC(
   const { gameId, playerId, playerName } = useSelector(
     (state: RootState) => state.logIn,
   );
+  const peerStatus = useSelector((state:RootState) => state.peerStatus)
   const { logOutOnError } = useLogOutOnError(false);
   const playerPeers = useRef<PlayerPeers>({});
+  const dispatch = useDispatch()
   const setPeers = useRef(false);
   const offersSent = useRef(false);
 
@@ -38,7 +41,6 @@ export default function useWebRTC(
       offersSent.current = false;
       return;
     };
-    if (!splashScreenComplete) return;
     if (setPeers.current) return;
     setPeers.current = true;
 
@@ -85,12 +87,13 @@ export default function useWebRTC(
           `activeGames/${gameId}/signaling/players/${playerId}/signalStatus`,
         );
         set(hasSignaledRef, "sent");
-      }, 3000);
+      }, 1000);
 
       Object.keys(data).forEach((key) => {
         if (key === playerId) return;
         if (playerPeers.current[key]) return;
-        playerPeers.current[key] = createPeer(true, key, playerName);
+        playerPeers.current[key] = createPeer(true, key, data[key].name);
+        dispatch(setStatus({playerId: key, status: "pending"}))
       });
     });
 
@@ -105,6 +108,7 @@ export default function useWebRTC(
       const remotePeer = createPeer(false, data.playerId, data.name);
       remotePeer.signal(data.signal);
       playerPeers.current[data.playerId] = remotePeer;
+      dispatch(setStatus({playerId: data.playerId, status: "pending"}))
     });
 
     //listen for answers and assign signals to their respective player ID's host peer
@@ -123,7 +127,7 @@ export default function useWebRTC(
       offerListener();
       answerListener();
     };
-  }, [playerId, splashScreenComplete]);
+  }, [playerId]);
 
   function createPeer(initiator: boolean, peerId: string, name: string) {
     const peer = new Peer({
@@ -166,6 +170,7 @@ export default function useWebRTC(
 
     peer.on("connect", () => {
       peer.send(`connected to ${playerName}`);
+      dispatch(setStatus({playerId: peerId, status: "connected"}))
       isConnected = true;
     });
 
@@ -174,32 +179,41 @@ export default function useWebRTC(
       if (!isConnected && playerPeers.current[peerId]) {
         if (playerPeers.current[peerId].connected) return;
         playerPeers.current[peerId].destroy(new Error(`${name} timed out`));
-        delete playerPeers.current[peerId];
       }
     }, 20000);
 
     peer.on("close", () => {
       console.log(`${name} left the game`);
       delete playerPeers.current[peerId];
+      dispatch(setStatus({playerId: peerId, status: "error"}))
     });
 
     peer.on("error", (error) => {
       console.log(error.message);
       delete playerPeers.current[peerId];
-    });
-
-    peer.on("data", (data) => {
-      try {
-        const parsedData = JSON.parse(data);
-        if (!("action" in parsedData)) return;
-        callUnityFunction("ControlBoardItem", data);
-      } catch (error) {
-        console.log(data);
-      }
+      dispatch(setStatus({playerId: peerId, status: "error"}))
     });
 
     return peer;
   }
+
+  //listen for data when Unity player finishes loading 
+  useEffect(() => {
+    if (!splashScreenComplete) return;
+    Object.keys(playerPeers.current).forEach(key => {
+      playerPeers.current[key].removeAllListeners("data")
+      playerPeers.current[key].on("data", data => {
+        try {
+          const parsedData = JSON.parse(data);
+          if (!("action" in parsedData)) return;
+          callUnityFunction("ControlBoardItem", data);
+        } catch (error) {
+          console.log(data);
+        }
+      })
+    })
+    
+  }, [splashScreenComplete, peerStatus])
 
   return { playerPeers };
 }

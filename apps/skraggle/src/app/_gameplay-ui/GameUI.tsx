@@ -11,6 +11,7 @@ import NotYourTurnUI from "./_not-your-turn/NotYourTurnUI";
 import useTurnListener from "./useTurnListener";
 import useSetGameState from "./useSetGameState";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
+import PlayerListGameplay from "./PlayerListGameplay";
 
 export default function GameUI() {
   const gameState = useSelector((state: RootState) => state.gameState);
@@ -26,12 +27,19 @@ export default function GameUI() {
   useTurnListener();
   useSetGameState(callUnityFunction, splashScreenComplete);
 
-  switch (gameState.state) {
-    case "Menu":
-      return <MainMenuPanel />;
-    case "TurnsDiceRoll":
-      return <></>;
-    case "Gameplay":
-      return currentTurn === playerTurn ? <YourTurnUI /> : <NotYourTurnUI />;
+  if (gameState.state === "Menu") {
+    return <MainMenuPanel />
   }
+
+  let stateUI = <></>
+  if (gameState.state === "Gameplay") {
+      stateUI = currentTurn === playerTurn ? <YourTurnUI /> : <NotYourTurnUI />;
+  }
+
+  return (
+    <>
+    {stateUI}
+    <PlayerListGameplay />
+    </>
+  )
 }

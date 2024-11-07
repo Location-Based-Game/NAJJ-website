@@ -1,5 +1,4 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { CrownIcon } from "lucide-react";
 import { PlayersData, useGetPlayers } from "@/components/GetPlayers";
 import { useState } from "react";
 import { ColorPicker } from "@/components/ui/color-picker";
@@ -7,6 +6,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
+import HostIcon from "./HostIcon";
+import ConnectionIcon from "./ConnectionIcon";
 
 export default function PlayerList() {
   const { playerData } = useGetPlayers();
@@ -17,9 +18,14 @@ export default function PlayerList() {
         {Object.keys(playerData).map((key, i) => (
           <TableRow key={i}>
             <TableCell className="font-medium">
-              {i === 0 && <CrownIcon size={16} />}
+              {i === 0 && <HostIcon name={playerData[key].name} />}
             </TableCell>
-            <TableCell className="font-medium">{i + 1}</TableCell>
+            <TableCell className="font-medium">
+              <ConnectionIcon
+                peerId={key}
+                name={playerData[key].name}
+              />
+            </TableCell>
             <TableCell className="w-full">{playerData[key].name}</TableCell>
             <PlayerColor playerData={playerData} playerKey={key} />
           </TableRow>

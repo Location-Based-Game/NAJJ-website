@@ -1,16 +1,7 @@
 import MainMenuPanel from "@/app/_main-menu/_home/MainMenuPanel";
 import { renderWithProviders } from "@/lib/reduxTestUtils";
-import {
-  fireEvent,
-  queryByAttribute,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import PlayerData from "@/components/GetPlayers";
-import MockUnityPlayer from "../mock/MockUnityPlayer";
-import { encryptJWT } from "@/lib/jwtUtils";
-import { cookies } from "next/headers";
 
 describe("Sign In to Create", () => {
   it('renders "Sign In to Create" and checks if "continue" button is disabled', async () => {
