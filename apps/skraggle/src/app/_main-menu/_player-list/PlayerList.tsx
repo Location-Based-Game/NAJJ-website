@@ -11,8 +11,6 @@ import ConnectionIcon from "./ConnectionIcon";
 
 export default function PlayerList() {
   const { playerData } = useGetPlayers();
-  const { playerId } = useSelector((state: RootState) => state.logIn);
-  const peerStatus = useSelector((state:RootState) => state.peerStatus)
 
   return (
     <Table>
@@ -24,9 +22,7 @@ export default function PlayerList() {
             </TableCell>
             <TableCell className="font-medium">
               <ConnectionIcon
-                peerStatus={
-                  key === playerId ? "Main Player" : peerStatus[key]
-                }
+                peerId={key}
                 name={playerData[key].name}
               />
             </TableCell>

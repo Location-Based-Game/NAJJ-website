@@ -199,6 +199,7 @@ export default function useWebRTC(
         if (!("action" in parsedData)) return;
         if (!splashScreenComplete) return;
         callUnityFunction("ControlBoardItem", data);
+        console.log('sending 1')
       } catch (error) {
         console.log(data);
       }
@@ -206,6 +207,26 @@ export default function useWebRTC(
 
     return peer;
   }
+
+  //listen for data when Unity player finishes loading
+  useEffect(() => {
+    if (!splashScreenComplete) return;
+    console.log("made it here")
+    Object.keys(playerPeers.current).forEach(key => {
+      playerPeers.current[key].removeAllListeners("data")
+      playerPeers.current[key].on("data", data => {
+        try {
+          const parsedData = JSON.parse(data);
+          if (!("action" in parsedData)) return;
+          callUnityFunction("ControlBoardItem", data);
+          console.log('sending 2')
+        } catch (error) {
+          console.log(data);
+        }
+      })
+    })
+    
+  }, [splashScreenComplete, playerPeers])
 
   return { playerPeers };
 }

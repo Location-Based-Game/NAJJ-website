@@ -6,10 +6,11 @@ import {
 } from "@/components/ui/tooltip";
 import { SignalHigh, CircleAlert, Loader2 } from "lucide-react";
 import React from "react";
-import type { PeerStatus } from "@/store/peerStatusSlice";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface ConnectionIcon {
-  peerStatus: PeerStatus | "Main Player" | undefined;
+  peerId: string;
   name: string;
 }
 
@@ -19,25 +20,17 @@ type StatusIndicator = {
   tooltipStyling: string;
 };
 
-export default function ConnectionIcon({ peerStatus, name }: ConnectionIcon) {
+export default function ConnectionIcon({ peerId, name }: ConnectionIcon) {
+  const peerStatus = useSelector((state:RootState) => state.peerStatus)
+  const { playerId } = useSelector((state: RootState) => state.logIn);
+  
   let statusIndicator: StatusIndicator = {
     icon: <></>,
     tooltip: "",
     tooltipStyling: "bg-secondary text-secondary-foreground",
   };
 
-  switch (peerStatus) {
-    case "Main Player":
-      statusIndicator.icon = (
-        <SignalHigh
-          id={`connected-${name}`}
-          size={18}
-          className="w-5 stroke-green-500"
-        />
-      );
-      statusIndicator.tooltip = "connected!";
-      statusIndicator.tooltipStyling = "bg-primary text-primary-foreground";
-      break;
+  switch (peerStatus[peerId]) {
     case "connected":
       statusIndicator.icon = (
         <SignalHigh
@@ -82,6 +75,18 @@ export default function ConnectionIcon({ peerStatus, name }: ConnectionIcon) {
       statusIndicator.tooltipStyling =
         "bg-destructive text-destructive-foreground";
       break;
+  }
+
+  if (peerId === playerId) {
+    statusIndicator.icon = (
+      <SignalHigh
+        id={`connected-${name}`}
+        size={18}
+        className="w-5 stroke-green-500"
+      />
+    );
+    statusIndicator.tooltip = "connected!";
+    statusIndicator.tooltipStyling = "bg-primary text-primary-foreground";
   }
 
   return (
