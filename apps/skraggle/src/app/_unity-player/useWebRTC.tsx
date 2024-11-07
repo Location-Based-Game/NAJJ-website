@@ -1,5 +1,5 @@
 import { onValue, ref, set, onDisconnect } from "firebase/database";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { rtdb } from "../firebaseConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -7,7 +7,7 @@ import Peer from "simple-peer";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
 import { CallUnityFunctionType } from "./UnityContext";
-import { removePeerStatus, setStatus } from "@/store/peerStatusSlice";
+import { setStatus } from "@/store/peerStatusSlice";
 
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
@@ -28,6 +28,7 @@ export default function useWebRTC(
   const { gameId, playerId, playerName } = useSelector(
     (state: RootState) => state.logIn,
   );
+  const peerStatus = useSelector((state:RootState) => state.peerStatus)
   const { logOutOnError } = useLogOutOnError(false);
   const playerPeers = useRef<PlayerPeers>({});
   const dispatch = useDispatch()
@@ -193,25 +194,12 @@ export default function useWebRTC(
       dispatch(setStatus({playerId: peerId, status: "error"}))
     });
 
-    peer.on("data", (data) => {
-      try {
-        const parsedData = JSON.parse(data);
-        if (!("action" in parsedData)) return;
-        if (!splashScreenComplete) return;
-        callUnityFunction("ControlBoardItem", data);
-        console.log('sending 1')
-      } catch (error) {
-        console.log(data);
-      }
-    });
-
     return peer;
   }
 
-  //listen for data when Unity player finishes loading
+  //listen for data when Unity player finishes loading 
   useEffect(() => {
     if (!splashScreenComplete) return;
-    console.log("made it here")
     Object.keys(playerPeers.current).forEach(key => {
       playerPeers.current[key].removeAllListeners("data")
       playerPeers.current[key].on("data", data => {
@@ -219,14 +207,13 @@ export default function useWebRTC(
           const parsedData = JSON.parse(data);
           if (!("action" in parsedData)) return;
           callUnityFunction("ControlBoardItem", data);
-          console.log('sending 2')
         } catch (error) {
           console.log(data);
         }
       })
     })
     
-  }, [splashScreenComplete, playerPeers])
+  }, [splashScreenComplete, peerStatus])
 
   return { playerPeers };
 }
