@@ -9,20 +9,25 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 
 interface LeaveGameDialogue {
   onLeave: () => void;
+  children: React.ReactNode;
+  triggerDialogue?: boolean;
 }
 
-export default function LeaveGameDialogue({ onLeave }: LeaveGameDialogue) {
+export default function LeaveGameDialogue({
+  onLeave,
+  children,
+  triggerDialogue = true
+}: LeaveGameDialogue) {
+  if (!triggerDialogue) {
+    return children
+  }
+
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline" className="h-12 w-full">
-          Leave Game
-        </Button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Leave Game?</AlertDialogTitle>

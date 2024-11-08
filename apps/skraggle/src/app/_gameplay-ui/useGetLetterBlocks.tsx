@@ -18,7 +18,6 @@ export default function useGetLetterBlocks() {
       clearInventory: firstFetch.current,
     }).toString();
     firstFetch.current = "false";
-    console.log("made it here")
     fetchApi(`/api/get-letterblock?${params}`).catch((error) => {
       logOutOnError(error);
     });

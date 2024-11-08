@@ -5,6 +5,7 @@ import LeaveGameDialogue from "../LeaveGameDialogue";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
 import { useDispatch } from "react-redux";
+import { Button } from "@/components/ui/button";
 
 export default function LeaveGame({
   animationCallback,
@@ -30,12 +31,16 @@ export default function LeaveGame({
       logOutOnError(error);
     }
   };
-  
+
   return (
     <LeaveGameDialogue
       onLeave={() => {
         handleOnLeave();
       }}
-    />
+    >
+      <Button variant="outline" className="h-12 w-full">
+        Leave Game
+      </Button>
+    </LeaveGameDialogue>
   );
 }

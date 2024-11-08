@@ -5,6 +5,7 @@ import LeaveGameDialogue from "../LeaveGameDialogue";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import useLogOutOnError from "@/hooks/useLogOutOnError";
 import { useDispatch } from "react-redux";
+import { Button } from "@/components/ui/button";
 
 export default function HostLeaveGameButton({
   animationCallback,
@@ -17,15 +18,15 @@ export default function HostLeaveGameButton({
 
   const handleLeaveGame = async () => {
     try {
+      dispatch(resetClientSessionData());
       await fetchApi("/api/leave-game");
       Object.keys(playerPeers.current).forEach((key) => {
         playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
       });
       animationCallback({
-        state: "Sign In to Create",
+        state: "Home",
         slideFrom: "left",
       });
-      dispatch(resetClientSessionData());
     } catch (error) {
       logOutOnError(error, {
         state: "Sign In to Create",
@@ -39,6 +40,10 @@ export default function HostLeaveGameButton({
       onLeave={() => {
         handleLeaveGame();
       }}
-    />
+    >
+      <Button variant="outline" className="h-12 w-full">
+        Leave Game
+      </Button>
+    </LeaveGameDialogue>
   );
 }
