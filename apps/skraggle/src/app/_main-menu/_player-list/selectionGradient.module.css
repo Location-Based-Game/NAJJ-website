@@ -1,0 +1,8 @@
+.selectionGradient {
+  background: radial-gradient(
+    50% 50% at 50% 120%,
+    hsla(var(--primary) / 0.3) 0%,
+    hsla(var(--primary) / 0.2) 50%,
+    hsla(var(--primary) / 0) 100%
+  );
+}
