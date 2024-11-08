@@ -12,34 +12,54 @@ import useTurnListener from "./useTurnListener";
 import useSetGameState from "./useSetGameState";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import PlayerListGameplay from "./PlayerListGameplay";
+import dynamic from "next/dynamic";
+
+const Unity = dynamic(
+  () => import("react-unity-webgl").then((mod) => mod.Unity),
+  { ssr: false },
+);
 
 export default function GameUI() {
   const gameState = useSelector((state: RootState) => state.gameState);
-  const { currentTurn, playerTurn } = useSelector(
-    (state: RootState) => state.turnState,
-  );
   const { playerData } = useGetPlayers();
-  const {callUnityFunction, splashScreenComplete} = useUnityReactContext()
-  
+  const { callUnityFunction, splashScreenComplete, unityProvider } =
+    useUnityReactContext();
+
   useStartingDice(playerData);
   useSendBoardItemData();
   useGetLetterBlocks();
   useTurnListener();
   useSetGameState(callUnityFunction, splashScreenComplete);
 
-  if (gameState.state === "Menu") {
-    return <MainMenuPanel />
-  }
+  return (
+    <div className="relative flex h-[calc(100dvh-3rem)] items-center justify-center bg-secondary">
+      <div className="w-full h-full pointer-events-none absolute z-10 flex items-center justify-center">
+        {gameState.state === "Menu" ? <MainMenuPanel /> : <GamePlayUI />}
+      </div>
+      <Unity
+        unityProvider={unityProvider}
+        className={`h-full w-full transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
+      />
+    </div>
+  );
+}
 
-  let stateUI = <></>
+function GamePlayUI() {
+  const gameState = useSelector((state: RootState) => state.gameState);
+  const { currentTurn, playerTurn } = useSelector(
+    (state: RootState) => state.turnState,
+  );
+
+  let gameplayUI = <></>;
   if (gameState.state === "Gameplay") {
-      stateUI = currentTurn === playerTurn ? <YourTurnUI /> : <NotYourTurnUI />;
+    gameplayUI =
+      currentTurn === playerTurn ? <YourTurnUI /> : <NotYourTurnUI />;
   }
 
   return (
     <>
-    {stateUI}
-    <PlayerListGameplay />
+      {gameplayUI}
+      <PlayerListGameplay />
     </>
-  )
+  );
 }
