@@ -6,7 +6,7 @@ import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CallUnityFunctionType } from "../_unity-player/UnityContext";
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
 
 export default function useSetGameState(
   callUnityFunction: CallUnityFunctionType,
@@ -14,7 +14,7 @@ export default function useSetGameState(
 ) {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const dispatch = useDispatch();
-  const {logOutOnError} = useLogOutOnError()
+  const {logOutOnError} = useLogOut()
 
   useEffect(() => {
     if (!splashScreenComplete || !gameId) return;

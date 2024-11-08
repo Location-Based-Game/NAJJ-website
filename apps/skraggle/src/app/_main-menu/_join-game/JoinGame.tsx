@@ -40,7 +40,7 @@ export default function JoinGame() {
 
   return (
     <InnerPanelWrapper ref={scope}>
-      <LeaveGame animationCallback={animationCallback} />
+      <LeaveGame />
       <div className="w-full grow">
         <h2 className="my-6 w-full text-center">Players</h2>
         <PlayerList />

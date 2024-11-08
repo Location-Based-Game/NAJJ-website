@@ -1,17 +1,18 @@
 import { useDispatch } from "react-redux";
 import { useToast } from "./use-toast";
-import type { MainMenuState } from "./usePanelUI";
+import type { MainMenuState, MainMenuStates } from "./usePanelUI";
 import { mainMenuState } from "@/store/store";
 import { resetClientSessionData } from "@/store/logInSlice";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { PlayerPeers } from "@/app/_unity-player/useWebRTC";
+import { fetchApi } from "@/lib/fetchApi";
 
 const defaultState: MainMenuState = {
   state: "Home",
   slideFrom: "left",
 };
 
-export default function useLogOutOnError(disconnectPeers: boolean = true) {
+export default function useLogOut(disconnectPeers: boolean = true) {
   const dispatch = useDispatch();
   const { toast } = useToast();
   let playerPeers: React.MutableRefObject<PlayerPeers>;
@@ -19,6 +20,14 @@ export default function useLogOutOnError(disconnectPeers: boolean = true) {
   if (disconnectPeers) {
     // eslint-disable-next-line
     playerPeers = useUnityReactContext().playerPeers;
+  }
+
+  const disconnectWebRTCPeers = () => {
+    if (playerPeers) {
+      Object.keys(playerPeers.current).forEach((key) => {
+        playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
+      });
+    }
   }
 
   const logOutOnError = (
@@ -37,13 +46,27 @@ export default function useLogOutOnError(disconnectPeers: boolean = true) {
     dispatch(resetClientSessionData());
     dispatch(mainMenuState.updateState(state));
 
-    //disconnect all webRTC peers
-    if (playerPeers) {
-      Object.keys(playerPeers.current).forEach((key) => {
-        playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
+    disconnectWebRTCPeers()
+  };
+
+  const leaveGame = async (state: MainMenuStates) => {
+    try {
+      dispatch(resetClientSessionData());
+      await fetchApi("/api/leave-game");
+      disconnectWebRTCPeers()
+      dispatch(
+        mainMenuState.updateState({
+          state,
+          slideFrom: "left",
+        }),
+      );
+    } catch (error) {
+      logOutOnError(error, {
+        state: "Home",
+        slideFrom: "left",
       });
     }
   };
 
-  return { logOutOnError };
+  return { logOutOnError, leaveGame };
 }

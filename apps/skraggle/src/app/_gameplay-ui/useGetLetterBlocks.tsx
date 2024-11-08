@@ -1,4 +1,4 @@
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
 import { fetchApi } from "@/lib/fetchApi";
 import { useCallback, useEffect, useRef } from "react";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
@@ -10,7 +10,7 @@ export default function useGetLetterBlocks() {
   const { playerData } = useGetPlayers();
 
   const firstFetch = useRef<"true" | "false">("true");
-  const { logOutOnError } = useLogOutOnError();
+  const { logOutOnError } = useLogOut();
 
   const handleSendData = useCallback((data: any) => {
     const params = new URLSearchParams({

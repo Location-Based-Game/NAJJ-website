@@ -13,16 +13,18 @@ import {
 interface LeaveGameDialogue {
   onLeave: () => void;
   children: React.ReactNode;
+  onCancel?: () => void;
   triggerDialogue?: boolean;
 }
 
 export default function LeaveGameDialogue({
   onLeave,
   children,
-  triggerDialogue = true
+  onCancel = () => {},
+  triggerDialogue = true,
 }: LeaveGameDialogue) {
   if (!triggerDialogue) {
-    return children
+    return children;
   }
 
   return (
@@ -36,7 +38,13 @@ export default function LeaveGameDialogue({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel
+            onClick={() => {
+              onCancel();
+            }}
+          >
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
               onLeave();

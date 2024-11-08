@@ -5,7 +5,7 @@ import { ColorPicker } from "@/components/ui/color-picker";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { fetchApi } from "@/lib/fetchApi";
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
 import HostIcon from "./HostIcon";
 import ConnectionIcon from "./ConnectionIcon";
 
@@ -43,7 +43,7 @@ interface PlayerColor {
 function PlayerColor({ playerData, playerKey }: PlayerColor) {
   const { playerId } = useSelector((state: RootState) => state.logIn);
   const [color, setColor] = useState(playerData[playerKey].color);
-  const { logOutOnError } = useLogOutOnError();
+  const { logOutOnError } = useLogOut();
 
   return (
     <TableCell className="text-right">

@@ -25,7 +25,7 @@ export default function CreateGame() {
         </div>
       </div>
       <div className="flex w-full gap-4">
-        <HostLeaveGameButton animationCallback={animationCallback} />
+        <HostLeaveGameButton />
         {loadingProgression === 1 ? (
           <Button
             disabled={!enableButtons}

@@ -6,14 +6,14 @@ import SignIn from "../SignIn";
 import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { GuestNameType } from "../GuestNameInput";
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
 
 export default function CreateLogIn() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
   const dispatch = useDispatch<AppDispatch>();
   const sessionData = useSelector((state: RootState) => state.logIn);
-  const { logOutOnError } = useLogOutOnError();
+  const { logOutOnError } = useLogOut();
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
