@@ -1,6 +1,6 @@
 import usePanelTransition from "@/hooks/usePanelTransition";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QRCode from "./QRCode";
 import { Button } from "@/components/ui/button";
 import PlayerList from "../_player-list/PlayerList";
@@ -10,10 +10,19 @@ import { Loader2 } from "lucide-react";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 
 export default function CreateGame() {
-  const [enableButtons, setEnableButtons] = useState(true);
+  const [enableButtons, setEnableButtons] = useState(false);
   const { scope, animationCallback } = usePanelTransition();
   const { handleStartGame } = useStartGame();
-  const { loadingProgression } = useUnityReactContext();
+  const { loadingProgression, splashScreenComplete } = useUnityReactContext();
+
+  useEffect(() => {
+    if (loadingProgression === 1 && splashScreenComplete) {
+      //prevents start button from being clicked when host rejoins the game
+      setTimeout(() => {
+        setEnableButtons(true)
+      }, 1000);
+    }
+  }, [loadingProgression, splashScreenComplete])
 
   return (
     <InnerPanelWrapper ref={scope}>
@@ -26,10 +35,10 @@ export default function CreateGame() {
       </div>
       <div className="flex w-full gap-4">
         <HostLeaveGameButton />
-        {loadingProgression === 1 ? (
+        {loadingProgression === 1 && splashScreenComplete ? (
           <Button
             disabled={!enableButtons}
-            className="h-12 w-full"
+            className="h-12 w-full transition-opacity"
             onClick={() => {
               setEnableButtons(false);
               handleStartGame();
