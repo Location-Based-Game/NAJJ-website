@@ -10,7 +10,7 @@ export default function Home() {
     <SidebarProvider>
       <PlayerData>
         <UnityContextProvider>
-          <AppSidebar />
+          <AppSidebar className="pointer-events-auto" />
           <SidebarInset>
             <GameHeader />
             <GameUI />

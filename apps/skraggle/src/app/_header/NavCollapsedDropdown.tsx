@@ -40,7 +40,7 @@ export default function NavCollapsedDropdown({
         className="flex items-center gap-1 outline-none"
         aria-label="Toggle menu"
       >
-        <BreadcrumbEllipsis className="pointer-events-auto h-4 w-4" />
+        <BreadcrumbEllipsis className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         {previousItems.reverse().map((menuItem, i) => (

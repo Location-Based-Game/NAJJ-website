@@ -38,7 +38,7 @@ export default function GameUI() {
       </div>
       <Unity
         unityProvider={unityProvider}
-        className={`h-full w-full transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
+        className={`h-full w-full pointer-events-auto transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
       />
     </div>
   );
