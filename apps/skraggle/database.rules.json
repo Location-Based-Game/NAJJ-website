@@ -29,7 +29,7 @@
             ".read": true,
             "$playerId": {
               "signalStatus": {
-                ".write": "newData.val() === 'pending' || newData.val() === 'offline' || newData.val() === 'sent'"
+                ".write": "(newData.val() === 'pending' || newData.val() === 'offline' || newData.val() === 'sent') && root.child('activeGames').child($gameId).child('signaling').child('players').child($playerId).exists()"
               }
             }
           }

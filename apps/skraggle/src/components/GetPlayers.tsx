@@ -1,6 +1,6 @@
 "use client"
 import { rtdb } from "@/app/firebaseConfig";
-import { addInitialStatus, setStatus } from "@/store/peerStatusSlice";
+import { addInitialStatus } from "@/store/peerStatusSlice";
 import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { createContext, useContext, useEffect, useState } from "react";

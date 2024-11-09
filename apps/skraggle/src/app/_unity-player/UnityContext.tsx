@@ -37,11 +37,13 @@ export default function UnityContextProvider({
   });
 
   const { sendMessage, isLoaded } = unityContext;
+  const [splashScreenComplete, setSplashScreenComplete] = useState(false);
 
   const callUnityFunction = (
     functionName: string,
     param?: ReactUnityEventParameter | object,
   ) => {
+    if (!splashScreenComplete) return;
     if (!param && param !== 0) {
       sendMessage("Receiver", functionName);
       return;
@@ -54,7 +56,6 @@ export default function UnityContextProvider({
     }
   };
 
-  const [splashScreenComplete, setSplashScreenComplete] = useState(false);
 
   useEffect(() => {
     if (!isLoaded) return;

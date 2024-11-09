@@ -9,8 +9,9 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import NavCollapsedDropdown from "./NavCollapsedDropdown";
+import BreadCrumbDropdown from "./BreadCrumbDropdown";
 import NavPreviousBreadCrumb from "./NavPreviousBreadCrumb";
+import { BreadcrumbEllipsis } from "@/components/ui/breadcrumb";
 
 type MainMenuStateRelation = Record<MainMenuStates, MainMenuStates | null>;
 const mainMenuStateRelations: MainMenuStateRelation = {
@@ -23,7 +24,7 @@ const mainMenuStateRelations: MainMenuStateRelation = {
   Rejoining: null,
 } as const;
 
-const NavHistory = memo(() => {
+const MainMenuBreadCrumb = memo(() => {
   const mainMenu = useSelector((state: RootState) => state.mainMenu);
   const previousItems: MainMenuStates[] = [];
   const isSmallScreen = useMediaQuery(1024);
@@ -41,7 +42,9 @@ const NavHistory = memo(() => {
     if (mainMenu.state === "Home" || mainMenu.state === "Rejoining") return;
     return (
       <>
-        <NavCollapsedDropdown previousItems={previousItems} />
+        <BreadCrumbDropdown menuItems={previousItems.reverse()}>
+          <BreadcrumbEllipsis className="h-4 w-4" />
+        </BreadCrumbDropdown>
         <BreadcrumbSeparator />
       </>
     );
@@ -68,6 +71,6 @@ const NavHistory = memo(() => {
   );
 });
 
-NavHistory.displayName = "NavHistory";
+MainMenuBreadCrumb.displayName = "MainMenuBreadCrumb";
 
-export default NavHistory;
+export default MainMenuBreadCrumb;

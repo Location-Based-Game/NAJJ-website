@@ -6,6 +6,8 @@ import { resetClientSessionData } from "@/store/logInSlice";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { PlayerPeers } from "@/app/_unity-player/useWebRTC";
 import { fetchApi } from "@/lib/fetchApi";
+import { setGameState, setGameActive } from "@/store/gameStateSlice";
+import { resetTurnState } from "@/store/turnSlice";
 
 const defaultState: MainMenuState = {
   state: "Home",
@@ -45,11 +47,13 @@ export default function useLogOut(disconnectPeers: boolean = true) {
 
     dispatch(resetClientSessionData());
     dispatch(mainMenuState.updateState(state));
-
+    dispatch(setGameState("Menu"));
+    dispatch(setGameActive(false));
+    dispatch(resetTurnState());
     disconnectWebRTCPeers()
   };
 
-  const leaveGame = async (state: MainMenuStates) => {
+  const leaveGame = async (state: MainMenuStates = "Home") => {
     try {
       dispatch(resetClientSessionData());
       await fetchApi("/api/leave-game");
@@ -60,11 +64,11 @@ export default function useLogOut(disconnectPeers: boolean = true) {
           slideFrom: "left",
         }),
       );
+      dispatch(setGameState("Menu"));
+      dispatch(setGameActive(false));
+      dispatch(resetTurnState());
     } catch (error) {
-      logOutOnError(error, {
-        state: "Home",
-        slideFrom: "left",
-      });
+      logOutOnError(error);
     }
   };
 

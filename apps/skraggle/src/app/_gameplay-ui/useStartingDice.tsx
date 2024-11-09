@@ -13,7 +13,10 @@ export default function useStartingDice(players: PlayersData) {
   const isStartingDiceSet = useRef(false);
 
   useEffect(() => {
-    if (!isGameActive) return;
+    if (!isGameActive) {
+      isStartingDiceSet.current = false;
+      return;
+    };
     if (!gameId) return;
     if (isStartingDiceSet.current) return;
     if (!players[playerId].inventory) return;

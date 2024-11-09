@@ -20,7 +20,10 @@ export const turnSlice = createSlice({
     setPlayerTurn: (state: TurnState, action: PayloadAction<number>) => {
       state.playerTurn = action.payload;
     },
+    resetTurnState: () => {
+      return initialState
+    }
   },
 });
 
-export const { setCurrentTurn, setPlayerTurn } = turnSlice.actions;
+export const { setCurrentTurn, setPlayerTurn, resetTurnState } = turnSlice.actions;
