@@ -21,7 +21,7 @@ interface NavCollapsedDropdown {
 export default function BreadCrumbDropdown({
   menuItems,
   customElements,
-  children
+  children,
 }: NavCollapsedDropdown) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const { gameId } = useSelector((state: RootState) => state.logIn);
@@ -65,11 +65,7 @@ export default function BreadCrumbDropdown({
                 handleNavigate(menuItem);
               }}
             >
-              {customElements ? (
-                customElements[i]
-              ) : (
-                menuItem
-              )}
+              {customElements ? customElements[i] : menuItem}
             </DropdownMenuItem>
           </LeaveGameDialogue>
         ))}

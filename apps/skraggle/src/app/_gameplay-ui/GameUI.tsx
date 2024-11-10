@@ -13,6 +13,7 @@ import useSetGameState from "./useSetGameState";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import PlayerListGameplay from "./PlayerListGameplay";
 import dynamic from "next/dynamic";
+import { cn } from "@/lib/tailwindUtils";
 
 const Unity = dynamic(
   () => import("react-unity-webgl").then((mod) => mod.Unity),
@@ -20,7 +21,9 @@ const Unity = dynamic(
 );
 
 export default function GameUI() {
-  const gameState = useSelector((state: RootState) => state.gameState);
+  const { state: gameState, isGameActive } = useSelector(
+    (state: RootState) => state.gameState,
+  );
   const { playerData } = useGetPlayers();
   const { callUnityFunction, splashScreenComplete, unityProvider } =
     useUnityReactContext();
@@ -33,12 +36,16 @@ export default function GameUI() {
 
   return (
     <div className="relative flex h-[calc(100dvh-3rem)] items-center justify-center bg-secondary">
-      <div className="w-full h-full pointer-events-none absolute z-10 flex items-center justify-center">
-        {gameState.state === "Menu" ? <MainMenuPanel /> : <GamePlayUI />}
+      <div className="pointer-events-none absolute z-10 flex h-full w-full items-center justify-center">
+        {gameState === "Menu" ? <MainMenuPanel /> : <GamePlayUI />}
       </div>
       <Unity
         unityProvider={unityProvider}
-        className={`h-full w-full pointer-events-auto transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
+        className={cn(
+          "h-full w-full transition-opacity duration-700",
+          isGameActive ? "pointer-events-auto" : "pointer-events-none",
+          splashScreenComplete ? "opacity-100" : "opacity-0",
+        )}
       />
     </div>
   );
