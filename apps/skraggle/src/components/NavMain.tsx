@@ -3,13 +3,13 @@
 import { BookMarked, CircleHelp, Gamepad2, Info, Play } from "lucide-react";
 
 import {
-  SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
-const items = [
+export const navItems = [
   {
     title: "Play Skraggle!",
     url: "/",
@@ -39,10 +39,10 @@ const items = [
 
 export function NavMain() {
   return (
-    <SidebarGroup>
-      <SidebarMenu>
-        {items.map((item, i) => {
-          return (
+    <SidebarMenu>
+      {navItems.map((item, i) => {
+        return (
+          <SidebarMenuItem>
             <SidebarMenuButton
               asChild
               tooltip={item.title}
@@ -54,9 +54,9 @@ export function NavMain() {
                 <span>{item.title}</span>
               </Link>
             </SidebarMenuButton>
-          );
-        })}
-      </SidebarMenu>
-    </SidebarGroup>
+          </SidebarMenuItem>
+        );
+      })}
+    </SidebarMenu>
   );
 }

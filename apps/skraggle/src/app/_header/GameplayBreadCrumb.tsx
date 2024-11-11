@@ -29,9 +29,17 @@ export default function GameplayBreadCrumb() {
     if (currentTurn === playerTurn) {
       return "Your Turn!";
     } else {
-      const currentPlayerName = Object.values(playerData).filter(
+      const currentPlayer = Object.values(playerData).filter(
         (data) => data.turn === currentTurn,
-      )[0].name;
+      )[0];
+      
+      if (!currentPlayer) {
+        //TODO Refactor this
+        console.error("Current player is not in the game!");
+        return;
+      }
+
+      const currentPlayerName = currentPlayer.name;
       return `${currentPlayerName}'s Turn`;
     }
   };
