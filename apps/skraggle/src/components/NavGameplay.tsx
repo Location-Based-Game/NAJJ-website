@@ -21,7 +21,7 @@ import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { useGetPlayers } from "./GetPlayers";
+import { useGetPlayers } from "./PlayersDataProvider";
 
 const AnimatedDropdown = motion.create(SidebarMenuSub);
 

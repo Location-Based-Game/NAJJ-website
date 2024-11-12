@@ -1,4 +1,4 @@
-import PlayerData from "@/components/GetPlayers";
+import PlayersDataProvider from "@/components/PlayersDataProvider";
 import GameUI from "./_gameplay-ui/GameUI";
 import UnityContextProvider from "./_unity-player/UnityContext";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -9,7 +9,7 @@ import LeaveGameProvider from "./LeaveGameProvider";
 export default function Home() {
   return (
     <SidebarProvider>
-      <PlayerData>
+      <PlayersDataProvider>
         <UnityContextProvider>
           <LeaveGameProvider>
             <AppSidebar className="pointer-events-auto" />
@@ -19,7 +19,7 @@ export default function Home() {
             </SidebarInset>
           </LeaveGameProvider>
         </UnityContextProvider>
-      </PlayerData>
+      </PlayersDataProvider>
     </SidebarProvider>
   );
 }

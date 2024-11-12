@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { PlayersData, useGetPlayers } from "@/components/GetPlayers";
+import { PlayersData, useGetPlayers } from "@/components/PlayersDataProvider";
 import { useState } from "react";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { useSelector } from "react-redux";

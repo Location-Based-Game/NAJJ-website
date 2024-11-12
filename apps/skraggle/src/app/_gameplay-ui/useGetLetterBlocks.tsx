@@ -2,7 +2,7 @@ import useLogOut from "@/hooks/useLogOut";
 import { fetchApi } from "@/lib/fetchApi";
 import { useCallback, useEffect, useRef } from "react";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { PlayersData, useGetPlayers } from "@/components/GetPlayers";
+import { PlayersData, useGetPlayers } from "@/components/PlayersDataProvider";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
@@ -20,7 +20,9 @@ export default function useGetLetterBlocks() {
       amount: data,
       clearInventory: firstFetch.current,
     }).toString();
+
     firstFetch.current = "false";
+
     fetchApi(`/api/get-letterblock?${params}`).catch((error) => {
       logOutOnError(error);
     });
@@ -49,10 +51,11 @@ export default function useGetLetterBlocks() {
     const inventory = players[key].inventory;
     if (!inventory) return;
     Object.keys(inventory).forEach((itemId) => {
-      callUnityFunction("SpawnLetterBlock", {
+      callUnityFunction("SpawnItem", {
         playerId: key,
         itemId,
-        letter: inventory[itemId].data,
+        data: JSON.stringify(inventory[itemId].data),
+        type: inventory[itemId].type,
       });
     });
   }

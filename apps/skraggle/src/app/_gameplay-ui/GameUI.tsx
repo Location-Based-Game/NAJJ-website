@@ -3,7 +3,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import MainMenuPanel from "../_main-menu/_home/MainMenuPanel";
 import YourTurnUI from "./_your-turn/YourTurnUI";
-import { useGetPlayers } from "@/components/GetPlayers";
+import { useGetPlayers } from "@/components/PlayersDataProvider";
 import useSendBoardItemData from "./useSendBoardItemData";
 import useStartingDice from "./useStartingDice";
 import useGetLetterBlocks from "./useGetLetterBlocks";

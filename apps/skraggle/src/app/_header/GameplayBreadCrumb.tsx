@@ -8,7 +8,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import BreadCrumbDropdown from "./BreadCrumbDropdown";
 import { ArrowRightFromLine } from "lucide-react";
-import { useGetPlayers } from "@/components/GetPlayers";
+import { useGetPlayers } from "@/components/PlayersDataProvider";
 
 export default function GameplayBreadCrumb() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
