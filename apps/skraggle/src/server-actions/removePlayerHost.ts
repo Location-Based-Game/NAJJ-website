@@ -1,6 +1,6 @@
 import "server-only"
 import removePlayer from "./removePlayer";
-import type { PlayersData } from "@/components/GetPlayers";
+import type { PlayersData } from "@/components/PlayersDataProvider";
 import { PlayerIdType, playerIdSchema } from "@/schemas/playerIdSchema";
 import { db } from "@/lib/firebaseAdmin";
 

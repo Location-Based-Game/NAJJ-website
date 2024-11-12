@@ -1,15 +1,25 @@
-import PlayerData from "@/components/GetPlayers";
+import PlayersDataProvider from "@/components/PlayersDataProvider";
 import GameUI from "./_gameplay-ui/GameUI";
-import UnityPlayer from "./_unity-player/UnityContext";
+import UnityContextProvider from "./_unity-player/UnityContext";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import GameHeader from "./_header/GameHeader";
+import LeaveGameProvider from "./LeaveGameProvider";
 
 export default function Home() {
   return (
-    <main className="flex h-screen w-screen items-center justify-center bg-secondary">
-      <PlayerData>
-        <UnityPlayer>
-          <GameUI />
-        </UnityPlayer>
-      </PlayerData>
-    </main>
+    <SidebarProvider>
+      <PlayersDataProvider>
+        <UnityContextProvider>
+          <LeaveGameProvider>
+            <AppSidebar className="pointer-events-auto" />
+            <SidebarInset>
+              <GameHeader />
+              <GameUI />
+            </SidebarInset>
+          </LeaveGameProvider>
+        </UnityContextProvider>
+      </PlayersDataProvider>
+    </SidebarProvider>
   );
 }

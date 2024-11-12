@@ -6,14 +6,14 @@ import { GuestNameType } from "../GuestNameInput";
 import SignIn from "../SignIn";
 import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { logInJoin } from "@/store/logInSlice";
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
 
 export default function JoinLogIn() {
   const [enableButtons, setEnableButtons] = useState(true);
   const { scope, animationCallback } = usePanelTransition();
   const currentJoinCode = useSelector((state: RootState) => state.joinCode);
   const sessionData = useSelector((state: RootState) => state.logIn);
-  const { logOutOnError } = useLogOutOnError();
+  const { logOutOnError } = useLogOut();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {

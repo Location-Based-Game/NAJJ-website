@@ -1,25 +1,27 @@
-import { ItemType } from "@/components/GetPlayers";
+import { ItemType } from "@/components/PlayersDataProvider";
 import { db } from "@/lib/firebaseAdmin";
 import { deleteSession, getSessionData } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const getLetterBlockSchema = z.object({
   amount: z.string().min(1),
-  clearInventory: z.enum(["true", "false"])
+  clearInventory: z.enum(["true", "false"]),
 });
 
-const letters = 'AAAAABBCCDDDDEEEEEEFFFGGGGHHHIIIIIIJJKKLLLLMMMNNNOOOOOOPPPQRRRRRRSSSSSSTTTTTUUUUUVVWWXYYYZ___'.split(''); 
-type LetterBlock = ItemType<string>;
+const letters =
+  "AAAAABBCCDDDDEEEEEEFFFGGGGHHHIIIIIIJJKKLLLLMMMNNNOOOOOOPPPQRRRRRRSSSSSSTTTTTUUUUUVVWWXYYYZ___".split(
+    "",
+  );
+type LetterBlock = ItemType<{ letter: string }>;
 
 //GET LETTER BLOCK
 export async function GET(request: NextRequest) {
-  const { amount, clearInventory } = validateSearchParams<z.infer<typeof getLetterBlockSchema>>(
-    request.url,
-    getLetterBlockSchema,
-  );
+  const { amount, clearInventory } = validateSearchParams<
+    z.infer<typeof getLetterBlockSchema>
+  >(request.url, getLetterBlockSchema);
 
   try {
     const { gameId, playerId } = await getSessionData();
@@ -27,19 +29,24 @@ export async function GET(request: NextRequest) {
       `activeGames/${gameId}/players/${playerId}/inventory`,
     );
 
+    const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
+
     if (clearInventory === "true") {
-      await inventoryRef.remove();
+      await Promise.all([inventoryRef.remove(), gameStateRef.set("Gameplay")]);
     }
 
-    const letterBlocks: {[id:string]:LetterBlock} = {}
+    const letterBlocks: { [id: string]: LetterBlock } = {};
 
     for (let i = 0; i < parseInt(amount); i++) {
-      const randomIndex = Math.floor(Math.random() * letters.length)
-      const randomLetter = letters[randomIndex]
-      letterBlocks[`${randomLetter}-${uuidv4()}`] = {type: "LetterBlock", data: randomLetter}
+      const randomIndex = Math.floor(Math.random() * letters.length);
+      const randomLetter = letters[randomIndex];
+      letterBlocks[`${randomLetter}-${uuidv4()}`] = {
+        type: "LetterBlock",
+        data: { letter: randomLetter },
+      };
     }
 
-    await inventoryRef.update(letterBlocks)
+    await inventoryRef.update(letterBlocks);
 
     return NextResponse.json({ data: "Success" });
   } catch (error) {

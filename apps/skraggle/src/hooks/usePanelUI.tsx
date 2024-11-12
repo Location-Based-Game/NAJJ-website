@@ -7,16 +7,18 @@ import MainButtons from "@/app/_main-menu/_home/MainButtons";
 import Rejoining from "@/app/_main-menu/_home/Rejoining";
 
 export type MainMenuState = {
-  state:
-    | "Home"
-    | "Sign In to Create"
-    | "Sign In to Join"
-    | "Create Game"
-    | "Enter Join Code"
-    | "Join Game"
-    | "Rejoining"
+  state: MainMenuStates
   slideFrom: "left" | "right";
 };
+
+export type MainMenuStates =
+  | "Home"
+  | "Sign In to Create"
+  | "Sign In to Join"
+  | "Create Game"
+  | "Enter Join Code"
+  | "Join Game"
+  | "Rejoining";
 
 type MainMenuParams = {
   component: React.ReactNode;

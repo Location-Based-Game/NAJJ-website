@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
 import { setCurrentTurn } from "@/store/turnSlice";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { useGetPlayers } from "@/components/GetPlayers";
+import { useGetPlayers } from "@/components/PlayersDataProvider";
 
 export default function useTurnListener() {
   const { gameId } = useSelector((state: RootState) => state.logIn);

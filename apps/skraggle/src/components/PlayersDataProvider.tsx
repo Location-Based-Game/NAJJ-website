@@ -1,12 +1,12 @@
 "use client"
 import { rtdb } from "@/app/firebaseConfig";
-import { addInitialStatus, setStatus } from "@/store/peerStatusSlice";
+import { addInitialStatus } from "@/store/peerStatusSlice";
 import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export const PlayerDataContext = createContext<{
+export const PlayersDataContext = createContext<{
   playerData: PlayersData;
 } | null>(null);
 
@@ -14,8 +14,10 @@ interface PlayerData {
   children: React.ReactNode;
 }
 
+type ItemTypes = "LetterBlock" | "StartingDice"
+
 export type ItemType<T> = {
-  type: string;
+  type: ItemTypes;
   data: T;
 };
 
@@ -32,7 +34,7 @@ export type PlayersData = {
   };
 };
 
-export default function PlayerData({ children }: PlayerData) {
+export default function PlayersDataProvider({ children }: PlayerData) {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const [playerData, setPlayerData] = useState<PlayersData>({});
   const dispatch = useDispatch()
@@ -54,14 +56,14 @@ export default function PlayerData({ children }: PlayerData) {
   }, [gameId]);
 
   return (
-    <PlayerDataContext.Provider value={{ playerData }}>
+    <PlayersDataContext.Provider value={{ playerData }}>
       {children}
-    </PlayerDataContext.Provider>
+    </PlayersDataContext.Provider>
   );
 }
 
 export function useGetPlayers() {
-  const context = useContext(PlayerDataContext);
+  const context = useContext(PlayersDataContext);
   if (!context) {
     throw new Error(
       "useGetPlayers must be used within a PlayerDataContextProvider",

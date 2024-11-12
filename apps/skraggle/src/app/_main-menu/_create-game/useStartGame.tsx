@@ -3,12 +3,12 @@ import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchApi } from "@/lib/fetchApi";
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
 
 export default function useStartGame() {
   const dispatch = useDispatch();
   const { gameId } = useSelector((state: RootState) => state.logIn);
-  const { logOutOnError } = useLogOutOnError();
+  const { logOutOnError } = useLogOut();
 
   useEffect(() => {
     if (!gameId) {

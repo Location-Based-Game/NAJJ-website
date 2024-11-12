@@ -15,7 +15,7 @@ export default function JoinGame() {
   const { scope, animationCallback } = usePanelTransition();
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { toast } = useToast();
-  const { loadingProgression } = useUnityReactContext();
+  const { loadingProgression, splashScreenComplete } = useUnityReactContext();
 
   useEffect(() => {
     const hostRef = ref(rtdb, `activeGames/${gameId}/host`);
@@ -40,7 +40,7 @@ export default function JoinGame() {
 
   return (
     <InnerPanelWrapper ref={scope}>
-      <LeaveGame animationCallback={animationCallback} />
+      <LeaveGame />
       <div className="w-full grow">
         <h2 className="my-6 w-full text-center">Players</h2>
         <PlayerList />
@@ -50,10 +50,14 @@ export default function JoinGame() {
           className="absolute left-0 h-full w-full origin-left rounded-md bg-secondary transition-transform duration-300"
           style={{ transform: `scaleX(${loadingProgression})` }}
         ></div>
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        <div className="z-10">
-          {loadingProgression === 1 ? "Waiting for Host" : "Loading Game"}
-        </div>
+        {loadingProgression === 1 && splashScreenComplete ? (
+          <div className="z-10 animate-pulse">Waiting for Host</div>
+        ) : (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <div className="z-10">Loading Game</div>
+          </>
+        )}
       </div>
     </InnerPanelWrapper>
   );

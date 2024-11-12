@@ -1,4 +1,4 @@
-import { useGetPlayers } from "@/components/GetPlayers";
+import { useGetPlayers } from "@/components/PlayersDataProvider";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import ConnectionIcon from "../_main-menu/_player-list/ConnectionIcon";

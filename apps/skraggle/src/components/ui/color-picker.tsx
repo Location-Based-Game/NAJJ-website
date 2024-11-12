@@ -12,20 +12,19 @@ import { cn } from "@/lib/tailwindUtils";
 
 type ColorPickerProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   value: string;
-  onColorChange: (value: string) => void;
   onBlur?: () => void;
-  onClose: () => void;
+  onClose: (value:string) => void;
 };
 
 const ColorPicker = ({
   value,
-  onColorChange,
   onBlur,
   onClose,
   className,
   ...props
 }: ColorPickerProps) => {
   const [open, setOpen] = useState(false);
+  const [color, setColor] = useState("");
 
   const parsedValue = useMemo(() => {
     return value || "#FFFFFF";
@@ -35,7 +34,7 @@ const ColorPicker = ({
     <Popover
       onOpenChange={(open) => {
         if (!open) {
-          onClose();
+          onClose(color);
         }
         setOpen(open);
       }}
@@ -56,7 +55,19 @@ const ColorPicker = ({
         ></Button>
       </PopoverTrigger>
       <PopoverContent className="w-full">
-        <HexColorPicker color={parsedValue} onChange={(color) => onColorChange(color)} />
+        <HexColorPicker
+          color={parsedValue}
+          onChange={(color) => setColor(color)}
+        />
+        <Button
+          className="mt-4 w-full"
+          onClick={() => {
+            onClose(color);
+            setOpen(false);
+          }}
+        >
+          Confirm
+        </Button>
       </PopoverContent>
     </Popover>
   );

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Peer from "simple-peer";
 import { fetchApi } from "@/lib/fetchApi";
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
 import { CallUnityFunctionType } from "./UnityContext";
 import { setStatus } from "@/store/peerStatusSlice";
 
@@ -29,7 +29,7 @@ export default function useWebRTC(
     (state: RootState) => state.logIn,
   );
   const peerStatus = useSelector((state:RootState) => state.peerStatus)
-  const { logOutOnError } = useLogOutOnError(false);
+  const { logOutOnError } = useLogOut(false);
   const playerPeers = useRef<PlayerPeers>({});
   const dispatch = useDispatch()
   const setPeers = useRef(false);

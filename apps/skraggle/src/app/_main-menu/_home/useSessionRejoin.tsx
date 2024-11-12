@@ -1,4 +1,4 @@
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
 import { fetchApi } from "@/lib/fetchApi";
 import { sessionSchema } from "@/schemas/sessionSchema";
 import { setJoinCode } from "@/store/joinCodeSlice";
@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 
 export default function useSessionRejoin() {
   const dispatch = useDispatch();
-  const { logOutOnError } = useLogOutOnError();
+  const { logOutOnError } = useLogOut();
 
   useEffect(() => {
     const sessionCookie = document.cookie

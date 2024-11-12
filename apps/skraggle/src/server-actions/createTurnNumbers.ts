@@ -1,9 +1,9 @@
 import "server-only";
 import { db } from "@/lib/firebaseAdmin";
-import { ItemType, PlayersData } from "@/components/GetPlayers";
-import { v4 as uuidv4 } from 'uuid';
+import { ItemType, PlayersData } from "@/components/PlayersDataProvider";
+import { v4 as uuidv4 } from "uuid";
 
-type StartingDice = ItemType<number>;
+type StartingDice = ItemType<{ diceValue: number }>;
 
 export async function createTurnNumbers(gameId: string) {
   const playersRef = db.ref(`activeGames/${gameId}/players`);
@@ -23,12 +23,12 @@ export async function createTurnNumbers(gameId: string) {
 
     const startingDice1: StartingDice = {
       type: "StartingDice",
-      data: diceData.dice1,
+      data: { diceValue: diceData.dice1 },
     };
 
     const startingDice2: StartingDice = {
       type: "StartingDice",
-      data: diceData.dice2,
+      data: { diceValue: diceData.dice2 },
     };
 
     updates[playerIds[i]] = {
