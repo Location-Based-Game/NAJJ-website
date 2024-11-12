@@ -19,13 +19,14 @@ import { ArrowRightFromLine } from "lucide-react";
 import styles from "./GameInfoDropdown.module.css";
 import useLogOut from "@/hooks/useLogOut";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
-import LeaveGameDialogue from "@/app/_main-menu/LeaveGameDialogue";
 import { useState } from "react";
+import { useLeaveGame } from "@/app/LeaveGameProvider";
 
 export function GameInfoDropdown() {
   const { leaveGame } = useLogOut();
   const { callUnityFunction } = useUnityReactContext();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const { setOpenDialogue, onLeave } = useLeaveGame();
 
   return (
     <SidebarMenu>
@@ -38,24 +39,23 @@ export function GameInfoDropdown() {
             side="bottom"
             sideOffset={4}
           >
-            <LeaveGameDialogue
-              onLeave={async () => {
-                setDropdownOpen(false);
-                await leaveGame("Home");
-                callUnityFunction("ResetGame");
+            <DropdownMenuItem
+              className="gap-4 p-2"
+              onSelect={(e) => {
+                e.preventDefault();
+                onLeave.current = async () => {
+                  setDropdownOpen(false);
+                  await leaveGame("Home");
+                  callUnityFunction("ResetGame");
+                }
+                setOpenDialogue(true);
               }}
-              onCancel={() => setDropdownOpen(false)}
             >
-              <DropdownMenuItem
-                className="gap-4 p-2"
-                onSelect={(e) => e.preventDefault()}
-              >
-                <ArrowRightFromLine className="size-4 opacity-70" />
-                <div className="font-medium text-muted-foreground">
-                  Leave Game
-                </div>
-              </DropdownMenuItem>
-            </LeaveGameDialogue>
+              <ArrowRightFromLine className="size-4 opacity-70" />
+              <div className="font-medium text-muted-foreground">
+                Leave Game
+              </div>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

@@ -42,11 +42,10 @@ export function NavMain() {
     <SidebarMenu>
       {navItems.map((item, i) => {
         return (
-          <SidebarMenuItem>
+          <SidebarMenuItem key={i}>
             <SidebarMenuButton
               asChild
               tooltip={item.title}
-              key={i}
               className="h-12 gap-4 pl-4 text-sm group-data-[collapsible=icon]:!pl-2"
             >
               <Link href={item.url}>

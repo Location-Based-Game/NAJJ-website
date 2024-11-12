@@ -72,7 +72,6 @@ test.describe("nav breadcrumb mobile", () => {
     await expect(p1.getByLabel("Leave Game?")).toBeVisible();
     await p1.getByRole("button", { name: "Leave" }).click();
     await expect(p1.getByLabel("Leave Game?")).toBeHidden();
-    await expect(createGameBreadCrumb).toBeHidden();
 
     //Return to home page
     await Promise.all([

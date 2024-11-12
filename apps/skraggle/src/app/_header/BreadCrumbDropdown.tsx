@@ -9,8 +9,8 @@ import { MainMenuStates } from "@/hooks/usePanelUI";
 import { RootState, mainMenuState } from "@/store/store";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import LeaveGameDialogue from "../_main-menu/LeaveGameDialogue";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
+import { useLeaveGame } from "../LeaveGameProvider";
 
 interface NavCollapsedDropdown {
   menuItems: MainMenuStates[];
@@ -28,6 +28,7 @@ export default function BreadCrumbDropdown({
   const dispatch = useDispatch();
   const { leaveGame } = useLogOut();
   const { callUnityFunction } = useUnityReactContext();
+  const { setOpenDialogue, onLeave } = useLeaveGame();
 
   const handleNavigate = (state: MainMenuStates) => {
     dispatch(
@@ -48,26 +49,24 @@ export default function BreadCrumbDropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         {menuItems.map((menuItem, i) => (
-          <LeaveGameDialogue
-            onLeave={async () => {
-              setDropdownOpen(false);
-              await leaveGame(menuItem);
-              callUnityFunction("ResetGame");
-            }}
-            onCancel={() => setDropdownOpen(false)}
-            triggerDialogue={!!gameId}
+          <DropdownMenuItem
             key={i}
-          >
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault();
-                if (!!gameId) return;
+            onSelect={(e) => {
+              e.preventDefault();
+              if (!!gameId) {
+                onLeave.current = async () => {
+                  setDropdownOpen(false);
+                  await leaveGame(menuItem);
+                  callUnityFunction("ResetGame");
+                }
+                setOpenDialogue(true);
+              } else {
                 handleNavigate(menuItem);
-              }}
-            >
-              {customElements ? customElements[i] : menuItem}
-            </DropdownMenuItem>
-          </LeaveGameDialogue>
+              }
+            }}
+          >
+            {customElements ? customElements[i] : menuItem}
+          </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
