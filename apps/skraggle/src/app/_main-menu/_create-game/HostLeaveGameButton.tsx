@@ -9,7 +9,7 @@ export default function HostLeaveGameButton() {
   return (
     <Button
       variant="outline"
-      className="h-12 w-full"
+      className="h-12 basis-0 grow relative"
       onClick={() => {
         onLeave.current = async () => {
           await leaveGame("Home");

@@ -10,6 +10,7 @@ import { RootState } from "@/store/store";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
+import { Progress } from "@/components/ui/progress";
 
 export default function JoinGame() {
   const { scope, animationCallback } = usePanelTransition();
@@ -46,10 +47,11 @@ export default function JoinGame() {
         <PlayerList />
       </div>
       <div className="relative inline-flex h-12 w-full items-center justify-center whitespace-nowrap rounded-md border-2 border-border text-sm font-medium text-secondary-foreground transition-colors">
-        <div
-          className="absolute left-0 h-full w-full origin-left rounded-md bg-secondary transition-transform duration-300"
-          style={{ transform: `scaleX(${loadingProgression})` }}
-        ></div>
+        <Progress
+          className="absolute left-0 h-full rounded-md"
+          classNameIndicator="bg-secondary"
+          value={loadingProgression}
+        />
         {loadingProgression === 1 && splashScreenComplete ? (
           <div className="z-10 animate-pulse">Waiting for Host</div>
         ) : (
