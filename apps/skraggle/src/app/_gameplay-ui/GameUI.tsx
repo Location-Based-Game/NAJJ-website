@@ -3,7 +3,6 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import MainMenuPanel from "../_main-menu/_home/MainMenuPanel";
 import YourTurnUI from "./_your-turn/YourTurnUI";
-import { useGetPlayers } from "@/components/PlayersDataProvider";
 import useSendBoardItemData from "./useSendBoardItemData";
 import useStartingDice from "./useStartingDice";
 import useGetLetterBlocks from "./useGetLetterBlocks";
@@ -14,6 +13,7 @@ import { useUnityReactContext } from "../_unity-player/UnityContext";
 import PlayerListGameplay from "./PlayerListGameplay";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/tailwindUtils";
+import useSpawnPlayers from "./useSpawnPlayers";
 
 const Unity = dynamic(
   () => import("react-unity-webgl").then((mod) => mod.Unity),
@@ -24,11 +24,11 @@ export default function GameUI() {
   const { state: gameState, isGameActive } = useSelector(
     (state: RootState) => state.gameState,
   );
-  const { playerData } = useGetPlayers();
   const { callUnityFunction, splashScreenComplete, unityProvider } =
     useUnityReactContext();
 
-  useStartingDice(playerData);
+  useSpawnPlayers();
+  useStartingDice();
   useSendBoardItemData();
   useGetLetterBlocks();
   useTurnListener();

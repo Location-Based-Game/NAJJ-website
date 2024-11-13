@@ -1,6 +1,7 @@
 import "server-only";
 import { playerIdSchema, PlayerIdType } from "@/schemas/playerIdSchema";
 import { db } from "@/lib/firebaseAdmin";
+import type { GameRoom } from "./createRoom";
 
 export default async function removePlayer(data: PlayerIdType) {
   const validatedData = playerIdSchema.safeParse(data);
@@ -12,9 +13,28 @@ export default async function removePlayer(data: PlayerIdType) {
 
   const { gameId, playerId } = validatedData.data;
 
-  const playersRef = db.ref(`activeGames/${gameId}/players/${playerId}`);
-  await playersRef.remove();
+  const playerRef = db.ref(`activeGames/${gameId}/players/${playerId}`);
+  const playerSignalingRef = db.ref(
+    `activeGames/${gameId}/signaling/players/${playerId}`,
+  );
 
-  const playerSignalingRef = db.ref(`activeGames/${gameId}/signaling/players/${playerId}`)
-  await playerSignalingRef.remove();
+  await Promise.all([playerRef.remove(), playerSignalingRef.remove()]);
+
+  //updates the turn numbers for all players
+  const gameRef = db.ref(`activeGames/${gameId}`);
+  await gameRef.transaction((gameData: GameRoom) => {
+    if (gameData === null) return gameData;
+
+    const { currentTurn, players } = gameData;
+    for (const playerId in players) {
+      if (
+        players.hasOwnProperty(playerId) &&
+        players[playerId].turn >= currentTurn
+      ) {
+        gameData.players[playerId].turn--;
+      }
+    }
+
+    return gameData;
+  });
 }
