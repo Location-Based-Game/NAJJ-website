@@ -6,6 +6,7 @@ import { gameStateSlice } from "./gameStateSlice";
 import { turnSlice } from "./turnSlice";
 import { logInSlice } from "./logInSlice";
 import { peerStatusSlice } from "./peerStatusSlice";
+import { playersSlice } from "./playersSlice";
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
   state: "Home",
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   gameState: gameStateSlice.reducer,
   turnState: turnSlice.reducer,
   logIn: logInSlice.reducer,
-  peerStatus: peerStatusSlice.reducer
+  peerStatus: peerStatusSlice.reducer,
+  players: playersSlice.reducer
 });
 
 export const setupStore = (preloadedState?: Partial<RootState>) => {

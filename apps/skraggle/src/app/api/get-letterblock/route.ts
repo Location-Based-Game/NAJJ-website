@@ -1,10 +1,10 @@
-import { ItemType } from "@/components/PlayersDataProvider";
 import { db } from "@/lib/firebaseAdmin";
 import { deleteSession, getSessionData } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
+import { type ItemType } from "@/store/playersSlice";
 
 const getLetterBlockSchema = z.object({
   amount: z.string().min(1),

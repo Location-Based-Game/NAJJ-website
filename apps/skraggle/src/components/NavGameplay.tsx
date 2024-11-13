@@ -21,12 +21,13 @@ import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { useGetPlayers } from "./PlayersDataProvider";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const AnimatedDropdown = motion.create(SidebarMenuSub);
 
 export function NavGameplay() {
-  const { playerData } = useGetPlayers();
+  const players = useSelector((state: RootState) => state.players);
 
   return (
     <SidebarMenu>
@@ -43,7 +44,7 @@ export function NavGameplay() {
         ))}
       </SidebarCollapsible>
       <SidebarCollapsible title="Players" icon={<Users />} defaultOpen>
-        {Object.values(playerData).map((player, i) => (
+        {Object.values(players).map((player, i) => (
           <SidebarMenuSubItem key={i}>{player.name}</SidebarMenuSubItem>
         ))}
       </SidebarCollapsible>

@@ -2,14 +2,14 @@ import useLogOut from "@/hooks/useLogOut";
 import { fetchApi } from "@/lib/fetchApi";
 import { useCallback, useEffect, useRef } from "react";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { PlayersData, useGetPlayers } from "@/components/PlayersDataProvider";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { PlayersData } from "@/store/playersSlice";
 
 export default function useGetLetterBlocks() {
   const { addEventListener, removeEventListener, callUnityFunction } =
     useUnityReactContext();
-  const { playerData } = useGetPlayers();
+  const players = useSelector((state: RootState) => state.players);
   const { gameId } = useSelector((state: RootState) => state.logIn);
 
   const firstFetch = useRef<"true" | "false">("true");
@@ -42,10 +42,10 @@ export default function useGetLetterBlocks() {
       return;
     }
     if (firstFetch.current === "true") return;
-    Object.keys(playerData).forEach((key) => {
-      AddItem(playerData, key);
+    Object.keys(players).forEach((key) => {
+      AddItem(players, key);
     });
-  }, [playerData, gameId]);
+  }, [players, gameId]);
 
   function AddItem(players: PlayersData, key: string) {
     const inventory = players[key].inventory;

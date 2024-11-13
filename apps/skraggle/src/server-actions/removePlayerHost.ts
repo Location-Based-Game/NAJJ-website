@@ -1,8 +1,8 @@
 import "server-only"
 import removePlayer from "./removePlayer";
-import type { PlayersData } from "@/components/PlayersDataProvider";
 import { PlayerIdType, playerIdSchema } from "@/schemas/playerIdSchema";
 import { db } from "@/lib/firebaseAdmin";
+import { type PlayersData } from "@/store/playersSlice";
 
 export default async function removePlayerHost(data: PlayerIdType) {
   const validatedData = playerIdSchema.safeParse(data);

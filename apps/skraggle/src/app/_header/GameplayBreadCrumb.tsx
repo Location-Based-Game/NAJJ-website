@@ -8,7 +8,6 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import BreadCrumbDropdown from "./BreadCrumbDropdown";
 import { ArrowRightFromLine } from "lucide-react";
-import { useGetPlayers } from "@/components/PlayersDataProvider";
 
 export default function GameplayBreadCrumb() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
@@ -18,7 +17,7 @@ export default function GameplayBreadCrumb() {
   const { currentTurn, playerTurn } = useSelector(
     (state: RootState) => state.turnState,
   );
-  const { playerData } = useGetPlayers();
+  const players = useSelector((state: RootState) => state.players);
 
   const getTitleState = () => {
     if (!gameId) return;
@@ -29,7 +28,7 @@ export default function GameplayBreadCrumb() {
     if (currentTurn === playerTurn) {
       return "Your Turn!";
     } else {
-      const currentPlayer = Object.values(playerData).filter(
+      const currentPlayer = Object.values(players).filter(
         (data) => data.turn === currentTurn,
       )[0];
       

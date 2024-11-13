@@ -13,7 +13,7 @@ import { useUnityReactContext } from "../_unity-player/UnityContext";
 import PlayerListGameplay from "./PlayerListGameplay";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/tailwindUtils";
-import useSpawnPlayers from "./useSpawnPlayers";
+import usePlayersData from "@/hooks/usePlayersData";
 
 const Unity = dynamic(
   () => import("react-unity-webgl").then((mod) => mod.Unity),
@@ -27,7 +27,7 @@ export default function GameUI() {
   const { callUnityFunction, splashScreenComplete, unityProvider } =
     useUnityReactContext();
 
-  useSpawnPlayers();
+  usePlayersData();
   useStartingDice();
   useSendBoardItemData();
   useGetLetterBlocks();

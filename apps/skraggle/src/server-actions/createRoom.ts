@@ -2,7 +2,7 @@ import "server-only";
 import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
 import { GameStates } from "@/schemas/gameStateSchema";
 import { db } from "@/lib/firebaseAdmin";
-import { PlayersData } from "@/components/PlayersDataProvider";
+import { PlayersData } from "@/store/playersSlice";
 
 export type GameRoom = {
   id: string;
