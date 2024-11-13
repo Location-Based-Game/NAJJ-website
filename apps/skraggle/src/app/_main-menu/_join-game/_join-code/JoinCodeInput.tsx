@@ -9,7 +9,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
-import getRoom from "@/server-actions/getRoom";
+import getRoom from "@/firebase-actions/getRoom";
 
 const FormSchema = z.object({
   code: z.string(),

@@ -1,8 +1,8 @@
 import { db } from "@/lib/firebaseAdmin";
 import { deleteSession, getSessionData, setSessionCookie } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
-import { addPlayer } from "@/server-actions/addPlayer";
-import getRoom from "@/server-actions/getRoom";
+import { addPlayer } from "@/firebase-actions/addPlayer";
+import getRoom from "@/firebase-actions/getRoom";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 

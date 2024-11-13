@@ -1,7 +1,7 @@
 import { deleteSession, getSessionData } from "@/lib/sessionUtils";
-import getHost from "@/server-actions/getHost";
-import removePlayer from "@/server-actions/removePlayer";
-import removePlayerHost from "@/server-actions/removePlayerHost";
+import getHost from "@/firebase-actions/getHost";
+import removePlayer from "@/firebase-actions/removePlayer";
+import removePlayerHost from "@/firebase-actions/removePlayerHost";
 import { NextResponse } from "next/server";
 
 //LEAVE GAME

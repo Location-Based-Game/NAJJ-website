@@ -1,6 +1,6 @@
 import { db } from "@/lib/firebaseAdmin";
 import { deleteSession, getSessionData } from "@/lib/sessionUtils";
-import getHost from "@/server-actions/getHost";
+import getHost from "@/firebase-actions/getHost";
 import { serverTimestamp } from "firebase/database";
 import { NextResponse } from "next/server";
 

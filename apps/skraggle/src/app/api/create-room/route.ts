@@ -1,8 +1,8 @@
 import { deleteSession, getSessionData, setSessionCookie } from "@/lib/sessionUtils";
 import { validateSearchParams } from "@/lib/validateSearchParams";
-import { addPlayer } from "@/server-actions/addPlayer";
-import createRoom from "@/server-actions/createRoom";
-import setHost from "@/server-actions/setHost";
+import { addPlayer } from "@/firebase-actions/addPlayer";
+import createRoom from "@/firebase-actions/createRoom";
+import setHost from "@/firebase-actions/setHost";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 

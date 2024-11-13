@@ -1,7 +1,7 @@
 import { deleteSession, getSessionData } from "@/lib/sessionUtils";
-import { createTurnNumbers } from "@/server-actions/createTurnNumbers";
-import getHost from "@/server-actions/getHost";
-import setGameState from "@/server-actions/setGameState";
+import { createTurnNumbers } from "@/firebase-actions/createTurnNumbers";
+import getHost from "@/firebase-actions/getHost";
+import setGameState from "@/firebase-actions/setGameState";
 import { NextResponse } from "next/server";
 
 //START GAME
