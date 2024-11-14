@@ -11,13 +11,14 @@ const MotionButton = motion.create(Button);
 export default function EndTurnButton() {
   const [enableButton, setEnableButton] = useState(true);
   const { gameId } = useSelector((state: RootState) => state.logIn);
+  const players = useSelector((state: RootState) => state.players);
+
   const handleEndTurn = async () => {
     const turnRef = ref(rtdb, `activeGames/${gameId}/currentTurn`);
     await runTransaction(turnRef, (currentValue: number) => {
-      if (currentValue === null) {
-        return 1;
-      }
-      return currentValue + 1;
+      const playerAmount = Object.keys(players).length;
+      if (currentValue === null || playerAmount === 1) return currentValue;
+      return (currentValue + 1) % playerAmount;
     });
   };
 

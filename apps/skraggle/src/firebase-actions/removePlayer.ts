@@ -21,28 +21,31 @@ export default async function removePlayer(data: PlayerIdType) {
     `activeGames/${gameId}/inventories/${playerId}`,
   );
 
-  await Promise.all([
-    playerRef.remove(),
-    playerSignalingRef.remove(),
-    playerInventoryRef.remove(),
-  ]);
-
   //updates the turn numbers for all players
   const gameRef = db.ref(`activeGames/${gameId}`);
   await gameRef.transaction((gameData: GameRoom) => {
     if (gameData === null) return gameData;
 
     const { currentTurn, players } = gameData;
-    for (const playerId in players) {
+    for (const key in players) {
       if (
-        players.hasOwnProperty(playerId) &&
-        players[playerId].turn >= currentTurn
+        players.hasOwnProperty(key) &&
+        players[key].turn >= currentTurn
       ) {
-        gameData.players[playerId].turn--;
-        gameData.currentTurn--;
+        gameData.players[key].turn--;
       }
     }
 
+    const playerAmount = Object.keys(players).length;
+    gameData.currentTurn = gameData.currentTurn % playerAmount;
+
     return gameData;
   });
+
+  await Promise.all([
+    playerRef.remove(),
+    playerSignalingRef.remove(),
+    playerInventoryRef.remove(),
+  ]);
+
 }
