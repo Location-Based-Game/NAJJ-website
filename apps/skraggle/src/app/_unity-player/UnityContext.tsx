@@ -56,7 +56,6 @@ export default function UnityContextProvider({
     }
   };
 
-
   useEffect(() => {
     if (!isLoaded) return;
 

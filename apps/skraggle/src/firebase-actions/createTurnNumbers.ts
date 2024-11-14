@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "@/lib/firebaseAdmin";
 import { v4 as uuidv4 } from "uuid";
-import type { ItemType, PlayersData } from "@/store/playersSlice";
+import type { Inventories, ItemType, PlayersData } from "@/store/playersSlice";
 
 type StartingDice = ItemType<{ diceValue: number }>;
 
@@ -12,11 +12,12 @@ export async function createTurnNumbers(gameId: string) {
     throw new Error("No players in game!");
   }
 
+  const inventoriesRef = db.ref(`activeGames/${gameId}/inventories`);
   const playerData = players.val() as PlayersData;
   const playerIds = Object.keys(playerData);
 
   const totalValues: number[] = [];
-  const updates: PlayersData = {};
+  const updates: Inventories = {};
   for (let i = 0; i < playerIds.length; i++) {
     const diceData = getDiceData(totalValues);
     totalValues.push(diceData.dice1 + diceData.dice2);
@@ -32,20 +33,25 @@ export async function createTurnNumbers(gameId: string) {
     };
 
     updates[playerIds[i]] = {
-      ...playerData[playerIds[i]],
-      inventory: {
-        [`startingDice1-${uuidv4()}`]: startingDice1,
-        [`startingDice2-${uuidv4()}`]: startingDice2,
-      },
+      [`startingDice1-${uuidv4()}`]: startingDice1,
+      [`startingDice2-${uuidv4()}`]: startingDice2,
     };
   }
 
   const turnValues = getSortedIndices(totalValues);
-  Object.keys(updates).forEach((key, i) => {
-    updates[key].turn = turnValues[i];
+  playersRef.transaction((players: PlayersData) => {
+    if (players === null) return players;
+    for (const playerId in players) {
+      if (players.hasOwnProperty(playerId)) {
+        const index = Object.keys(players).indexOf(playerId);
+        players[playerId].turn = turnValues[index];
+      }
+    }
+
+    return players;
   });
 
-  await playersRef.update(updates);
+  await inventoriesRef.update(updates);
 }
 
 function getSortedIndices(arr: number[]): number[] {
@@ -75,7 +81,6 @@ function getDiceData(totalValues: number[]) {
       assignValues();
     }
   }
-
   assignValues();
 
   const diceData = {

@@ -25,14 +25,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const { gameId, playerId } = await getSessionData();
-    const inventoryRef = db.ref(
-      `activeGames/${gameId}/players/${playerId}/inventory`,
+    const inventoriesRef = db.ref(
+      `activeGames/${gameId}/inventories/${playerId}`,
     );
 
     const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
 
     if (clearInventory === "true") {
-      await Promise.all([inventoryRef.remove(), gameStateRef.set("Gameplay")]);
+      await Promise.all([inventoriesRef.remove(), gameStateRef.set("Gameplay")]);
     }
 
     const letterBlocks: { [id: string]: LetterBlock } = {};
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       };
     }
 
-    await inventoryRef.update(letterBlocks);
+    await inventoriesRef.update(letterBlocks);
 
     return NextResponse.json({ data: "Success" });
   } catch (error) {

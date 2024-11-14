@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import MainMenuPanel from "../_main-menu/_home/MainMenuPanel";
 import YourTurnUI from "./_your-turn/YourTurnUI";
 import useSendBoardItemData from "./useSendBoardItemData";
-import useStartingDice from "./useStartingDice";
 import useGetLetterBlocks from "./useGetLetterBlocks";
 import NotYourTurnUI from "./_not-your-turn/NotYourTurnUI";
 import useTurnListener from "./useTurnListener";
@@ -14,6 +13,7 @@ import PlayerListGameplay from "./PlayerListGameplay";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/tailwindUtils";
 import usePlayersData from "@/hooks/usePlayersData";
+import useInventories from "./useInventories";
 
 const Unity = dynamic(
   () => import("react-unity-webgl").then((mod) => mod.Unity),
@@ -24,15 +24,14 @@ export default function GameUI() {
   const { state: gameState, isGameActive } = useSelector(
     (state: RootState) => state.gameState,
   );
-  const { callUnityFunction, splashScreenComplete, unityProvider } =
-    useUnityReactContext();
+  const { splashScreenComplete, unityProvider } = useUnityReactContext();
 
   usePlayersData();
-  useStartingDice();
+  useInventories();
   useSendBoardItemData();
   useGetLetterBlocks();
   useTurnListener();
-  useSetGameState(callUnityFunction, splashScreenComplete);
+  useSetGameState();
 
   return (
     <div className="relative flex h-[calc(100dvh-3rem)] items-center justify-center bg-secondary">

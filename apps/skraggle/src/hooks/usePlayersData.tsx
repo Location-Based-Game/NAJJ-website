@@ -7,7 +7,6 @@ import {
   onChildAdded,
   onChildRemoved,
   onChildChanged,
-  DataSnapshot,
 } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,9 +17,11 @@ import {
   type PlayerData,
 } from "@/store/playersSlice";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
+import { setPlayerTurn } from "@/store/turnSlice";
 
 export default function usePlayersData() {
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
+  const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const { callUnityFunction } = useUnityReactContext();
   const dispatch = useDispatch();
 
@@ -33,15 +34,26 @@ export default function usePlayersData() {
 
     const addPlayerListener = onChildAdded(playersRef, (newPlayer) => {
       if (newPlayer.key === null) return;
-      dispatch(
-        addPlayer({ key: newPlayer.key, value: newPlayer.val() as PlayerData }),
-      );
+      const data = newPlayer.val() as PlayerData;
+
+      dispatch(addPlayer({ key: newPlayer.key, value: data }));
       dispatch(addInitialStatus(newPlayer.key));
+        AddPlayer(data, newPlayer.key);
     });
 
     const playerChangedListener = onChildChanged(
       playersRef,
-      handleChangedPlayerData,
+      (changedPlayer) => {
+        if (changedPlayer.key === null) return;
+        const data = changedPlayer.val() as PlayerData;
+        dispatch(
+          addPlayer({
+            key: changedPlayer.key,
+            value: data,
+          }),
+        );
+        AddPlayer(data, changedPlayer.key);
+      },
     );
 
     const removePlayerListener = onChildRemoved(playersRef, (removedPlayer) => {
@@ -54,27 +66,23 @@ export default function usePlayersData() {
       playerChangedListener();
       removePlayerListener();
     };
-  }, [gameId]);
+  }, [gameId, isGameActive]);
 
-  function handleChangedPlayerData(changedPlayer: DataSnapshot) {
-    if (changedPlayer.key === null) return;
+  function AddPlayer(data: PlayerData, key: string) {
+    if (!isGameActive) return;
+    if (data.turn === null) return;
+    const isMainPlayer = key === playerId;
 
-    const data = changedPlayer.val() as PlayerData;
-    dispatch(
-      addPlayer({
-        key: changedPlayer.key,
-        value: data,
-      }),
-    );
+    callUnityFunction("AddPlayer", {
+      turn: data.turn,
+      playerId: key,
+      playerName: data.name,
+      color: data.color,
+      isMainPlayer,
+    });
 
-    if (data.turn !== null) {
-      callUnityFunction("AddPlayer", {
-        turn: data.turn,
-        playerId: changedPlayer.key,
-        playerName: data.name,
-        color: data.color,
-        isMainPlayer: changedPlayer.key === playerId,
-      });
+    if (isMainPlayer) {
+      dispatch(setPlayerTurn(data.turn));
     }
   }
 }

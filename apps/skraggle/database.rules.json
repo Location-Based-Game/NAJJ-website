@@ -21,7 +21,7 @@
           ".read": true,
           ".write": false
         },
-        "inventory": {
+        "inventories": {
           ".read": true
         },
         "signaling": {

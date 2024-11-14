@@ -6,14 +6,12 @@ export type ItemType<T> = {
   type: ItemTypes;
   data: T;
 };
-
-//TODO Separate inventory
 export type Inventory = Record<string, ItemType<any>>;
+export type Inventories = Record<string, Inventory>
 
 export type PlayerData = {
   name: string;
   color: string;
-  inventory: Inventory;
   turn: number;
 };
 

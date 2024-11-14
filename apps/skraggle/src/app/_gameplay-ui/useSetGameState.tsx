@@ -5,18 +5,16 @@ import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CallUnityFunctionType } from "../_unity-player/UnityContext";
+import { useUnityReactContext } from "../_unity-player/UnityContext";
 import useLogOut from "@/hooks/useLogOut";
 
-export default function useSetGameState(
-  callUnityFunction: CallUnityFunctionType,
-  splashScreenComplete: boolean,
-) {
+export default function useSetGameState() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const dispatch = useDispatch();
   const { logOutOnError } = useLogOut();
-  const turnsDiceRollStateSet = useRef(false)
-
+  const { callUnityFunction, splashScreenComplete } = useUnityReactContext();
+  const turnsDiceRollStateSet = useRef(false);
+  
   useEffect(() => {
     if (!splashScreenComplete || !gameId) return;
 
@@ -41,7 +39,6 @@ export default function useSetGameState(
       if (state !== "Menu") {
         dispatch(setGameActive(true));
       }
-
     });
 
     return () => unsubscribe();

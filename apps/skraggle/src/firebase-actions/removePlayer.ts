@@ -17,8 +17,15 @@ export default async function removePlayer(data: PlayerIdType) {
   const playerSignalingRef = db.ref(
     `activeGames/${gameId}/signaling/players/${playerId}`,
   );
+  const playerInventoryRef = db.ref(
+    `activeGames/${gameId}/inventories/${playerId}`,
+  );
 
-  await Promise.all([playerRef.remove(), playerSignalingRef.remove()]);
+  await Promise.all([
+    playerRef.remove(),
+    playerSignalingRef.remove(),
+    playerInventoryRef.remove(),
+  ]);
 
   //updates the turn numbers for all players
   const gameRef = db.ref(`activeGames/${gameId}`);
