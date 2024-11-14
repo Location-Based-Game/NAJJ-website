@@ -59,6 +59,10 @@ export default function usePlayersData() {
     const removePlayerListener = onChildRemoved(playersRef, (removedPlayer) => {
       if (removedPlayer.key === null) return;
       dispatch(removePlayer(removedPlayer.key));
+
+      if (removedPlayer.key !== playerId && isGameActive) {
+        callUnityFunction("RemovePlayer", removedPlayer.key);
+      }
     });
 
     return () => {

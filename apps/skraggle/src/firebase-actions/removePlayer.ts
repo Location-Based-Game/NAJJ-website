@@ -39,6 +39,7 @@ export default async function removePlayer(data: PlayerIdType) {
         players[playerId].turn >= currentTurn
       ) {
         gameData.players[playerId].turn--;
+        gameData.currentTurn--;
       }
     }
 

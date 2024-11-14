@@ -8,6 +8,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import BreadCrumbDropdown from "./BreadCrumbDropdown";
 import { ArrowRightFromLine } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function GameplayBreadCrumb() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
@@ -18,30 +19,26 @@ export default function GameplayBreadCrumb() {
     (state: RootState) => state.turnState,
   );
   const players = useSelector((state: RootState) => state.players);
+  const [title, setTitle] = useState("")
 
-  const getTitleState = () => {
+  useEffect(() => {
     if (!gameId) return;
     if (gameState === "TurnsDiceRoll") {
-      return "Turns Dice Roll";
+      setTitle("Turns Dice Roll");
+      return;
     }
 
     if (currentTurn === playerTurn) {
-      return "Your Turn!";
+      setTitle("Your Turn!");
     } else {
       const currentPlayer = Object.values(players).filter(
         (data) => data.turn === currentTurn,
       )[0];
-      
-      if (!currentPlayer) {
-        //TODO Refactor this
-        console.error("Current player is not in the game!");
-        return;
-      }
 
       const currentPlayerName = currentPlayer.name;
-      return `${currentPlayerName}'s Turn`;
+      setTitle( `${currentPlayerName}'s Turn`)
     }
-  };
+  }, [gameId, gameState, currentTurn, playerTurn])
 
   return (
     <BreadcrumbList>
@@ -58,7 +55,7 @@ export default function GameplayBreadCrumb() {
       </BreadCrumbDropdown>
       <BreadcrumbSeparator />
       <BreadcrumbItem>
-        <BreadcrumbPage className="px-2 py-2">{getTitleState()}</BreadcrumbPage>{" "}
+        <BreadcrumbPage className="px-2 py-2">{title}</BreadcrumbPage>{" "}
       </BreadcrumbItem>
     </BreadcrumbList>
   );
