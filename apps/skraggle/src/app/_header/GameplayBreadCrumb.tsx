@@ -35,6 +35,8 @@ export default function GameplayBreadCrumb() {
         (data) => data.turn === currentTurn,
       )[0];
 
+      if (!currentPlayer) return;
+
       const currentPlayerName = currentPlayer.name;
       setTitle( `${currentPlayerName}'s Turn`)
     }

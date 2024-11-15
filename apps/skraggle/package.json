@@ -2,6 +2,9 @@
   "name": "skraggle",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "20"
+  },
   "scripts": {
     "dev": "npm run kill-emulators && concurrently \"firebase emulators:start\" \"next dev\"",
     "build": "next build",
@@ -33,6 +36,7 @@
     "clsx": "^2.1.1",
     "firebase": "^10.13.2",
     "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.1.0",
     "framer-motion": "^11.5.6",
     "input-otp": "^1.2.4",
     "jose": "^5.9.4",

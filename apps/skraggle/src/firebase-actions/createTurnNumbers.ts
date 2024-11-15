@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "@/lib/firebaseAdmin";
 import { v4 as uuidv4 } from "uuid";
-import type { Inventories, ItemType, PlayersData } from "@/store/playersSlice";
+import { ItemTypes, type Inventories, type ItemType, type PlayersData } from "@/store/playersSlice";
 
 type StartingDice = ItemType<{ diceValue: number }>;
 
@@ -23,12 +23,12 @@ export async function createTurnNumbers(gameId: string) {
     totalValues.push(diceData.dice1 + diceData.dice2);
 
     const startingDice1: StartingDice = {
-      type: "StartingDice",
+      type: ItemTypes.StartingDice,
       data: { diceValue: diceData.dice1 },
     };
 
     const startingDice2: StartingDice = {
-      type: "StartingDice",
+      type: ItemTypes.StartingDice,
       data: { diceValue: diceData.dice2 },
     };
 

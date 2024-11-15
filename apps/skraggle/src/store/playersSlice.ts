@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type ItemTypes = "LetterBlock" | "StartingDice";
+export enum ItemTypes {
+  StartingDice,
+  LetterBlock,
+}
 
 export type ItemType<T> = {
   type: ItemTypes;
   data: T;
 };
 export type Inventory = Record<string, ItemType<any>>;
-export type Inventories = Record<string, Inventory>
+export type Inventories = Record<string, Inventory>;
 
 export type PlayerData = {
   name: string;
@@ -36,4 +39,5 @@ export const playersSlice = createSlice({
   },
 });
 
-export const { addPlayer, removePlayer, removeAllPlayers } = playersSlice.actions;
+export const { addPlayer, removePlayer, removeAllPlayers } =
+  playersSlice.actions;

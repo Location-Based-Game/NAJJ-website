@@ -4,7 +4,7 @@ import { validateSearchParams } from "@/lib/validateSearchParams";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
-import { type ItemType } from "@/store/playersSlice";
+import { ItemTypes, type ItemType } from "@/store/playersSlice";
 
 const getLetterBlockSchema = z.object({
   amount: z.string().min(1),
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       const randomIndex = Math.floor(Math.random() * letters.length);
       const randomLetter = letters[randomIndex];
       letterBlocks[`${randomLetter}-${uuidv4()}`] = {
-        type: "LetterBlock",
+        type: ItemTypes.LetterBlock,
         data: { letter: randomLetter },
       };
     }

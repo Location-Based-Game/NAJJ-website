@@ -38,7 +38,7 @@ export default function usePlayersData() {
 
       dispatch(addPlayer({ key: newPlayer.key, value: data }));
       dispatch(addInitialStatus(newPlayer.key));
-        AddPlayer(data, newPlayer.key);
+      AddPlayer(data, newPlayer.key);
     });
 
     const playerChangedListener = onChildChanged(

@@ -1,15 +1,18 @@
 import { RootState } from "@/store/store";
 import { onChildAdded, onChildChanged, ref } from "firebase/database";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
 import { Inventory } from "@/store/playersSlice";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
+import { fetchApi } from "@/lib/fetchApi";
+import useLogOut from "@/hooks/useLogOut";
 
 export default function useInventories() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
-  const { callUnityFunction } = useUnityReactContext();
+  const { callUnityFunction, addEventListener, removeEventListener } = useUnityReactContext();
+  const { logOutOnError } = useLogOut();
 
   useEffect(() => {
     if (!gameId) return;
@@ -51,4 +54,20 @@ export default function useInventories() {
       });
     }, 100);
   }
+
+  const updateInventory = useCallback((json:any) => {
+    console.log(json)
+
+    // fetchApi(`/api/get-letterblock?${params}`).catch((error) => {
+    //   logOutOnError(error);
+    // });
+  }, []);
+
+  useEffect(() => {
+    addEventListener("UpdateInventory", updateInventory);
+
+    return () => {
+      removeEventListener("UpdateInventory", updateInventory);
+    };
+  }, [addEventListener, removeEventListener, updateInventory]);
 }
