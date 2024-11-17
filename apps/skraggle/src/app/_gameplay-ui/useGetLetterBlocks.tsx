@@ -2,9 +2,9 @@ import useLogOut from "@/hooks/useLogOut";
 import { fetchApi } from "@/lib/fetchApi";
 import { useCallback, useEffect } from "react";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { setInventory } from "@/firebase-actions/setInventory";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { SetInventorySchemaType } from "../../../functions/src/endpoints/setInventory";
 
 export default function useGetLetterBlocks() {
   const { addEventListener, removeEventListener } =
@@ -12,16 +12,29 @@ export default function useGetLetterBlocks() {
   const { logOutOnError } = useLogOut();
   const {gameId, playerId} = useSelector((state:RootState) => state.logIn)
   const handleSendData = useCallback(() => {
-    // const params = new URLSearchParams({
-    //   amount: "7",
-    //   clearInventory: "true"
-    // }).toString();
+    const body:SetInventorySchemaType = {
+      currentItems: {},
+      gameId,
+      playerId,
+    };
 
-    // fetchApi(`/api/get-letterblock?${params}`).catch((error) => {
-    //   logOutOnError(error);
-    // });
-    setInventory({}, true, gameId, playerId)
-  }, []);
+    (async () => {
+      try {
+        const data = await fetch("http://localhost:5001/skraggle-2e19f/us-central1/setInventory", {
+          method: "POST",
+          body: JSON.stringify(body),
+          credentials: "include"
+        })
+        const res = await data.json()
+        if (res.error) {
+          throw new Error(res.error);
+        }
+      } catch (error) {
+        console.error(`${error}`)
+      }
+    })()
+
+  }, [gameId, playerId]);
 
   useEffect(() => {
     addEventListener("FetchFirstLetterBlocks", handleSendData);

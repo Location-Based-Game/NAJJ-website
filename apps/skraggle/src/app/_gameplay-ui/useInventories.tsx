@@ -7,9 +7,10 @@ import { Inventory } from "@/store/playersSlice";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
+import { SetInventorySchemaType } from "../../../functions/src/endpoints/setInventory";
 
 export default function useInventories() {
-  const { gameId } = useSelector((state: RootState) => state.logIn);
+  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const { callUnityFunction, addEventListener, removeEventListener } = useUnityReactContext();
   const { logOutOnError } = useLogOut();
@@ -56,12 +57,27 @@ export default function useInventories() {
   }
 
   const updateInventory = useCallback((json:any) => {
-    console.log(json)
-
-    // fetchApi(`/api/get-letterblock?${params}`).catch((error) => {
-    //   logOutOnError(error);
-    // });
-  }, []);
+    const body:SetInventorySchemaType = {
+      currentItems: JSON.parse(json),
+      gameId,
+      playerId,
+    };
+    (async () => {
+      try {
+        const data = await fetch("http://localhost:5001/skraggle-2e19f/us-central1/setInventory", {
+          method: "POST",
+          body: JSON.stringify(body),
+          credentials: "include"
+        })
+        const res = await data.json()
+        if (res.error) {
+          throw new Error(res.error);
+        }
+      } catch (error) {
+        console.error(`${error}`)
+      }
+    })()
+  }, [gameId, playerId]);
 
   useEffect(() => {
     addEventListener("UpdateInventory", updateInventory);
