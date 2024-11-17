@@ -20,10 +20,7 @@
       "enabled": true,
       "port": 5000
     },
-    "singleProjectMode": true,
-    "functions": {
-      "port": 5001
-    }
+    "singleProjectMode": true
   },
   "functions": [
     {
