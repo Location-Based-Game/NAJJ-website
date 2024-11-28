@@ -1,7 +1,7 @@
 import "server-only";
 import { playerIdSchema, PlayerIdType } from "@/schemas/playerIdSchema";
 import { db } from "@/lib/firebaseAdmin";
-import type { GameRoom } from "./createRoom";
+import { GameRoom } from "./getRoom";
 
 export default async function removePlayer(data: PlayerIdType) {
   const validatedData = playerIdSchema.safeParse(data);

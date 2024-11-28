@@ -1,8 +1,7 @@
-import "server-only";
 import { z } from "zod";
-import { gameIdSchema } from "@/schemas/gameIdSchema";
-import { db, Reference } from "@/lib/firebaseAdmin";
 import { serverTimestamp } from "firebase/database";
+import { gameIdSchema } from "../schemas/gameIdSchema";
+import { db, Reference } from "../lib/firebaseAdmin";
 
 const addPlayerSchema = gameIdSchema.extend({
   playerName: z.string().min(1),
@@ -10,16 +9,10 @@ const addPlayerSchema = gameIdSchema.extend({
 
 type AddPlayerType = z.infer<typeof addPlayerSchema>;
 
-export async function addPlayer(data: AddPlayerType): Promise<string> {
-  const validatedData = addPlayerSchema.safeParse(data);
-
-  if (!validatedData.success) {
-    console.error(validatedData.error);
-    throw new Error("Invalid Data!");
-  }
-
-  const { gameId, playerName } = validatedData.data;
-
+export async function addPlayer(
+  gameId: string,
+  playerName: string,
+): Promise<string> {
   const playersRef = db.ref(`activeGames/${gameId}/players`);
   let playerId = "";
 

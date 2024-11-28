@@ -1,5 +1,5 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { getSessionData } from "../lib/getSessionData";
+import { getSessionData } from "../lib/sessionUtils";
 import { db } from "../lib/firebaseAdmin";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
