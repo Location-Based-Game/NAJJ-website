@@ -1,6 +1,6 @@
 "use client"
-import { GameStates } from "@/schemas/gameStateSchema";
 import { setGameState } from "@/store/gameStateSlice";
+import { GameStates } from "@types";
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";

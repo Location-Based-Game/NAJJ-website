@@ -147,15 +147,13 @@ export default function useWebRTC(
     });
 
     peer.on("signal", async (signal) => {
-      const params = new URLSearchParams({
-        isInitiator: initiator.toString(),
-        peerId,
-        signalString: JSON.stringify(signal),
-        name,
-      }).toString();
-
       try {
-        await fetchApi(`/api/send-peer-signal?${params}`);
+        await fetchApi("sendPeerSignal", {
+          isInitiator: initiator,
+          peerId,
+          signal,
+          name,
+        });
       } catch (error) {
         logOutOnError(error);
         Object.keys(playerPeers.current).forEach((key) => {

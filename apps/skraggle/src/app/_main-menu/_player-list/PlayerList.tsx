@@ -8,7 +8,7 @@ import useLogOut from "@/hooks/useLogOut";
 import HostIcon from "./HostIcon";
 import ConnectionIcon from "./ConnectionIcon";
 import styles from "./selectionGradient.module.css"
-import { PlayersData } from "@/store/playersSlice";
+import { PlayersData } from "../../../../functions/src/types";
 
 export default function PlayerList() {
   const players = useSelector((state: RootState) => state.players);
@@ -55,10 +55,7 @@ function PlayerColor({ playerData, playerKey }: PlayerColor) {
           onClose={async (value) => {
             try {
               setColor(value);
-              const params = new URLSearchParams({
-                color: value
-              }).toString();
-              await fetchApi(`/api/change-player-color?${params}`);
+              await fetchApi("changePlayerColor", {color: value});
             } catch (error) {
               logOutOnError(error);
             }

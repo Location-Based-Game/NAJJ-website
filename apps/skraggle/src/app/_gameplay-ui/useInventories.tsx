@@ -3,11 +3,11 @@ import { onChildAdded, onChildChanged, ref } from "firebase/database";
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
-import { Inventory } from "@/store/playersSlice";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
 import { SetInventorySchemaType } from "../../../functions/src/endpoints/setInventory";
+import { Inventory } from "@types";
 
 export default function useInventories() {
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);

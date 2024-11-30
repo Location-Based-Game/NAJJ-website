@@ -56,7 +56,7 @@ export default function useLogOut(disconnectPeers: boolean = true) {
   const leaveGame = async (state: MainMenuStates = "Home") => {
     try {
       dispatch(resetClientSessionData());
-      await fetchApi("/api/leave-game");
+      await fetchApi("leaveGame");
       disconnectWebRTCPeers()
       dispatch(
         mainMenuState.updateState({

@@ -7,20 +7,28 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import {onRequest} from "firebase-functions/v2/https";
+import { onRequest } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
 export const helloWorld = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
+  logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");
 });
 
-export const helloWorld6 = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
+export const helloWorld5 = onRequest((request, response) => {
+  logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");
 });
 
-export {setInventory} from "./endpoints/setInventory"
+export { addPlayer } from "./endpoints/addPlayer";
+export { changePlayerColor } from "./endpoints/changePlayerColor";
+export { createRoom } from "./endpoints/createRoom";
+export { leaveGame } from "./endpoints/leaveGame";
+export { logIn } from "./endpoints/logIn";
+export { rejoin } from "./endpoints/rejoin";
+export { sendPeerSignal } from "./endpoints/sendPeerSignal";
+export { setInventory } from "./endpoints/setInventory";
+export { startGame } from "./endpoints/startGame";

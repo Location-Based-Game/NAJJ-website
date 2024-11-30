@@ -1,18 +1,7 @@
-import "server-only";
-import { playerIdSchema, PlayerIdType } from "@/schemas/playerIdSchema";
-import { db } from "@/lib/firebaseAdmin";
-import type { GameRoom } from "./createRoom";
+import { db } from "../lib/firebaseAdmin";
+import { GameRoom } from "../types";
 
-export default async function removePlayer(data: PlayerIdType) {
-  const validatedData = playerIdSchema.safeParse(data);
-
-  if (!validatedData.success) {
-    console.error(validatedData.error);
-    throw new Error("Invalid Data!");
-  }
-
-  const { gameId, playerId } = validatedData.data;
-
+export default async function removePlayer(gameId: string, playerId: string) {
   const playerRef = db.ref(`activeGames/${gameId}/players/${playerId}`);
   const playerSignalingRef = db.ref(
     `activeGames/${gameId}/signaling/players/${playerId}`,
@@ -28,10 +17,7 @@ export default async function removePlayer(data: PlayerIdType) {
 
     const { currentTurn, players } = gameData;
     for (const key in players) {
-      if (
-        players.hasOwnProperty(key) &&
-        players[key].turn >= currentTurn
-      ) {
+      if (players.hasOwnProperty(key) && players[key].turn >= currentTurn) {
         gameData.players[key].turn--;
       }
     }
@@ -47,5 +33,4 @@ export default async function removePlayer(data: PlayerIdType) {
     playerSignalingRef.remove(),
     playerInventoryRef.remove(),
   ]);
-
 }

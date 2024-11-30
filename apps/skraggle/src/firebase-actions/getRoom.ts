@@ -1,9 +1,9 @@
 'use server'
 
 import { ref, get } from "firebase/database";
-import { GameRoom } from "./createRoom";
 import { rtdb } from "@/app/firebaseConfig";
-import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
+import { gameIdSchema, GameIdType } from "../schemas/gameIdSchema";
+import { GameRoom } from "../../functions/src/types";
 
 export default async function getRoom(data:GameIdType): Promise<GameRoom> {
   const validatedData = gameIdSchema.safeParse(data)
