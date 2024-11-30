@@ -18,12 +18,17 @@ export const helloWorld = onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
-export const helloWorld6 = onRequest((request, response) => {
+export const helloWorld5 = onRequest((request, response) => {
   logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");
 });
 
-export { setInventory } from "./endpoints/setInventory";
-export { logIn } from "./endpoints/logIn";
+export { addPlayer } from "./endpoints/addPlayer";
+export { changePlayerColor } from "./endpoints/changePlayerColor";
 export { createRoom } from "./endpoints/createRoom";
-export { addPlayer } from "./endpoints/addPlayer"
+export { leaveGame } from "./endpoints/leaveGame";
+export { logIn } from "./endpoints/logIn";
+export { rejoin } from "./endpoints/rejoin";
+export { sendPeerSignal } from "./endpoints/sendPeerSignal";
+export { setInventory } from "./endpoints/setInventory";
+export { startGame } from "./endpoints/startGame";

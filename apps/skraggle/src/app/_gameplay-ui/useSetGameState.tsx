@@ -1,5 +1,4 @@
 import { rtdb } from "@/app/firebaseConfig";
-import { GameStates } from "@/schemas/gameStateSchema";
 import { setGameActive, setGameState } from "@/store/gameStateSlice";
 import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
@@ -7,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import useLogOut from "@/hooks/useLogOut";
+import { GameStates } from "@types";
 
 export default function useSetGameState() {
   const { gameId } = useSelector((state: RootState) => state.logIn);

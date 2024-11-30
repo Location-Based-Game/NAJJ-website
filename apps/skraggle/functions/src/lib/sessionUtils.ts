@@ -36,3 +36,8 @@ export async function setSessionCookie(
   const session = await encryptJWT({ ...sessionData });
   response.cookie("session", session, { expires, httpOnly: true });
 }
+
+export async function deleteSession(response: Response) {
+  response.clearCookie("session");
+  response.clearCookie("session_data");
+}

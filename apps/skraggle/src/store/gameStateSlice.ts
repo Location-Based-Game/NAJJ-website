@@ -1,5 +1,5 @@
-import { GameStates } from "@/schemas/gameStateSchema";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { GameStates } from "@types";
 
 interface GameState {
   state: GameStates;

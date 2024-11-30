@@ -19,7 +19,7 @@ export default function useStartGame() {
   const handleStartGame = async () => {
     try {
       dispatch(setJoinCode(gameId));
-      await fetchApi("/api/start-game");
+      await fetchApi("startGame");
     } catch (error) {
       logOutOnError(error);
     }

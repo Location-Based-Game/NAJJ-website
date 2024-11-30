@@ -14,10 +14,10 @@ import {
   addPlayer,
   removePlayer,
   removeAllPlayers,
-  type PlayerData,
 } from "@/store/playersSlice";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { setPlayerTurn } from "@/store/turnSlice";
+import { PlayerData } from "@types";
 
 export default function usePlayersData() {
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);

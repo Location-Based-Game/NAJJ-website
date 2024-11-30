@@ -1,19 +1,9 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { getSessionData } from "../lib/sessionUtils";
+import { deleteSession, getSessionData } from "../lib/sessionUtils";
 import { db } from "../lib/firebaseAdmin";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
-import * as logger from "firebase-functions/logger";
-
-export enum ItemTypes {
-  StartingDice,
-  LetterBlock,
-}
-
-export type ItemType<T> = {
-  type: ItemTypes;
-  data: T;
-};
+import { ItemType, ItemTypes } from "../types";
 
 // import * as logger from "firebase-functions/logger";
 type LetterBlock = ItemType<{ letter: string }>;
@@ -86,6 +76,7 @@ export const setInventory = onRequest(
 
       response.send({ data: "Success" });
     } catch (error) {
+      deleteSession(response);
       response.send({ error: `${error}` });
     }
   },

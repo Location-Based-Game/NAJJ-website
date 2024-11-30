@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { decryptJWT, encryptJWT } from "./jwtUtils";
-import { SessionData, sessionSchema } from "@/schemas/sessionSchema";
+import { SessionData, sessionSchema } from "../schemas/sessionSchema";
 import { NextRequest, NextResponse } from "next/server";
 
 /**

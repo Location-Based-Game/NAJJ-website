@@ -1,4 +1,4 @@
-import { gameIdSchema } from "@/schemas/gameIdSchema";
+import { gameIdSchema } from "./gameIdSchema";
 import { z } from "zod";
 
 export const playerIdSchema = gameIdSchema.extend({

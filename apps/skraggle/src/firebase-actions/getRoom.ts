@@ -2,9 +2,8 @@
 
 import { ref, get } from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
-import { gameIdSchema, GameIdType } from "@/schemas/gameIdSchema";
-import { GameStates } from "@/schemas/gameStateSchema";
-import { PlayersData } from "@/store/playersSlice";
+import { gameIdSchema, GameIdType } from "../schemas/gameIdSchema";
+import { GameRoom } from "../../functions/src/types";
 
 export default async function getRoom(data:GameIdType): Promise<GameRoom> {
   const validatedData = gameIdSchema.safeParse(data)
@@ -24,10 +23,3 @@ export default async function getRoom(data:GameIdType): Promise<GameRoom> {
     return snapshot.val() as GameRoom;
   }
 }
-
-export type GameRoom = {
-  id: string;
-  gameState: GameStates;
-  players: PlayersData;
-  currentTurn: number;
-};

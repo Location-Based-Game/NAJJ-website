@@ -1,6 +1,6 @@
 import { onRequest } from "firebase-functions/https";
 import { z } from "zod";
-import { getSessionData, setSessionCookie } from "../lib/sessionUtils";
+import { deleteSession, getSessionData, setSessionCookie } from "../lib/sessionUtils";
 import { db } from "../lib/firebaseAdmin";
 import { addPlayer as addNewPlayer } from "../firebase-actions/addPlayer";
 
@@ -34,8 +34,9 @@ export const addPlayer = onRequest(
       const playerId = await addNewPlayer(gameId, playerName);
       await setSessionCookie(response, { playerName, playerId, gameId });
 
-      response.send({ data: "" });
+      response.send({ data: playerId });
     } catch (error) {
+      deleteSession(response);
       response.send({ error: `${error}` });
     }
   },

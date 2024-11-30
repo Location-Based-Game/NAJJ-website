@@ -1,6 +1,6 @@
 import { onRequest } from "firebase-functions/https";
 import { z } from "zod";
-import { setSessionCookie } from "../lib/sessionUtils";
+import { deleteSession, setSessionCookie } from "../lib/sessionUtils";
 
 const logInSchema = z.object({
   gameId: z.string().length(4).nullable(),
@@ -31,6 +31,7 @@ export const logIn = onRequest({ cors: true }, async (request, response) => {
 
     response.send({ data: gameId });
   } catch (error) {
+    deleteSession(response);
     response.send({ error: `${error}` });
   }
 });

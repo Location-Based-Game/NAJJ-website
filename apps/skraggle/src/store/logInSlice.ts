@@ -1,5 +1,5 @@
 import { fetchApi } from "@/lib/fetchApi";
-import { SessionData } from "@/schemas/sessionSchema";
+import { SessionData } from "../schemas/sessionSchema";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type LogInType = SessionData & {

@@ -1,7 +1,6 @@
-import "server-only";
-import { db } from "@/lib/firebaseAdmin";
 import { v4 as uuidv4 } from "uuid";
-import { ItemTypes, type Inventories, type ItemType, type PlayersData } from "@/store/playersSlice";
+import { db } from "../lib/firebaseAdmin";
+import { PlayersData, Inventories, ItemType, ItemTypes } from "../types";
 
 type StartingDice = ItemType<{ diceValue: number }>;
 

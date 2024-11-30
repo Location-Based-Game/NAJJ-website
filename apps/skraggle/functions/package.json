@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/glob": "^8.1.0",
     "@types/inquirer": "^9.0.7",
+    "@types/simple-peer": "^9.11.8",
     "firebase-admin": "^12.1.0",
     "firebase-functions": "^6.1.0",
     "zod": "^3.23.8"

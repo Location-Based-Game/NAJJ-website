@@ -1,24 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export enum ItemTypes {
-  StartingDice,
-  LetterBlock,
-}
-
-export type ItemType<T> = {
-  type: ItemTypes;
-  data: T;
-};
-export type Inventory = Record<string, ItemType<any>>;
-export type Inventories = Record<string, Inventory>;
-
-export type PlayerData = {
-  name: string;
-  color: string;
-  turn: number;
-};
-
-export type PlayersData = Record<string, PlayerData>;
+import { PlayerData, PlayersData } from "@types";
 
 export const playersSlice = createSlice({
   name: "players",

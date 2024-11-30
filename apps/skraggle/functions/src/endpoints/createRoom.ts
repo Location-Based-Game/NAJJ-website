@@ -1,6 +1,6 @@
 import { onRequest } from "firebase-functions/https";
 import { z } from "zod";
-import { getSessionData, setSessionCookie } from "../lib/sessionUtils";
+import { deleteSession, getSessionData, setSessionCookie } from "../lib/sessionUtils";
 import { addPlayer } from "../firebase-actions/addPlayer";
 import { db } from "../lib/firebaseAdmin";
 
@@ -39,8 +39,9 @@ export const createRoom = onRequest(
 
       await setSessionCookie(response, { playerName, playerId, gameId });
 
-      response.send({ data: gameId });
+      response.send({ data: playerId });
     } catch (error) {
+      deleteSession(response);
       response.send({ error: `${error}` });
     }
   },
