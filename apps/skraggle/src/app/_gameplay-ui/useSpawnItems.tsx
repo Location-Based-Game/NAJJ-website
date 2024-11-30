@@ -1,20 +1,19 @@
 import { RootState } from "@/store/store";
 import { onChildAdded, onChildChanged, ref } from "firebase/database";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { fetchApi } from "@/lib/fetchApi";
-import useLogOut from "@/hooks/useLogOut";
-import { SetInventorySchemaType } from "../../../functions/src/endpoints/setInventory";
 import { Inventory } from "@types";
 
-export default function useInventories() {
-  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
+/**
+* Listens for inventory updates in the rtdb and spawns/deletes items in the player inventories.
+* TODO delete items
+*/
+export default function useSpawnItems() {
+  const { gameId } = useSelector((state: RootState) => state.logIn);
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
-  const { callUnityFunction, addEventListener, removeEventListener } =
-    useUnityReactContext();
-  const { logOutOnError } = useLogOut();
+  const { callUnityFunction } = useUnityReactContext();
 
   useEffect(() => {
     if (!gameId) return;
@@ -56,26 +55,4 @@ export default function useInventories() {
       });
     }, 100);
   }
-
-  const updateInventory = useCallback(
-    (json: any) => {
-      const body: SetInventorySchemaType = {
-        currentItems: JSON.parse(json),
-        gameId,
-        playerId,
-      };
-      fetchApi("setInventory", body).catch((error) => {
-        logOutOnError(error);
-      });
-    },
-    [gameId, playerId],
-  );
-
-  useEffect(() => {
-    addEventListener("UpdateInventory", updateInventory);
-
-    return () => {
-      removeEventListener("UpdateInventory", updateInventory);
-    };
-  }, [addEventListener, removeEventListener, updateInventory]);
 }

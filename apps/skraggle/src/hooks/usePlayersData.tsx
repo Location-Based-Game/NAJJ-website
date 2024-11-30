@@ -74,7 +74,7 @@ export default function usePlayersData() {
 
   function AddPlayer(data: PlayerData, key: string) {
     if (!isGameActive) return;
-    if (data.turn === null) return;
+    if (!('turn' in data)) return;
     const isMainPlayer = key === playerId;
 
     callUnityFunction("AddPlayer", {
