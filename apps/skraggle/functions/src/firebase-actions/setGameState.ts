@@ -1,4 +1,3 @@
-//@ts-ignore
 import { GameStates } from "../types";
 import { db } from "../lib/firebaseAdmin";
 
