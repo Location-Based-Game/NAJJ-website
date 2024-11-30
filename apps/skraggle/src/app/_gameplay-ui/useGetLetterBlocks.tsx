@@ -7,33 +7,19 @@ import { useSelector } from "react-redux";
 import { SetInventorySchemaType } from "../../../functions/src/endpoints/setInventory";
 
 export default function useGetLetterBlocks() {
-  const { addEventListener, removeEventListener } =
-    useUnityReactContext();
+  const { addEventListener, removeEventListener } = useUnityReactContext();
   const { logOutOnError } = useLogOut();
-  const {gameId, playerId} = useSelector((state:RootState) => state.logIn)
+  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const handleSendData = useCallback(() => {
-    const body:SetInventorySchemaType = {
+    const body: SetInventorySchemaType = {
       currentItems: {},
       gameId,
       playerId,
     };
 
-    (async () => {
-      try {
-        const data = await fetch("http://localhost:5001/skraggle-2e19f/us-central1/setInventory", {
-          method: "POST",
-          body: JSON.stringify(body),
-          credentials: "include"
-        })
-        const res = await data.json()
-        if (res.error) {
-          throw new Error(res.error);
-        }
-      } catch (error) {
-        console.error(`${error}`)
-      }
-    })()
-
+    fetchApi("setInventory", body).catch((error) => {
+      logOutOnError(error);
+    });
   }, [gameId, playerId]);
 
   useEffect(() => {

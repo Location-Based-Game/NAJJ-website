@@ -3,7 +3,7 @@
 import { ref, get } from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
 import { gameIdSchema, GameIdType } from "../schemas/gameIdSchema";
-import { GameRoom } from "../../functions/src/types";
+import { GameRoom } from "@types";
 
 export default async function getRoom(data:GameIdType): Promise<GameRoom> {
   const validatedData = gameIdSchema.safeParse(data)

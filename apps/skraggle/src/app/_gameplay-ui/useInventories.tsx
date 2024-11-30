@@ -12,7 +12,8 @@ import { Inventory } from "@types";
 export default function useInventories() {
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
-  const { callUnityFunction, addEventListener, removeEventListener } = useUnityReactContext();
+  const { callUnityFunction, addEventListener, removeEventListener } =
+    useUnityReactContext();
   const { logOutOnError } = useLogOut();
 
   useEffect(() => {
@@ -56,28 +57,19 @@ export default function useInventories() {
     }, 100);
   }
 
-  const updateInventory = useCallback((json:any) => {
-    const body:SetInventorySchemaType = {
-      currentItems: JSON.parse(json),
-      gameId,
-      playerId,
-    };
-    (async () => {
-      try {
-        const data = await fetch("http://localhost:5001/skraggle-2e19f/us-central1/setInventory", {
-          method: "POST",
-          body: JSON.stringify(body),
-          credentials: "include"
-        })
-        const res = await data.json()
-        if (res.error) {
-          throw new Error(res.error);
-        }
-      } catch (error) {
-        console.error(`${error}`)
-      }
-    })()
-  }, [gameId, playerId]);
+  const updateInventory = useCallback(
+    (json: any) => {
+      const body: SetInventorySchemaType = {
+        currentItems: JSON.parse(json),
+        gameId,
+        playerId,
+      };
+      fetchApi("setInventory", body).catch((error) => {
+        logOutOnError(error);
+      });
+    },
+    [gameId, playerId],
+  );
 
   useEffect(() => {
     addEventListener("UpdateInventory", updateInventory);
