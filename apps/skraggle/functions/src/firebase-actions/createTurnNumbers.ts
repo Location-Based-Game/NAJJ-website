@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../lib/firebaseAdmin";
-import { PlayersData, Inventories, ItemType, ItemTypes } from "../types";
+import { PlayersData, Inventories, ItemTypes } from "../types";
+import { Item } from "../schemas/itemSchema";
 
-type StartingDice = ItemType<{ diceValue: number }>;
+type StartingDice = Item<{ diceValue: number }>;
 
 export async function createTurnNumbers(gameId: string) {
   const playersRef = db.ref(`activeGames/${gameId}/players`);
@@ -22,18 +23,24 @@ export async function createTurnNumbers(gameId: string) {
     totalValues.push(diceData.dice1 + diceData.dice2);
 
     const startingDice1: StartingDice = {
-      type: ItemTypes.StartingDice,
       data: { diceValue: diceData.dice1 },
+      playerId: playerIds[i],
+      itemId: `startingDice1-${uuidv4()}`,
+      type: ItemTypes.StartingDice,
+      gridPosition: []
     };
 
     const startingDice2: StartingDice = {
-      type: ItemTypes.StartingDice,
       data: { diceValue: diceData.dice2 },
+      playerId: playerIds[i],
+      itemId: `startingDice2-${uuidv4()}`,
+      type: ItemTypes.StartingDice,
+      gridPosition: []
     };
 
     updates[playerIds[i]] = {
-      [`startingDice1-${uuidv4()}`]: startingDice1,
-      [`startingDice2-${uuidv4()}`]: startingDice2,
+      [startingDice1.itemId]: startingDice1,
+      [startingDice2.itemId]: startingDice2,
     };
   }
 

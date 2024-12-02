@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { decryptJWT, encryptJWT } from "./jwtUtils";
-import { SessionData, sessionSchema } from "../schemas/sessionSchema";
 import { NextRequest, NextResponse } from "next/server";
+import { sessionSchema, SessionData } from "@schemas/sessionSchema";
 
 /**
  * Reads the session cookie and deserializes and validates the JWT

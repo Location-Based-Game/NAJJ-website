@@ -1,6 +1,6 @@
 import { fetchApi } from "@/lib/fetchApi";
-import { SessionData } from "../schemas/sessionSchema";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SessionData } from "@schemas/sessionSchema";
 
 export type LogInType = SessionData & {
   loading: boolean;

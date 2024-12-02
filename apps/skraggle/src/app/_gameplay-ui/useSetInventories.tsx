@@ -7,10 +7,9 @@ import useLogOut from "@/hooks/useLogOut";
 import { SetInventorySchemaType } from "../../../functions/src/endpoints/setInventory";
 
 /**
-* Listens for events in the Unity instance to update inventory in rtdb
-*/
+ * Listens for events in the Unity instance to update inventory in rtdb
+ */
 export default function useSetInventories() {
-  const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { addEventListener, removeEventListener } = useUnityReactContext();
   const { logOutOnError } = useLogOut();
 
@@ -18,14 +17,12 @@ export default function useSetInventories() {
     (json: any) => {
       const body: SetInventorySchemaType = {
         currentItems: json ? JSON.parse(json) : {},
-        gameId,
-        playerId,
       };
       fetchApi("setInventory", body).catch((error) => {
         logOutOnError(error);
       });
     },
-    [gameId, playerId],
+    [],
   );
 
   useEffect(() => {

@@ -1,4 +1,6 @@
-export type GameStates = "Menu" | "TurnsDiceRoll" | "Gameplay"
+import type { Item } from "./schemas/itemSchema";
+
+export type GameStates = "Menu" | "TurnsDiceRoll" | "Gameplay";
 
 export type GameRoom = {
   id: string;
@@ -12,11 +14,7 @@ export enum ItemTypes {
   LetterBlock,
 }
 
-export type ItemType<T> = {
-  type: ItemTypes;
-  data: T;
-};
-export type Inventory = Record<string, ItemType<any>>;
+export type Inventory = Record<string, Item<any>>;
 export type Inventories = Record<string, Inventory>;
 
 export type PlayerData = {

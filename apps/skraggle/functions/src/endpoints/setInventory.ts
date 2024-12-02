@@ -3,10 +3,11 @@ import { deleteSession, getSessionData } from "../lib/sessionUtils";
 import { db } from "../lib/firebaseAdmin";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
-import { ItemType, ItemTypes } from "../types";
+import { ItemTypes } from "../types";
+import { type Item, itemSchema } from "../schemas/itemSchema";
 
 // import * as logger from "firebase-functions/logger";
-type LetterBlock = ItemType<{ letter: string }>;
+type LetterBlock = Item<{ letter: string }>;
 const letters =
   "AAAAABBCCDDDDEEEEEEFFFGGGGHHHIIIIIIJJKKLLLLMMMNNNOOOOOOPPPQRRRRRRSSSSSSTTTTTUUUUUVVWWXYYYZ___".split(
     "",
@@ -14,15 +15,8 @@ const letters =
 const setInventorySchema = z.object({
   currentItems: z.record(
     z.string(),
-    z.object({
-      data: z.any(),
-      playerId: z.string().min(1),
-      itemId: z.string().min(1),
-      type: z.nativeEnum(ItemTypes),
-    }),
-  ),
-  gameId: z.string().min(1),
-  playerId: z.string().min(1),
+    itemSchema
+  )
 });
 
 export type SetInventorySchemaType = z.infer<typeof setInventorySchema>;
@@ -30,7 +24,7 @@ export type SetInventorySchemaType = z.infer<typeof setInventorySchema>;
 export const setInventory = onRequest(
   { cors: true },
   async (request, response) => {
-    response.set("Access-Control-Allow-Credentials", "true")
+    response.set("Access-Control-Allow-Credentials", "true");
 
     try {
       const { gameId, playerId } = await getSessionData(request);
@@ -38,7 +32,9 @@ export const setInventory = onRequest(
         `activeGames/${gameId}/inventories/${playerId}`,
       );
 
-      const validatedData = setInventorySchema.safeParse(JSON.parse(request.body));
+      const validatedData = setInventorySchema.safeParse(
+        JSON.parse(request.body),
+      );
       if (!validatedData.success) {
         response.send({ error: "Invalid Data!" });
         return;
@@ -46,33 +42,33 @@ export const setInventory = onRequest(
 
       const { currentItems } = validatedData.data;
 
-      const letterBlocks: { [id: string]: LetterBlock } = {};
+      const letterBlocks: Record<string, LetterBlock> = {};
+      
+      const lettersOnStandCount = Object.values(currentItems).filter((item) => {
+        if (item.type !== ItemTypes.LetterBlock) return false;
+        //check if letter is on grid
+        return item.gridPosition.length === 0;
+      }).length;
 
-      Object.values(currentItems).forEach((item) => {
-        letterBlocks[item.itemId] = {
-          type: item.type,
-          data: JSON.parse(item.data),
-        };
-      });
-
-      const amount = Object.values(currentItems).filter(
-        (item) => item.type === ItemTypes.LetterBlock,
-      ).length;
-
-      for (let i = 0; i < 7 - amount; i++) {
+      //give letterBlocks for every letter that is not placed on grid
+      for (let i = 0; i < 7 - lettersOnStandCount; i++) {
         const randomIndex = Math.floor(Math.random() * letters.length);
         const randomLetter = letters[randomIndex];
-        letterBlocks[`${randomLetter}-${uuidv4()}`] = {
-          type: ItemTypes.LetterBlock,
+        const itemId = `${randomLetter}-${uuidv4()}`
+        letterBlocks[itemId] = {
           data: { letter: randomLetter },
+          playerId,
+          itemId,
+          type: ItemTypes.LetterBlock,
+          gridPosition: []
         };
       }
 
       const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
       await Promise.all([
         gameStateRef.set("Gameplay"),
-        inventoriesRef.set({ ...currentItems, ...letterBlocks })
-      ])
+        inventoriesRef.set({ ...currentItems, ...letterBlocks }),
+      ]);
 
       response.send({ data: "Success" });
     } catch (error) {

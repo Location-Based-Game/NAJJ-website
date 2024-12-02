@@ -19,7 +19,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@types": ["./functions/src/types.ts"]
+      "@types": ["./functions/src/types.ts"],
+      "@schemas/*": ["./functions/src/schemas/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

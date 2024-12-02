@@ -1,9 +1,9 @@
 import useLogOut from "@/hooks/useLogOut";
 import { fetchApi } from "@/lib/fetchApi";
-import { sessionSchema } from "../../../schemas/sessionSchema";
 import { setJoinCode } from "@/store/joinCodeSlice";
 import { LogInType, setLogInSession } from "@/store/logInSlice";
 import { mainMenuState } from "@/store/store";
+import { sessionSchema } from "@schemas/sessionSchema";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { z } from "zod";

@@ -5,11 +5,12 @@ import { useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { Inventory } from "@types";
+import { itemSchema } from "@schemas/itemSchema";
 
 /**
-* Listens for inventory updates in the rtdb and spawns/deletes items in the player inventories.
-* TODO delete items
-*/
+ * Listens for inventory updates in the rtdb and spawns/deletes items in the player inventories.
+ * TODO delete items
+ */
 export default function useSpawnItems() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
@@ -23,7 +24,7 @@ export default function useSpawnItems() {
       (newInventory) => {
         if (newInventory.key === null) return;
         const data = newInventory.val() as Inventory;
-        SpawnItems(data, newInventory.key);
+        SpawnItems(data);
       },
     );
 
@@ -32,7 +33,7 @@ export default function useSpawnItems() {
       (newInventory) => {
         if (newInventory.key === null) return;
         const data = newInventory.val() as Inventory;
-        SpawnItems(data, newInventory.key);
+        SpawnItems(data);
       },
     );
 
@@ -42,16 +43,14 @@ export default function useSpawnItems() {
     };
   }, [gameId, isGameActive]);
 
-  function SpawnItems(inventory: Inventory, key: string) {
+  function SpawnItems(inventory: Inventory) {
     setTimeout(() => {
-      Object.keys(inventory).forEach((itemId) => {
-        const itemData = {
-          playerId: key,
-          itemId,
-          data: JSON.stringify(inventory[itemId].data),
-          type: inventory[itemId].type,
-        };
-        callUnityFunction("SpawnItem", itemData);
+      Object.values(inventory).forEach((values) => {
+        const validatedData = itemSchema.parse(values);
+        callUnityFunction("SpawnItem", {
+          ...validatedData,
+          data: JSON.stringify(validatedData.data),
+        });
       });
     }, 100);
   }
