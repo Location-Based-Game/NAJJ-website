@@ -13,10 +13,7 @@ const letters =
     "",
   );
 const setInventorySchema = z.object({
-  currentItems: z.record(
-    z.string(),
-    itemSchema
-  )
+  currentItems: z.record(z.string(), itemSchema),
 });
 
 export type SetInventorySchemaType = z.infer<typeof setInventorySchema>;
@@ -42,8 +39,19 @@ export const setInventory = onRequest(
 
       const { currentItems } = validatedData.data;
 
+      //remove placed items from player inventory and store them on the grid
+      const gridRef = db.ref(`activeGames/${gameId}/grid`);
+      await Promise.all(
+        Object.values(currentItems)
+          .filter((value) => value.gridPosition.length !== 0)
+          .map(async (value) => {
+            await inventoriesRef.child(value.itemId).remove();
+            delete currentItems[value.itemId]
+            await gridRef.child(value.itemId).set(value);
+          }),
+      );
+
       const letterBlocks: Record<string, LetterBlock> = {};
-      
       const lettersOnStandCount = Object.values(currentItems).filter((item) => {
         if (item.type !== ItemTypes.LetterBlock) return false;
         //check if letter is on grid
@@ -54,13 +62,13 @@ export const setInventory = onRequest(
       for (let i = 0; i < 7 - lettersOnStandCount; i++) {
         const randomIndex = Math.floor(Math.random() * letters.length);
         const randomLetter = letters[randomIndex];
-        const itemId = `${randomLetter}-${uuidv4()}`
+        const itemId = `${randomLetter}-${uuidv4()}`;
         letterBlocks[itemId] = {
           data: { letter: randomLetter },
           playerId,
           itemId,
           type: ItemTypes.LetterBlock,
-          gridPosition: []
+          gridPosition: [],
         };
       }
 
