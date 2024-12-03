@@ -49,10 +49,10 @@ export default function useSpawnItems() {
         const validatedData = itemSchema.parse(values);
         callUnityFunction("SpawnItem", {
           ...validatedData,
-          data:
-            typeof validatedData.data === "string"
-              ? validatedData.data
-              : JSON.stringify(validatedData.data),
+          itemData:
+            typeof validatedData.itemData === "string"
+              ? validatedData.itemData
+              : JSON.stringify(validatedData.itemData),
         });
       });
     }, 100);

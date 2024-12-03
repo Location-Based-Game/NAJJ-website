@@ -22,6 +22,7 @@ export default async function removePlayer(gameId: string, playerId: string) {
       }
     }
 
+    if (!players) return;
     const playerAmount = Object.keys(players).length;
     gameData.currentTurn = gameData.currentTurn % playerAmount;
 

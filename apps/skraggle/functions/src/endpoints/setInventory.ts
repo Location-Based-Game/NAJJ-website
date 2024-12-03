@@ -43,7 +43,7 @@ export const setInventory = onRequest(
       const gridRef = db.ref(`activeGames/${gameId}/grid`);
       await Promise.all(
         Object.values(currentItems)
-          .filter((value) => value.gridPosition.length !== 0)
+          .filter((value) => value.isPlaced)
           .map(async (value) => {
             await inventoriesRef.child(value.itemId).remove();
             delete currentItems[value.itemId]
@@ -55,7 +55,7 @@ export const setInventory = onRequest(
       const lettersOnStandCount = Object.values(currentItems).filter((item) => {
         if (item.type !== ItemTypes.LetterBlock) return false;
         //check if letter is on grid
-        return item.gridPosition.length === 0;
+        return !item.isPlaced;
       }).length;
 
       //give letterBlocks for every letter that is not placed on grid
@@ -64,10 +64,11 @@ export const setInventory = onRequest(
         const randomLetter = letters[randomIndex];
         const itemId = `${randomLetter}-${uuidv4()}`;
         letterBlocks[itemId] = {
-          data: { letter: randomLetter },
+          itemData: { letter: randomLetter },
           playerId,
           itemId,
           type: ItemTypes.LetterBlock,
+          isPlaced: false,
           gridPosition: [],
         };
       }

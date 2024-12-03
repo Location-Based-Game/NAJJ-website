@@ -23,18 +23,20 @@ export async function createTurnNumbers(gameId: string) {
     totalValues.push(diceData.dice1 + diceData.dice2);
 
     const startingDice1: StartingDice = {
-      data: { diceValue: diceData.dice1 },
+      itemData: { diceValue: diceData.dice1 },
       playerId: playerIds[i],
       itemId: `startingDice1-${uuidv4()}`,
       type: ItemTypes.StartingDice,
+      isPlaced: false,
       gridPosition: []
     };
 
     const startingDice2: StartingDice = {
-      data: { diceValue: diceData.dice2 },
+      itemData: { diceValue: diceData.dice2 },
       playerId: playerIds[i],
       itemId: `startingDice2-${uuidv4()}`,
       type: ItemTypes.StartingDice,
+      isPlaced: false,
       gridPosition: []
     };
 
