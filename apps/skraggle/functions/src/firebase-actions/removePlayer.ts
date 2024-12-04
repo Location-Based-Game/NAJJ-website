@@ -17,9 +17,13 @@ export default async function removePlayer(gameId: string, playerId: string) {
 
     const { currentTurn, players } = gameData;
     for (const key in players) {
-      if (players.hasOwnProperty(key) && players[key].turn >= currentTurn) {
+      if (players.hasOwnProperty(key) && players[key].turn >= currentTurn && players[key].turn > players[playerId].turn) {
         gameData.players[key].turn--;
       }
+    }
+
+    if (gameData.currentTurn > players[playerId].turn) {
+      gameData.currentTurn--;
     }
 
     if (!players) return;
