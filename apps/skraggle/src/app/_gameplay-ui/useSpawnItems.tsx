@@ -5,11 +5,10 @@ import { useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { Inventory } from "@types";
-import { itemSchema } from "@schemas/itemSchema";
+import { Item, itemSchema } from "@schemas/itemSchema";
 
 /**
- * Listens for inventory updates in the rtdb and spawns/deletes items in the player inventories.
- * TODO delete items
+ * Listens for inventory/grid updates in the rtdb and spawns/deletes items
  */
 export default function useSpawnItems() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
@@ -24,7 +23,7 @@ export default function useSpawnItems() {
       (newInventory) => {
         if (newInventory.key === null) return;
         const data = newInventory.val() as Inventory;
-        SpawnItems(data);
+        SpawnPlayerItems(data);
       },
     );
 
@@ -33,27 +32,44 @@ export default function useSpawnItems() {
       (newInventory) => {
         if (newInventory.key === null) return;
         const data = newInventory.val() as Inventory;
-        SpawnItems(data);
+        SpawnPlayerItems(data);
+      },
+    );
+
+    const gridRef = ref(rtdb, `activeGames/${gameId}/grid`);
+    const gridItemAddedListener = onChildAdded(
+      gridRef,
+      (newItem) => {
+        if (newItem.key === null) return;
+        const data = newItem.val();
+        const validatedData = itemSchema.parse(data);
+        SpawnItem(validatedData as Item<any>);
       },
     );
 
     return () => {
       inventoryAddedListener();
       inventoryChangedListener();
+      gridItemAddedListener();
     };
   }, [gameId, isGameActive]);
 
-  function SpawnItems(inventory: Inventory) {
+  function SpawnPlayerItems(inventory: Inventory) {
+    Object.values(inventory).forEach((values) => {
+      const validatedData = itemSchema.parse(values);
+      SpawnItem(validatedData as Item<any>);
+    });
+  }
+
+  function SpawnItem(item: Item<any>) {
+    //timeout ensures items are spawned after players are instantiated
     setTimeout(() => {
-      Object.values(inventory).forEach((values) => {
-        const validatedData = itemSchema.parse(values);
-        callUnityFunction("SpawnItem", {
-          ...validatedData,
-          itemData:
-            typeof validatedData.itemData === "string"
-              ? validatedData.itemData
-              : JSON.stringify(validatedData.itemData),
-        });
+      callUnityFunction("SpawnItem", {
+        ...item,
+        itemData:
+          typeof item.itemData === "string"
+            ? item.itemData
+            : JSON.stringify(item.itemData),
       });
     }, 100);
   }

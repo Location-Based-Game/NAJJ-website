@@ -6,6 +6,8 @@ export type GameRoom = {
   id: string;
   gameState: GameStates;
   players: PlayersData;
+  inventories: Inventories;
+  grid: Inventory;
   currentTurn: number;
 };
 

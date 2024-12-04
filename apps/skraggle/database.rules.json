@@ -24,6 +24,9 @@
         "inventories": {
           ".read": true
         },
+        "grid": {
+          ".read": true
+        },
         "signaling": {
           "$playerId": {
             ".read": true
