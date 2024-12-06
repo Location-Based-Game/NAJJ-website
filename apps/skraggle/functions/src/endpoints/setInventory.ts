@@ -1,9 +1,9 @@
 import { onRequest } from "firebase-functions/v2/https";
 import { deleteSession, getSessionData } from "../lib/sessionUtils";
-import { db } from "../lib/firebaseAdmin";
+import { db, Reference } from "../lib/firebaseAdmin";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
-import { ItemTypes } from "../types";
+import { GameRoom, GameStates, Inventory, ItemTypes } from "../types";
 import { type Item, itemSchema } from "../schemas/itemSchema";
 
 // import * as logger from "firebase-functions/logger";
@@ -41,43 +41,38 @@ export const setInventory = onRequest(
 
       //remove placed items from player inventory and store them on the grid
       const gridRef = db.ref(`activeGames/${gameId}/grid`);
+      const playersRef = db.ref(`activeGames/${gameId}/players`);
+      const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
+      const gameState = (await gameStateRef.get()).val() as GameStates;
+
       await Promise.all(
         Object.values(currentItems)
           .filter((value) => value.isPlaced)
           .map(async (value) => {
             await inventoriesRef.child(value.itemId).remove();
-            delete currentItems[value.itemId]
+            delete currentItems[value.itemId];
             await gridRef.child(value.itemId).set(value);
+            if (gameState === "TurnsDiceRoll") {
+              await SetDiceInventory();
+            }
           }),
       );
 
-      const letterBlocks: Record<string, LetterBlock> = {};
-      const lettersOnStandCount = Object.values(currentItems).filter((item) => {
-        if (item.type !== ItemTypes.LetterBlock) return false;
-        //check if letter is on grid
-        return !item.isPlaced;
-      }).length;
-
-      //give letterBlocks for every letter that is not placed on grid
-      for (let i = 0; i < 7 - lettersOnStandCount; i++) {
-        const randomIndex = Math.floor(Math.random() * letters.length);
-        const randomLetter = letters[randomIndex];
-        const itemId = `${randomLetter}-${uuidv4()}`;
-        letterBlocks[itemId] = {
-          itemData: { letter: randomLetter },
+      if (gameState === "Gameplay") {
+        const letterBlocks = GetLetterBlocks(
+          currentItems as Inventory,
           playerId,
-          itemId,
-          type: ItemTypes.LetterBlock,
-          isPlaced: false,
-          gridPosition: [],
-        };
+        );
+        await inventoriesRef.set({ ...currentItems, ...letterBlocks });
       }
 
-      const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
-      await Promise.all([
-        gameStateRef.set("Gameplay"),
-        inventoriesRef.set({ ...currentItems, ...letterBlocks }),
-      ]);
+      async function SetDiceInventory() {
+        const playerCount = (await playersRef.get()).numChildren();
+        const diceCount = (await gridRef.get()).numChildren();
+        if (diceCount === playerCount * 2) {
+          await gameStateRef.set("Gameplay");
+        }
+      }
 
       response.send({ data: "Success" });
     } catch (error) {
@@ -86,3 +81,29 @@ export const setInventory = onRequest(
     }
   },
 );
+
+function GetLetterBlocks(currentItems: Inventory, playerId: string) {
+  const letterBlocks: Record<string, LetterBlock> = {};
+  const lettersOnStandCount = Object.values(currentItems).filter((item) => {
+    if (item.type !== ItemTypes.LetterBlock) return false;
+    //check if letter is on grid
+    return !item.isPlaced;
+  }).length;
+
+  //give letterBlocks for every letter that is not placed on grid
+  for (let i = 0; i < 7 - lettersOnStandCount; i++) {
+    const randomIndex = Math.floor(Math.random() * letters.length);
+    const randomLetter = letters[randomIndex];
+    const itemId = `${randomLetter}-${uuidv4()}`;
+    letterBlocks[itemId] = {
+      itemData: { letter: randomLetter },
+      playerId,
+      itemId,
+      type: ItemTypes.LetterBlock,
+      isPlaced: false,
+      gridPosition: [],
+    };
+  }
+
+  return letterBlocks;
+}

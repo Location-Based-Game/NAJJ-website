@@ -11,7 +11,7 @@ import { useUnityReactContext } from "../_unity-player/UnityContext";
 import PlayerListGameplay from "./PlayerListGameplay";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/tailwindUtils";
-import usePlayersData from "@/hooks/usePlayersData";
+import usePlayersData from "@/app/_gameplay-ui/usePlayersData";
 import useSpawnItems from "./useSpawnItems";
 import useSetInventories from "./useSetInventories";
 

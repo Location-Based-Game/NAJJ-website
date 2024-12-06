@@ -14,7 +14,7 @@ export default function useSetGameState() {
   const { logOutOnError } = useLogOut();
   const { callUnityFunction, splashScreenComplete } = useUnityReactContext();
   const turnsDiceRollStateSet = useRef(false);
-  
+
   useEffect(() => {
     if (!splashScreenComplete || !gameId) return;
 
@@ -27,14 +27,8 @@ export default function useSetGameState() {
 
       const state = snapshot.val() as GameStates;
 
-      if (state === "TurnsDiceRoll") {
-        dispatch(setGameState(state));
-        callUnityFunction("UpdateGameState", state);
-        turnsDiceRollStateSet.current = true;
-      } else if (state === "Gameplay" && !turnsDiceRollStateSet.current) {
-        dispatch(setGameState(state));
-        callUnityFunction("UpdateGameState", state);
-      }
+      dispatch(setGameState(state));
+      callUnityFunction("UpdateGameState", state);
 
       if (state !== "Menu") {
         dispatch(setGameActive(true));

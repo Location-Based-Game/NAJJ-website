@@ -1,4 +1,3 @@
-"use client";
 import { rtdb } from "@/app/firebaseConfig";
 import { addInitialStatus } from "@/store/peerStatusSlice";
 import { RootState } from "@/store/store";
