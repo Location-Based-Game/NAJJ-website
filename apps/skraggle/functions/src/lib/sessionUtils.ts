@@ -2,7 +2,6 @@ import type { Request } from "firebase-functions/v2/https";
 import { decryptJWT, encryptJWT } from "./jwtUtils";
 import { SessionData, sessionSchema } from "../schemas/sessionSchema";
 import type { Response } from "express";
-import * as logger from "firebase-functions/logger";
 
 export async function getSessionData(request: Request) {
   const cookies = request.headers.cookie;

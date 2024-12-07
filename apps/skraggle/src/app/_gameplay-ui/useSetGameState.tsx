@@ -2,7 +2,7 @@ import { rtdb } from "@/app/firebaseConfig";
 import { setGameActive, setGameState } from "@/store/gameStateSlice";
 import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import useLogOut from "@/hooks/useLogOut";
@@ -13,7 +13,6 @@ export default function useSetGameState() {
   const dispatch = useDispatch();
   const { logOutOnError } = useLogOut();
   const { callUnityFunction, splashScreenComplete } = useUnityReactContext();
-  const turnsDiceRollStateSet = useRef(false);
 
   useEffect(() => {
     if (!splashScreenComplete || !gameId) return;
