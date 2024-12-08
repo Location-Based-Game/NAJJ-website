@@ -16,6 +16,8 @@ export enum ItemTypes {
   LetterBlock,
 }
 
+export type StartingDice = Item<{ diceValue: number, playerAmount: number }>;
+
 export type Inventory = Record<string, Item<any>>;
 export type Inventories = Record<string, Inventory>;
 

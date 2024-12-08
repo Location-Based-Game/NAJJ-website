@@ -1,9 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../lib/firebaseAdmin";
-import { PlayersData, Inventories, ItemTypes } from "../types";
-import { Item } from "../schemas/itemSchema";
-
-type StartingDice = Item<{ diceValue: number }>;
+import { PlayersData, Inventories, ItemTypes, StartingDice } from "../types";
 
 export async function createTurnNumbers(gameId: string) {
   const playersRef = db.ref(`activeGames/${gameId}/players`);
@@ -23,21 +20,30 @@ export async function createTurnNumbers(gameId: string) {
     totalValues.push(diceData.dice1 + diceData.dice2);
 
     const startingDice1: StartingDice = {
-      itemData: { diceValue: diceData.dice1 },
+      itemData: {
+        diceValue: diceData.dice1,
+        // playerAmount is stored on starting dice at time of creation
+        // so that if new players join during TurnsDiceRoll state
+        // they don't have to roll dice
+        playerAmount: players.numChildren(),
+      },
       playerId: playerIds[i],
       itemId: `startingDice1-${uuidv4()}`,
       type: ItemTypes.StartingDice,
       isPlaced: false,
-      gridPosition: []
+      gridPosition: [],
     };
 
     const startingDice2: StartingDice = {
-      itemData: { diceValue: diceData.dice2 },
+      itemData: {
+        diceValue: diceData.dice2,
+        playerAmount: players.numChildren(),
+      },
       playerId: playerIds[i],
       itemId: `startingDice2-${uuidv4()}`,
       type: ItemTypes.StartingDice,
       isPlaced: false,
-      gridPosition: []
+      gridPosition: [],
     };
 
     updates[playerIds[i]] = {

@@ -11,6 +11,6 @@ export const itemSchema = z.object({
   gridPosition: z.number().array().default([]),
 });
 
-export type Item<T> = Omit<z.infer<typeof itemSchema>, "data"> & {
+export type Item<T> = Omit<z.infer<typeof itemSchema>, "itemData"> & {
   itemData: T;
 };

@@ -3,7 +3,7 @@ import { deleteSession, getSessionData } from "../lib/sessionUtils";
 import { db } from "../lib/firebaseAdmin";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
-import { GameStates, Inventory, ItemTypes } from "../types";
+import { GameStates, Inventory, ItemTypes, StartingDice } from "../types";
 import { type Item, itemSchema } from "../schemas/itemSchema";
 import * as logger from "firebase-functions/logger";
 
@@ -42,7 +42,6 @@ export const setInventory = onRequest(
 
       //remove placed items from player inventory and store them on the grid
       const gridRef = db.ref(`activeGames/${gameId}/grid`);
-      const playersRef = db.ref(`activeGames/${gameId}/players`);
       const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
       const gameState = (await gameStateRef.get()).val() as GameStates;
 
@@ -53,8 +52,9 @@ export const setInventory = onRequest(
             await inventoriesRef.child(item.itemId).remove();
             delete currentItems[item.itemId];
             await gridRef.child(item.itemId).set(item);
-            if (gameState === "TurnsDiceRoll") {
-              await SetDiceInventory();
+
+            if (gameState === "TurnsDiceRoll" && item.type === ItemTypes.StartingDice) {
+              await SetDiceInventory(JSON.parse(item.itemData).playerAmount);
             }
           }),
       );
@@ -69,8 +69,7 @@ export const setInventory = onRequest(
         await inventoriesRef.set({ ...currentItems });
       }
 
-      async function SetDiceInventory() {
-        const playerCount = (await playersRef.get()).numChildren();
+      async function SetDiceInventory(playerCount: number) {
         const diceCount = (await gridRef.get()).numChildren();
         if (diceCount === playerCount * 2) {
           await gameStateRef.set("Gameplay");
