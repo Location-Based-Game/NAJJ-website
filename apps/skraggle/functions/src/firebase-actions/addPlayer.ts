@@ -1,18 +1,15 @@
-import { z } from "zod";
 import { serverTimestamp } from "firebase/database";
-import { gameIdSchema } from "../schemas/gameIdSchema";
 import { db, Reference } from "../lib/firebaseAdmin";
-
-const addPlayerSchema = gameIdSchema.extend({
-  playerName: z.string().min(1),
-});
-
-type AddPlayerType = z.infer<typeof addPlayerSchema>;
+import { GameStates, PlayerData } from "../types";
+import { GetLetterBlocks } from "../endpoints/setInventory";
 
 export async function addPlayer(
   gameId: string,
   playerName: string,
 ): Promise<string> {
+  const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
+  const gameState = (await gameStateRef.get()).val() as GameStates;
+
   const playersRef = db.ref(`activeGames/${gameId}/players`);
   let playerId = "";
 
@@ -26,7 +23,7 @@ export async function addPlayer(
     await testPlayerRef.set(playerName);
     playerId = "testPlayer";
   } else {
-    playerId = await addPlayerTransaction(playersRef, playerName);
+    playerId = await addPlayerTransaction(playersRef, playerName, gameState);
   }
 
   //add player to webRTC peers list
@@ -38,6 +35,14 @@ export async function addPlayer(
     signalStatus: "pending",
     timestamp: serverTimestamp(),
   });
+
+  if (gameState === "Gameplay") {
+    const inventoriesRef = db.ref(
+      `activeGames/${gameId}/inventories/${playerId}`,
+    );
+    const letterBlocks = GetLetterBlocks({}, playerId);
+    await inventoriesRef.set(letterBlocks);
+  }
 
   return playerId;
 }
@@ -53,32 +58,39 @@ const pastelColors: string[] = [
   "#91ffd1", // Light mint
 ];
 
-async function addPlayerTransaction(playersRef: Reference, playerName: string) {
+async function addPlayerTransaction(
+  playersRef: Reference,
+  playerName: string,
+  gameState: GameStates,
+) {
   let playerId = "";
 
-  await playersRef.transaction((currentPlayers) => {
-    if (currentPlayers === null) {
-      currentPlayers = {};
-    }
+  await playersRef.transaction(
+    (currentPlayers: Record<string, Partial<PlayerData>>) => {
+      if (currentPlayers === null) {
+        currentPlayers = {};
+      }
 
-    const playerCount = Object.keys(currentPlayers).length;
-    if (playerCount >= 8) {
-      throw new Error("Max players reached!");
-    }
+      const playerCount = Object.keys(currentPlayers).length;
+      if (playerCount >= 8) {
+        throw new Error("Max players reached!");
+      }
 
-    const newPlayerRef = playersRef.push();
-    if (newPlayerRef.key) {
-      playerId = newPlayerRef.key;
-      currentPlayers[playerId] = {
-        name: playerName,
-        color: pastelColors[playerCount],
-      };
-    } else {
-      throw new Error("Player key not created");
-    }
+      const newPlayerRef = playersRef.push();
+      if (newPlayerRef.key) {
+        playerId = newPlayerRef.key;
+        currentPlayers[playerId] = {
+          name: playerName,
+          color: pastelColors[playerCount],
+          turn: gameState !== "Menu" ? playerCount : null,
+        };
+      } else {
+        throw new Error("Player key not created");
+      }
 
-    return currentPlayers;
-  });
+      return currentPlayers;
+    },
+  );
 
   return playerId;
 }

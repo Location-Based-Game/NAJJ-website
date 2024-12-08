@@ -86,7 +86,7 @@ export const setInventory = onRequest(
   },
 );
 
-function GetLetterBlocks(currentItems: Inventory, playerId: string) {
+export function GetLetterBlocks(currentItems: Inventory, playerId: string) {
   const letterBlocks: Record<string, LetterBlock> = {};
   const lettersOnStandCount = Object.values(currentItems).filter((item) => {
     if (item.type !== ItemTypes.LetterBlock) return false;
