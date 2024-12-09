@@ -33,3 +33,7 @@ export { rejoin } from "./endpoints/rejoin";
 export { sendPeerSignal } from "./endpoints/sendPeerSignal";
 export { setInventory } from "./endpoints/setInventory";
 export { startGame } from "./endpoints/startGame";
+
+export { onPlayerDisconnect } from "./events/onPlayerDisconnect";
+
+export { deleteRoomsEveryDay } from "./scheduled-functions/deleteRoomsEveryDay";

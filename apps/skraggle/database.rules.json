@@ -4,8 +4,7 @@
       "$gameId": {
         ".read": false,
         "currentTurn": {
-          ".read": true,
-          ".write": "newData.isNumber()"
+          ".read": true
         },
         "gameState": {
           ".read": true
@@ -21,7 +20,7 @@
           "$playerId" : {
             "isOnline": {
               ".read": true,
-              ".write": "newData.isBoolean()"
+              ".write": "newData.isBoolean() && root.child('activeGames').child($gameId).child('players').child($playerId).exists()"
             }
           }
         },
