@@ -26,6 +26,7 @@ export const helloWorld4 = onRequest((request, response) => {
 export { addPlayer } from "./endpoints/addPlayer";
 export { changePlayerColor } from "./endpoints/changePlayerColor";
 export { createRoom } from "./endpoints/createRoom";
+export { endTurn } from "./endpoints/endTurn";
 export { leaveGame } from "./endpoints/leaveGame";
 export { logIn } from "./endpoints/logIn";
 export { rejoin } from "./endpoints/rejoin";

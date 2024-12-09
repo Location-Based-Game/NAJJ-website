@@ -24,7 +24,8 @@ export type Inventories = Record<string, Inventory>;
 export type PlayerData = {
   name: string;
   color: string;
-  turn: number | null;
+  turn: number;
+  isOnline: boolean;
 };
 
 export type PlayersData = Record<string, PlayerData>;

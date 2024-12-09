@@ -6,6 +6,9 @@ import {
   onChildAdded,
   onChildRemoved,
   onChildChanged,
+  onDisconnect,
+  child,
+  set,
 } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +33,10 @@ export default function usePlayersData() {
       return;
     }
     const playersRef = ref(rtdb, `activeGames/${gameId}/players`);
+
+    const isOnlineRef = child(playersRef, `${playerId}/isOnline`);
+    set(isOnlineRef, true)
+    onDisconnect(isOnlineRef).set(false);
 
     const addPlayerListener = onChildAdded(playersRef, (newPlayer) => {
       if (newPlayer.key === null) return;

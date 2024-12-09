@@ -14,12 +14,16 @@
           ".read": true
         },
         "id": {
-          ".read": true,
-          ".write": false
+          ".read": true
         },
         "players": {
           ".read": true,
-          ".write": false
+          "$playerId" : {
+            "isOnline": {
+              ".read": true,
+              ".write": "newData.isBoolean()"
+            }
+          }
         },
         "inventories": {
           ".read": true

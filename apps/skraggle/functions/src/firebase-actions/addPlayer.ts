@@ -23,7 +23,7 @@ export async function addPlayer(
     await testPlayerRef.set(playerName);
     playerId = "testPlayer";
   } else {
-    playerId = await addPlayerTransaction(playersRef, playerName, gameState);
+    playerId = await addPlayerTransaction(playersRef, playerName);
   }
 
   //add player to webRTC peers list
@@ -58,15 +58,11 @@ const pastelColors: string[] = [
   "#91ffd1", // Light mint
 ];
 
-async function addPlayerTransaction(
-  playersRef: Reference,
-  playerName: string,
-  gameState: GameStates,
-) {
+async function addPlayerTransaction(playersRef: Reference, playerName: string) {
   let playerId = "";
 
   await playersRef.transaction(
-    (currentPlayers: Record<string, Partial<PlayerData>>) => {
+    (currentPlayers: Record<string, PlayerData>) => {
       if (currentPlayers === null) {
         currentPlayers = {};
       }
@@ -82,7 +78,8 @@ async function addPlayerTransaction(
         currentPlayers[playerId] = {
           name: playerName,
           color: pastelColors[playerCount],
-          turn: gameState !== "Menu" ? playerCount : null,
+          turn: playerCount,
+          isOnline: true
         };
       } else {
         throw new Error("Player key not created");
