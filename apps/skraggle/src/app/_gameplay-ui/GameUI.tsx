@@ -45,12 +45,15 @@ export default function GameUI() {
   }, []);
 
   useEffect(() => {
+    if (!isGameActive) {
+      setShowUI(false);
+    }
     addEventListener("ShowGamePlayUI", handleShowGamePlayUI);
 
     return () => {
       removeEventListener("ShowGamePlayUI", handleShowGamePlayUI);
     };
-  }, [addEventListener, removeEventListener, handleShowGamePlayUI]);
+  }, [addEventListener, removeEventListener, handleShowGamePlayUI, isGameActive]);
 
   return (
     <div className="relative flex h-[calc(100dvh-3rem)] items-center justify-center bg-secondary">

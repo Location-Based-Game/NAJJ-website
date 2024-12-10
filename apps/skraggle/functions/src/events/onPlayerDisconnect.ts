@@ -1,7 +1,8 @@
 import { onValueUpdated } from "firebase-functions/v2/database";
-import { PlayersData } from "../types";
+import { PlayerData, PlayersData } from "../types";
 import { db } from "../lib/firebaseAdmin";
 import { logger } from "firebase-functions";
+import { incrementTurn } from "../firebase-actions/incrementTurn";
 
 export const onPlayerDisconnect = onValueUpdated(
   {
@@ -10,12 +11,14 @@ export const onPlayerDisconnect = onValueUpdated(
   async (event) => {
     const isOnline = event.data.after.val() as boolean;
     const deleteRoomsRef = db.ref(`gamesToDelete`);
-    const playersRef = event.data.after.ref.parent!.parent!;
-    const gameIdRef = playersRef.parent!.child("id");
+    const playerRef = event.data.after.ref.parent!;
+    const allPlayersRef = playerRef.parent!;
+    const gameIdRef = allPlayersRef.parent!.child("id");
 
     try {
+      const gameId = (await gameIdRef.get()).val() as string;
+
       if (isOnline) {
-        const gameId = (await gameIdRef.get()).val() as string;
         deleteRoomsRef.transaction((currentVal) => {
           if (currentVal === null) return [];
           return currentVal.filter((e: string) => e !== gameId);
@@ -23,16 +26,19 @@ export const onPlayerDisconnect = onValueUpdated(
         return;
       }
 
-      const playersData = (await playersRef.get()).val() as PlayersData;
+      const playerId = (await playerRef.get()).key as string;
+      //will increment turn if it is the current player's turn
+      await incrementTurn(gameId, playerId)
 
-      if (!Object.values(playersData).every((e) => !e.isOnline)) return;
-      const gameId = (await gameIdRef.get()).val() as string;
+      const allPlayersData = (await allPlayersRef.get()).val() as PlayersData;
+      if (!Object.values(allPlayersData).every((e) => !e.isOnline)) return;
 
       deleteRoomsRef.transaction((currentVal) => {
         if (currentVal === null) return [gameId];
         currentVal.push(gameId);
         return currentVal;
       });
+
     } catch (error) {
       logger.error(`${error}`);
     }
