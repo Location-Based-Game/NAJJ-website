@@ -1,14 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type TurnState = {
-  currentTurn:number;
+  currentTurn: number;
   playerTurn: number | null;
-}
+  enableWebRTCAfterFirstTurn: boolean;
+};
 
-const initialState:TurnState = {
+const initialState: TurnState = {
   currentTurn: 0,
-  playerTurn: null
-}
+  playerTurn: null,
+  enableWebRTCAfterFirstTurn: true,
+};
 
 export const turnSlice = createSlice({
   name: "Turn Number",
@@ -21,9 +23,24 @@ export const turnSlice = createSlice({
       state.playerTurn = action.payload;
     },
     resetTurnState: () => {
-      return initialState
-    }
+      return initialState;
+    },
+    /**
+     * in order to fix board persist bugs, disable WebRTC data transfer
+     * for the first turn if the player joins during GamePlay state
+     */
+    enableWebRTCAfterFirstTurn: (
+      state: TurnState,
+      action: PayloadAction<boolean>,
+    ) => {
+      state.enableWebRTCAfterFirstTurn = action.payload;
+    },
   },
 });
 
-export const { setCurrentTurn, setPlayerTurn, resetTurnState } = turnSlice.actions;
+export const {
+  setCurrentTurn,
+  setPlayerTurn,
+  resetTurnState,
+  enableWebRTCAfterFirstTurn,
+} = turnSlice.actions;

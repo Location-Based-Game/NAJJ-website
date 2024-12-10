@@ -19,7 +19,7 @@ type SignalStatusType = {
     signalStatus: "pending" | "offline" | "sent";
     timestamp: number;
   };
-}
+};
 
 export default function useWebRTC(
   splashScreenComplete: boolean,
@@ -28,10 +28,13 @@ export default function useWebRTC(
   const { gameId, playerId, playerName } = useSelector(
     (state: RootState) => state.logIn,
   );
-  const peerStatus = useSelector((state:RootState) => state.peerStatus)
+  const peerStatus = useSelector((state: RootState) => state.peerStatus);
+  const { enableWebRTCAfterFirstTurn } = useSelector(
+    (state: RootState) => state.turnState,
+  );
   const { logOutOnError } = useLogOut(false);
   const playerPeers = useRef<PlayerPeers>({});
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const setPeers = useRef(false);
   const offersSent = useRef(false);
 
@@ -40,7 +43,7 @@ export default function useWebRTC(
       setPeers.current = false;
       offersSent.current = false;
       return;
-    };
+    }
     if (setPeers.current) return;
     setPeers.current = true;
 
@@ -81,7 +84,7 @@ export default function useWebRTC(
       if (data[previousPeerId].signalStatus === "pending") return;
 
       offersSent.current = true;
-      setTimeout(() => {        
+      setTimeout(() => {
         const hasSignaledRef = ref(
           rtdb,
           `activeGames/${gameId}/signaling/players/${playerId}/signalStatus`,
@@ -93,7 +96,7 @@ export default function useWebRTC(
         if (key === playerId) return;
         if (playerPeers.current[key]) return;
         playerPeers.current[key] = createPeer(true, key, data[key].name);
-        dispatch(setStatus({playerId: key, status: "pending"}))
+        dispatch(setStatus({ playerId: key, status: "pending" }));
       });
     });
 
@@ -108,7 +111,7 @@ export default function useWebRTC(
       const remotePeer = createPeer(false, data.playerId, data.name);
       remotePeer.signal(data.signal);
       playerPeers.current[data.playerId] = remotePeer;
-      dispatch(setStatus({playerId: data.playerId, status: "pending"}))
+      dispatch(setStatus({ playerId: data.playerId, status: "pending" }));
     });
 
     //listen for answers and assign signals to their respective player ID's host peer
@@ -168,7 +171,7 @@ export default function useWebRTC(
 
     peer.on("connect", () => {
       peer.send(`connected to ${playerName}`);
-      dispatch(setStatus({playerId: peerId, status: "connected"}))
+      dispatch(setStatus({ playerId: peerId, status: "connected" }));
       isConnected = true;
     });
 
@@ -183,24 +186,26 @@ export default function useWebRTC(
     peer.on("close", () => {
       console.log(`${name} left the game`);
       delete playerPeers.current[peerId];
-      dispatch(setStatus({playerId: peerId, status: "error"}))
+      dispatch(setStatus({ playerId: peerId, status: "error" }));
     });
 
     peer.on("error", (error) => {
       console.log(error.message);
       delete playerPeers.current[peerId];
-      dispatch(setStatus({playerId: peerId, status: "error"}))
+      dispatch(setStatus({ playerId: peerId, status: "error" }));
     });
 
     return peer;
   }
 
-  //listen for data when Unity player finishes loading 
+  //listen for data when Unity player finishes loading
   useEffect(() => {
     if (!splashScreenComplete) return;
-    Object.keys(playerPeers.current).forEach(key => {
-      playerPeers.current[key].removeAllListeners("data")
-      playerPeers.current[key].on("data", data => {
+
+    Object.keys(playerPeers.current).forEach((key) => {
+      playerPeers.current[key].removeAllListeners("data");
+      if (!enableWebRTCAfterFirstTurn) return;
+      playerPeers.current[key].on("data", (data) => {
         try {
           const parsedData = JSON.parse(data);
           if (!("action" in parsedData)) return;
@@ -208,21 +213,25 @@ export default function useWebRTC(
         } catch (error) {
           console.log(data);
         }
-      })
-    })
-    
-  }, [splashScreenComplete, peerStatus])
+      });
+    });
+  }, [splashScreenComplete, peerStatus, enableWebRTCAfterFirstTurn]);
 
   return { playerPeers };
 }
 
-function getPreviousPeerId(data: SignalStatusType, targetPeerId: string): string | null {
+function getPreviousPeerId(
+  data: SignalStatusType,
+  targetPeerId: string,
+): string | null {
   // Convert data to an array of entries and sort by timestamp
   const sortedPeers = Object.entries(data)
     .filter(([, data]) => data.signalStatus !== "offline")
     .sort(([, a], [, b]) => a.timestamp - b.timestamp);
 
-  const targetIndex = sortedPeers.findIndex(([peerId]) => peerId === targetPeerId);
+  const targetIndex = sortedPeers.findIndex(
+    ([peerId]) => peerId === targetPeerId,
+  );
   if (targetIndex <= 0) {
     return null;
   }
