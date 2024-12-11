@@ -44,21 +44,27 @@ export default function usePlayersData() {
 
       dispatch(addPlayer({ key: newPlayer.key, value: data }));
       dispatch(addInitialStatus(newPlayer.key));
-      AddPlayer(data, newPlayer.key);
+      SetPlayer(data, newPlayer.key, "AddPlayer");
     });
 
     const playerChangedListener = onChildChanged(
       playersRef,
       (changedPlayer) => {
         if (changedPlayer.key === null) return;
+        if (!isGameActive) return;
         const data = changedPlayer.val() as PlayerData;
+
         dispatch(
           addPlayer({
             key: changedPlayer.key,
             value: data,
           }),
         );
-        AddPlayer(data, changedPlayer.key);
+        SetPlayer(data, changedPlayer.key, "UpdatePlayer");
+
+        if (!data.isOnline) {
+          callUnityFunction("DisconnectPlayer", changedPlayer.key);
+        }
       },
     );
 
@@ -78,12 +84,11 @@ export default function usePlayersData() {
     };
   }, [gameId, isGameActive]);
 
-  function AddPlayer(data: PlayerData, key: string) {
+  function SetPlayer(data: PlayerData, key: string, methodName: string) {
     if (!isGameActive) return;
-    if (!('turn' in data)) return;
     const isMainPlayer = key === playerId;
 
-    callUnityFunction("AddPlayer", {
+    callUnityFunction(methodName, {
       turn: data.turn,
       playerId: key,
       playerName: data.name,

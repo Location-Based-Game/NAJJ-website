@@ -39,16 +39,15 @@ export default function useTurnListener() {
 
       if (gameState === "Gameplay") {
         const turn = snapshot.val() as number;
-        const newTurn = turn % Object.keys(players).length
 
-        dispatch(setCurrentTurn(newTurn));
-        callUnityFunction("SetTurn", newTurn);
+        dispatch(setCurrentTurn(turn));
+        callUnityFunction("SetTurn", turn);
 
         if (firstTurn.current === undefined) {
-          firstTurn.current = newTurn;
+          firstTurn.current = turn;
         }
 
-        if (firstTurn.current !== newTurn) {
+        if (firstTurn.current !== turn) {
           dispatch(enableWebRTCAfterFirstTurn(true))
         }
       }
