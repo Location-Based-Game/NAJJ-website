@@ -1,8 +1,9 @@
 import { onValueUpdated } from "firebase-functions/v2/database";
-import { PlayerData, PlayersData } from "../types";
+import { GameStates, PlayerData, PlayersData } from "../types";
 import { db } from "../lib/firebaseAdmin";
 import { logger } from "firebase-functions";
 import { incrementTurn } from "../firebase-actions/incrementTurn";
+import { transitionTurnsDiceRollToGameplay } from "../firebase-actions/transitionTurnsDiceRollToGameplay";
 
 export const onPlayerDisconnect = onValueUpdated(
   {
@@ -29,6 +30,8 @@ export const onPlayerDisconnect = onValueUpdated(
       const playerId = (await playerRef.get()).key as string;
       //will increment turn if it is the current player's turn
       await incrementTurn(gameId, playerId)
+
+      transitionTurnsDiceRollToGameplay(gameId)
 
       const allPlayersData = (await allPlayersRef.get()).val() as PlayersData;
       if (!Object.values(allPlayersData).every((e) => !e.isOnline)) return;
