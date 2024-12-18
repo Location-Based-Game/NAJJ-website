@@ -37,7 +37,7 @@ export default function useTurnListener() {
         getFirstJoinState(gameState)
       }
 
-      if (gameState === "Gameplay") {
+      if (gameState === "Gameplay" || gameState === "FirstTurn") {
         const turn = snapshot.val() as number;
 
         dispatch(setCurrentTurn(turn));
@@ -66,7 +66,7 @@ export default function useTurnListener() {
     if (firstState.current) return;
     firstState.current = true;
 
-    if (state === "Gameplay") {
+    if (state === "Gameplay" || state === "FirstTurn") {
       dispatch(enableWebRTCAfterFirstTurn(false))
     }
   }

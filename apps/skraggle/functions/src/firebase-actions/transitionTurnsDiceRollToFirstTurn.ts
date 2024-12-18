@@ -6,7 +6,7 @@ import { GameStates, Inventories, PlayersData } from "../types";
  * in order to prevent the game from being stuck on TurnsDiceRoll state,
  * just transition to Gameplay state if a player leaves/disconnects
  */
-export async function transitionTurnsDiceRollToGameplay(gameId: string) {
+export async function transitionTurnsDiceRollToFirstTurn(gameId: string) {
   const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
   const gridRef = db.ref(`activeGames/${gameId}/grid`);
   const gameStateSnapshot = await gameStateRef.get();
@@ -15,7 +15,8 @@ export async function transitionTurnsDiceRollToGameplay(gameId: string) {
   const gameState = gameStateSnapshot.val() as GameStates;
 
   if (gameState === "TurnsDiceRoll") {
-    await Promise.all([gameStateRef.set("Gameplay"), gridRef.remove()]);
+    const newState: GameStates = "FirstTurn";
+    await Promise.all([gameStateRef.set(newState), gridRef.remove()]);
   } else {
     return;
   }

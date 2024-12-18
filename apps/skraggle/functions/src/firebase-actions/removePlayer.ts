@@ -1,6 +1,6 @@
 import { db } from "../lib/firebaseAdmin";
 import { GameRoom } from "../types";
-import { transitionTurnsDiceRollToGameplay } from "./transitionTurnsDiceRollToGameplay";
+import { transitionTurnsDiceRollToFirstTurn } from "./transitionTurnsDiceRollToFirstTurn";
 
 export default async function removePlayer(gameId: string, playerId: string) {
   const playerRef = db.ref(`activeGames/${gameId}/players/${playerId}`);
@@ -40,5 +40,5 @@ export default async function removePlayer(gameId: string, playerId: string) {
     playerInventoryRef.remove(),
   ]);
 
-  transitionTurnsDiceRollToGameplay(gameId)
+  transitionTurnsDiceRollToFirstTurn(gameId)
 }

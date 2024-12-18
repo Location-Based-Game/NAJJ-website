@@ -11,7 +11,7 @@ export default function GamePlayUI() {
   );
 
   let gameplayUI = <></>;
-  if (gameState.state === "Gameplay") {
+  if (gameState.state === "Gameplay" || gameState.state === "FirstTurn") {
     if (currentTurn === playerTurn) {
       gameplayUI = <YourTurnUI />;
     } else {

@@ -36,7 +36,8 @@ export async function addPlayer(
     timestamp: serverTimestamp(),
   });
 
-  if (gameState === "Gameplay") {
+  //get letter blocks if joining during Gameplay or FirstTurn states
+  if (gameState === "Gameplay" || gameState === "FirstTurn") {
     const inventoriesRef = db.ref(
       `activeGames/${gameId}/inventories/${playerId}`,
     );

@@ -4,9 +4,8 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { GameStates, Inventory, ItemTypes } from "../types";
 import { type Item, itemSchema } from "../schemas/itemSchema";
-import * as logger from "firebase-functions/logger";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
-import { transitionTurnsDiceRollToGameplay } from "../firebase-actions/transitionTurnsDiceRollToGameplay";
+import { transitionTurnsDiceRollToFirstTurn } from "../firebase-actions/transitionTurnsDiceRollToFirstTurn";
 
 // import * as logger from "firebase-functions/logger";
 type LetterBlock = Item<{ letter: string }>;
@@ -57,7 +56,7 @@ export const setInventory = onAuthorizedRequest(async (request, response) => {
       }),
   );
 
-  if (gameState === "Gameplay") {
+  if (gameState === "Gameplay" || gameState === "FirstTurn") {
     const letterBlocks = GetLetterBlocks(currentItems as Inventory, playerId);
     await inventoriesRef.set({ ...currentItems, ...letterBlocks });
   } else {
@@ -68,7 +67,7 @@ export const setInventory = onAuthorizedRequest(async (request, response) => {
     const diceCount = (await gridRef.get()).numChildren();
     if (diceCount === playerCount * 2 && !hasTransitionedToGameplay) {
       hasTransitionedToGameplay = true;
-      transitionTurnsDiceRollToGameplay(gameId);
+      transitionTurnsDiceRollToFirstTurn(gameId);
     }
   }
 
