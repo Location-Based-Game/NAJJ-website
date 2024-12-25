@@ -11,9 +11,11 @@ enum TileType {
   CenterStart
 }
 
-type WordData = {
+export type WordData = {
   word: string;
   score: number;
+  doubleBonus: number;
+  tripleBonus: number;
   scoreMultipliers: TileType[];
   firstPos: number[];
   lastPos: number[];

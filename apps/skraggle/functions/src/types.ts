@@ -29,3 +29,13 @@ export type PlayerData = {
 };
 
 export type PlayersData = Record<string, PlayerData>;
+
+export enum TileType
+{
+    Blank,
+    DoubleLetterScore,
+    TripleLetterScore,
+    DoubleWordScore,
+    TripleWordScore,
+    CenterStart
+}
