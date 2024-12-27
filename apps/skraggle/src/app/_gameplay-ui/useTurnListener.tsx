@@ -12,9 +12,6 @@ export default function useTurnListener() {
   const { state: gameState } = useSelector(
     (state: RootState) => state.gameState,
   );
-  const { currentTurn } = useSelector(
-    (state: RootState) => state.turnState,
-  );
   const dispatch = useDispatch();
   const { splashScreenComplete, callUnityFunction } = useUnityReactContext();
   const players = useSelector((state:RootState) => state.players)

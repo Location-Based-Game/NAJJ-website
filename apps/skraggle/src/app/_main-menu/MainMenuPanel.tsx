@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { MainMenuStates, RootState } from "@/store/store";
 import useSessionRejoin from "./_home/useSessionRejoin";
-import { AnimatePresence, useAnimate } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import CreateGame from "./_create-game/CreateGame";
 import CreateLogIn from "./_create-game/CreateLogIn";
 import MainButtons from "./_home/MainButtons";
@@ -9,7 +9,7 @@ import Rejoining from "./_home/Rejoining";
 import JoinCode from "./_join-game/_join-code/JoinCode";
 import JoinGame from "./_join-game/JoinGame";
 import JoinLogIn from "./_join-game/JoinLogIn";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import InnerPanelWrapper from "./InnerPanelWrapper";
 
 export default function MainMenuPanel() {

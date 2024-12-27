@@ -1,13 +1,13 @@
 import { Separator } from "@/components/ui/separator";
 import { useValidatedWordContext } from "./YourTurnUI";
 import { motion, AnimatePresence, MotionProps } from "framer-motion";
-import type { WordData } from "./useGetValidatedWord";
 import { TileType } from "@types";
 import { cn } from "@/lib/tailwindUtils";
 import { Star } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { forwardRef } from "react";
+import { WordData } from "@schemas/wordDataSchema";
 
 export default function CurrentTurnWordsList() {
   const { wordsData } = useValidatedWordContext();

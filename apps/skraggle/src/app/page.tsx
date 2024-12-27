@@ -1,4 +1,4 @@
-import GameUI from "./_gameplay-ui/GameUI";
+import GameUI from "./GameUI";
 import UnityContextProvider from "./_unity-player/UnityContext";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";

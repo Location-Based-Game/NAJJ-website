@@ -3,25 +3,35 @@ import { useSelector } from "react-redux";
 import NotYourTurnUI from "./_not-your-turn/NotYourTurnUI";
 import YourTurnUI from "./_your-turn/YourTurnUI";
 import PlayerListGameplay from "./PlayerListGameplay";
+import { useCallback } from "react";
+import useSendBoardItemData from "./useSendBoardItemData";
+import useSetInventories from "./useSetInventories";
+import useSpawnItems from "./useSpawnItems";
+import useTurnListener from "./useTurnListener";
 
-export default function GamePlayUI() {
-  const gameState = useSelector((state: RootState) => state.gameState);
+export default function GameplayUI() {
+  const { state } = useSelector((state: RootState) => state.gameState);
   const { currentTurn, playerTurn } = useSelector(
     (state: RootState) => state.turnState,
   );
 
-  let gameplayUI = <></>;
-  if (gameState.state === "Gameplay" || gameState.state === "FirstTurn") {
+  useSetInventories();
+  useSpawnItems();
+  useSendBoardItemData();
+  useTurnListener();
+
+  const getGamePlayUI = useCallback(() => {
+    if (state !== "Gameplay" && state !== "FirstTurn") return;
     if (currentTurn === playerTurn) {
-      gameplayUI = <YourTurnUI />;
+      return <YourTurnUI />;
     } else {
-      gameplayUI = <NotYourTurnUI />;
+      return <NotYourTurnUI />;
     }
-  }
+  }, [state, currentTurn, playerTurn]);
 
   return (
     <>
-      {gameplayUI}
+      {getGamePlayUI()}
       <PlayerListGameplay />
     </>
   );

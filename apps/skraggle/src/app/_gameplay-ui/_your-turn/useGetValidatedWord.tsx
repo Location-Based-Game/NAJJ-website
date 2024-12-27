@@ -1,31 +1,15 @@
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
+import { submittedWordSchema, WordData } from "@schemas/wordDataSchema";
 import { useAnimate } from "framer-motion";
 import { useState, useCallback, useEffect } from "react";
+import { z } from "zod";
 
-enum TileType {
-  Blank,
-  DoubleLetterScore,
-  TripleLetterScore,
-  DoubleWordScore,
-  TripleWordScore,
-  CenterStart
-}
-
-export type WordData = {
-  word: string;
-  score: number;
-  doubleBonus: number;
-  tripleBonus: number;
-  scoreMultipliers: TileType[];
-  firstPos: number[];
-  lastPos: number[];
-}
-
-type WordsJsonData = {
-  wordsData: WordData[];
-  validationType: LetterPosValidation;
-  isItemDropped: boolean;
-};
+const wordsJsonSchema = submittedWordSchema.merge(
+  z.object({
+    validationType: z.custom<LetterPosValidation>(),
+    isItemDropped: z.boolean(),
+  }),
+);
 
 export default function useGetValidatedWord() {
   const [enableButton, setEnableButton] = useState(true);
@@ -37,7 +21,7 @@ export default function useGetValidatedWord() {
 
   const setButtonState = useCallback(
     (json: any) => {
-      const data = JSON.parse(json) as WordsJsonData;
+      const data = wordsJsonSchema.parse(JSON.parse(json));
       if (!data.isItemDropped) {
         setEnableButton(false);
         return;
