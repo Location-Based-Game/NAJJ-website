@@ -1,24 +1,19 @@
-import type { AnimationCallback } from "@/hooks/usePanelTransition";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import GuestNameInput, { GuestNameType } from "./GuestNameInput";
 import { Loader2 } from "lucide-react";
-import { MainMenuState } from "@/hooks/usePanelUI";
+import { useDispatch } from "react-redux";
+import { MainMenuState, mainMenuState } from "@/store/store";
 
 interface SignIn {
   back: MainMenuState;
   submitHandler: (values: GuestNameType) => Promise<void>;
-  animationCallback: AnimationCallback;
   enableButtons: boolean;
 }
 
-export default function SignIn({
-  back,
-  submitHandler,
-  animationCallback,
-  enableButtons
-}: SignIn) {
+export default function SignIn({ back, submitHandler, enableButtons }: SignIn) {
   const [nameInput, setNameInput] = useState<string>("");
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -27,7 +22,7 @@ export default function SignIn({
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          animationCallback(back);
+          dispatch(mainMenuState.updateState(back));
         }}
       >
         Back

@@ -5,8 +5,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useLogOut from "@/hooks/useLogOut";
-import { MainMenuStates } from "@/hooks/usePanelUI";
-import { RootState, mainMenuState } from "@/store/store";
+import { MainMenuStates, RootState, mainMenuState } from "@/store/store";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useUnityReactContext } from "../_unity-player/UnityContext";

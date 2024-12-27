@@ -1,8 +1,7 @@
 import useLogOut from "@/hooks/useLogOut";
-import { mainMenuState, RootState } from "@/store/store";
+import { mainMenuState, MainMenuStates, RootState } from "@/store/store";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { MainMenuStates } from "@/hooks/usePanelUI";
 import { BreadcrumbItem } from "@/components/ui/breadcrumb";
 import { useLeaveGame } from "../LeaveGameProvider";
 

@@ -1,22 +1,20 @@
-import InnerPanelWrapper from "@/components/InnerPanelWrapper";
-import usePanelTransition from "@/hooks/usePanelTransition";
 import { useEffect } from "react";
 import PlayerList from "../_player-list/PlayerList";
 import LeaveGame from "./LeaveGame";
 import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/app/firebaseConfig";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { mainMenuState, RootState } from "@/store/store";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { Progress } from "@/components/ui/progress";
 
 export default function JoinGame() {
-  const { scope, animationCallback } = usePanelTransition();
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
   const { toast } = useToast();
   const { loadingProgression, splashScreenComplete } = useUnityReactContext();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const hostRef = ref(rtdb, `activeGames/${gameId}/host`);
@@ -27,10 +25,12 @@ export default function JoinGame() {
           title: "Host left the game",
           description: "You are now the host",
         });
-        animationCallback({
-          state: "Sign In to Create",
-          slideFrom: "right",
-        });
+        dispatch(
+          mainMenuState.updateState({
+            state: "Sign In to Create",
+            slideFrom: "right",
+          }),
+        );
       }
     });
 
@@ -40,7 +40,7 @@ export default function JoinGame() {
   }, []);
 
   return (
-    <InnerPanelWrapper ref={scope}>
+    <>
       <LeaveGame />
       <div className="w-full grow">
         <h2 className="my-6 w-full text-center">Players</h2>
@@ -61,6 +61,6 @@ export default function JoinGame() {
           </>
         )}
       </div>
-    </InnerPanelWrapper>
+    </>
   );
 }

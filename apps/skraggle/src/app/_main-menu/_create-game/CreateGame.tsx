@@ -1,6 +1,4 @@
-import usePanelTransition from "@/hooks/usePanelTransition";
-import InnerPanelWrapper from "@/components/InnerPanelWrapper";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import QRCode from "./QRCode";
 import { Button } from "@/components/ui/button";
 import PlayerList from "../_player-list/PlayerList";
@@ -9,10 +7,10 @@ import HostLeaveGameButton from "./HostLeaveGameButton";
 import { Loader2 } from "lucide-react";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { Progress } from "@/components/ui/progress";
+import { useMenuButtons } from "../InnerPanelWrapper";
 
 export default function CreateGame() {
-  const [enableButtons, setEnableButtons] = useState(false);
-  const { scope, animationCallback } = usePanelTransition();
+  const {enableButtons, setEnableButtons} = useMenuButtons()
   const { handleStartGame } = useStartGame();
   const { loadingProgression, splashScreenComplete } = useUnityReactContext();
 
@@ -26,7 +24,7 @@ export default function CreateGame() {
   }, [loadingProgression, splashScreenComplete]);
 
   return (
-    <InnerPanelWrapper ref={scope}>
+    <>
       <div className="flex w-full grow gap-8">
         <QRCode />
         <div className="w-full grow">
@@ -58,6 +56,6 @@ export default function CreateGame() {
           </div>
         )}
       </div>
-    </InnerPanelWrapper>
+    </>
   );
 }

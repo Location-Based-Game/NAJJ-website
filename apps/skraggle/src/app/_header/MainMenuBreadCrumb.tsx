@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import type { MainMenuStates } from "@/hooks/usePanelUI";
+import { MainMenuStates, RootState } from "@/store/store";
 import { memo, Fragment } from "react";
 import {
   BreadcrumbList,

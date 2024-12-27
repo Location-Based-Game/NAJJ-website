@@ -1,4 +1,4 @@
-import MainMenuPanel from "@/app/_main-menu/_home/MainMenuPanel";
+import MainMenuPanel from "@/app/_main-menu/MainMenuPanel";
 import { renderWithProviders } from "@/lib/reduxTestUtils";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";

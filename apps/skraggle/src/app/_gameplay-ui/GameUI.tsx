@@ -1,7 +1,7 @@
 "use client";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import MainMenuPanel from "../_main-menu/_home/MainMenuPanel";
+import MainMenuPanel from "../_main-menu/MainMenuPanel";
 import useSendBoardItemData from "./useSendBoardItemData";
 import useTurnListener from "./useTurnListener";
 import useSetGameState from "./useSetGameState";
@@ -53,11 +53,16 @@ export default function GameUI() {
     return () => {
       removeEventListener("ShowGamePlayUI", handleShowGamePlayUI);
     };
-  }, [addEventListener, removeEventListener, handleShowGamePlayUI, isGameActive]);
+  }, [
+    addEventListener,
+    removeEventListener,
+    handleShowGamePlayUI,
+    isGameActive,
+  ]);
 
   return (
     <div className="relative flex h-[calc(100dvh-3rem)] items-center justify-center bg-secondary">
-      <div className="pointer-events-none absolute z-10 flex h-full w-full items-center justify-center">
+      <div className="pointer-events-none absolute z-10 flex h-full w-full items-center justify-center overflow-hidden">
         <GamePlayUIContext.Provider value={showUI}>
           {gameState === "Menu" ? <MainMenuPanel /> : <GamePlayUI />}
         </GamePlayUIContext.Provider>

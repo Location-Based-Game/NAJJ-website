@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useToast } from "./use-toast";
-import type { MainMenuState, MainMenuStates } from "./usePanelUI";
-import { mainMenuState } from "@/store/store";
+import { MainMenuState, mainMenuState, MainMenuStates } from "@/store/store";
 import { resetClientSessionData } from "@/store/logInSlice";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { PlayerPeers } from "@/app/_unity-player/useWebRTC";
