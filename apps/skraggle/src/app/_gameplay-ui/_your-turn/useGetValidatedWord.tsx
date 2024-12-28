@@ -1,15 +1,15 @@
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
-import { submittedWordSchema, WordData } from "@schemas/wordDataSchema";
+import { challengeWordRecordSchema } from "@schemas/challengeWordSchema";
+import { WordData } from "@schemas/wordDataSchema";
 import { useAnimate } from "framer-motion";
 import { useState, useCallback, useEffect } from "react";
 import { z } from "zod";
 
-const wordsJsonSchema = submittedWordSchema.merge(
-  z.object({
+const wordsJsonSchema = z.object({
+    wordsData: challengeWordRecordSchema,
     validationType: z.custom<LetterPosValidation>(),
     isItemDropped: z.boolean(),
-  }),
-);
+  })
 
 export default function useGetValidatedWord() {
   const [enableButton, setEnableButton] = useState(true);
@@ -17,7 +17,7 @@ export default function useGetValidatedWord() {
   const [buttonLabel, setButtonLabel] =
     useState<ButtonLabels>("No letters placed");
   const [scopeLabel, animateLabel] = useAnimate();
-  const [wordsData, setWordsData] = useState<WordData[]>([]);
+  const [wordsData, setWordsData] = useState<Record<string, WordData>>({});
 
   const setButtonState = useCallback(
     (json: any) => {
@@ -29,7 +29,7 @@ export default function useGetValidatedWord() {
         setEnableButton(true);
         setWordsData(data.wordsData);
       } else {
-        setWordsData([]);
+        setWordsData({});
       }
 
       switch (data.validationType) {

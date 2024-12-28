@@ -13,14 +13,14 @@
 export { addPlayer } from "./endpoints/addPlayer";
 export { changePlayerColor } from "./endpoints/changePlayerColor";
 export { createRoom } from "./endpoints/createRoom";
-export { endTurn } from "./endpoints/endTurn";
+export { endTurnGetNewLetters } from "./endpoints/endTurnGetNewLetters";
 export { leaveGame } from "./endpoints/leaveGame";
 export { logIn } from "./endpoints/logIn";
 export { rejoin } from "./endpoints/rejoin";
 export { sendPeerSignal } from "./endpoints/sendPeerSignal";
 export { setInventory } from "./endpoints/setInventory";
 export { startGame } from "./endpoints/startGame";
-export { submitWord } from "./endpoints/submitWord";
+export { submitChallengeWords } from "./endpoints/submitChallengeWords";
 
 export { onPlayerDisconnect } from "./events/onPlayerDisconnect";
 

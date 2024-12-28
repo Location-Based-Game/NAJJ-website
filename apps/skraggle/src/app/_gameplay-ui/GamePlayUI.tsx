@@ -5,9 +5,9 @@ import YourTurnUI from "./_your-turn/YourTurnUI";
 import PlayerListGameplay from "./PlayerListGameplay";
 import { useCallback } from "react";
 import useSendBoardItemData from "./useSendBoardItemData";
-import useSetInventories from "./useSetInventories";
 import useSpawnItems from "./useSpawnItems";
 import useTurnListener from "./useTurnListener";
+import useChallengeWordsListener from "./useChallengeWordsListener";
 
 export default function GameplayUI() {
   const { state } = useSelector((state: RootState) => state.gameState);
@@ -15,10 +15,10 @@ export default function GameplayUI() {
     (state: RootState) => state.turnState,
   );
 
-  useSetInventories();
   useSpawnItems();
   useSendBoardItemData();
   useTurnListener();
+  useChallengeWordsListener();
 
   const getGamePlayUI = useCallback(() => {
     if (state !== "Gameplay" && state !== "FirstTurn") return;

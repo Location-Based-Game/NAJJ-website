@@ -1,5 +1,5 @@
 import { onValueUpdated } from "firebase-functions/v2/database";
-import { PlayersData } from "../types";
+import { Inventory, PlayersData } from "../types";
 import { db } from "../lib/firebaseAdmin";
 import { logger } from "firebase-functions";
 import { incrementTurn } from "../firebase-actions/incrementTurn";
@@ -29,7 +29,18 @@ export const onPlayerDisconnect = onValueUpdated(
 
       const playerId = (await playerRef.get()).key as string;
       //will increment turn if it is the current player's turn
-      await incrementTurn(gameId, playerId)
+      const {validTurn} = await incrementTurn(gameId, playerId)
+      if (validTurn) {
+        const currentPlacedLettersRef = db.ref(`activeGames/${gameId}/challengeWords/placedLetters`);
+        const currentPlacedLetters = (await currentPlacedLettersRef.get()).val() as string[]
+        const gridRef = db.ref(`activeGames/${gameId}/grid`);
+        await Promise.all(currentPlacedLetters.map(async (itemId) => {
+          await gridRef.child(itemId).remove();
+        }))
+
+        const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
+        await challengeWordsRef.remove();
+      }
 
       transitionTurnsDiceRollToFirstTurn(gameId)
 

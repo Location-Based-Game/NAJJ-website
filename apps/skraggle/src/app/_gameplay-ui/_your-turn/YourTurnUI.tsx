@@ -2,6 +2,8 @@ import { createContext, useContext } from "react";
 import EndTurnButton from "./EndTurnButton";
 import useGetValidatedWord from "./useGetValidatedWord";
 import CurrentTurnWordsList from "./CurrentTurnWordsList";
+import { useGameplayUIContext } from "../GameplayUIContextProvider";
+import ChallengeWords from "./ChallengeWords";
 
 const ValidatedWordContext = createContext<ReturnType<
   typeof useGetValidatedWord
@@ -9,11 +11,18 @@ const ValidatedWordContext = createContext<ReturnType<
 
 export default function YourTurnUI() {
   const validatedWordData = useGetValidatedWord();
+  const { challengeWords } = useGameplayUIContext();
 
   return (
     <ValidatedWordContext.Provider value={validatedWordData}>
-      <CurrentTurnWordsList />
-      <EndTurnButton ref={validatedWordData.scopeLabel} />
+      {Object.keys(challengeWords).length === 0 ? (
+        <>
+          <CurrentTurnWordsList />
+          <EndTurnButton ref={validatedWordData.scopeLabel} />
+        </>
+      ) : (
+        <ChallengeWords />
+      )}
     </ValidatedWordContext.Provider>
   );
 }

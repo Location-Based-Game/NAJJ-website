@@ -1,7 +1,7 @@
 import { serverTimestamp } from "firebase/database";
 import { db, Reference } from "../lib/firebaseAdmin";
 import { GameStates, PlayerData } from "../types";
-import { GetLetterBlocks } from "../endpoints/setInventory";
+import { getLetterBlocks } from "../lib/getLetterBlocks";
 
 export async function addPlayer(
   gameId: string,
@@ -41,7 +41,7 @@ export async function addPlayer(
     const inventoriesRef = db.ref(
       `activeGames/${gameId}/inventories/${playerId}`,
     );
-    const letterBlocks = GetLetterBlocks({}, playerId);
+    const letterBlocks = getLetterBlocks({}, playerId);
     await inventoriesRef.set(letterBlocks);
   }
 

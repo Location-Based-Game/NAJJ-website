@@ -4,7 +4,7 @@ import { RootState } from "@/store/store";
 import { ref, onValue } from "firebase/database";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useUnityReactContext } from "../_unity-player/UnityContext";
+import { useUnityReactContext } from "./_unity-player/UnityContext";
 import useLogOut from "@/hooks/useLogOut";
 import { GameStates } from "@types";
 

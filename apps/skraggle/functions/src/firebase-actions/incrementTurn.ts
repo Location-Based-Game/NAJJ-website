@@ -40,7 +40,7 @@ export async function incrementTurn(
 
       return nextTurn;
     });
-
+    
     return { validTurn: true, gameState };
   } else {
     return { validTurn: false, gameState };

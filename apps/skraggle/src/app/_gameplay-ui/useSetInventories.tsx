@@ -1,37 +1,66 @@
-import { RootState } from "@/store/store";
-import { useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useCallback, useEffect, useRef } from "react";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
+import {
+  CurrentItemsType,
+  currentItemsSchema,
+} from "@schemas/currentItemsSchema";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
-import { SetInventorySchemaType } from "../../../functions/src/endpoints/setInventory";
 
 /**
  * Listens for events in the Unity instance to update inventory in rtdb
  */
 export default function useSetInventories() {
-  const { addEventListener, removeEventListener } = useUnityReactContext();
+  const { addEventListener, removeEventListener, callUnityFunction } =
+    useUnityReactContext();
   const { logOutOnError } = useLogOut();
 
-  const updateInventory = useCallback(
-    (json: any) => {
-      const body: SetInventorySchemaType = {
-        currentItems: json ? JSON.parse(json) : {},
-      };
-      fetchApi("setInventory", body).catch((error) => {
-        logOutOnError(error);
-      });
-    },
-    [],
-  );
+  const getCurrentItemsResolve = useRef<(value: CurrentItemsType) => void>();
+  const currentItemsRef = useRef<CurrentItemsType | null>(null);
+
+  const getCurrentItems = async () => {
+    const promise = new Promise<CurrentItemsType>((resolve) => {
+      getCurrentItemsResolve.current = resolve;
+    });
+    callUnityFunction("SendInventoryData");
+    await promise;
+    return currentItemsRef.current!;
+  };
+
+  const getCurrentItemsFromUnity = useCallback((json: any) => {
+    const data = {
+      currentItems: json ? JSON.parse(json) : {},
+    };
+    const currentItems = currentItemsSchema.parse(data);
+    if (getCurrentItemsResolve.current === undefined) return;
+    currentItemsRef.current = currentItems;
+    getCurrentItemsResolve.current(currentItems);
+  }, []);
+
+  const updateInventory = useCallback((json: any) => {
+    const data = {
+      currentItems: json ? JSON.parse(json) : {},
+    };
+    const { currentItems } = currentItemsSchema.parse(data);
+    fetchApi("setInventory", { currentItems }).catch((error) => {
+      logOutOnError(error);
+    });
+  }, []);
 
   useEffect(() => {
     addEventListener("UpdateInventory", updateInventory);
-    addEventListener("FetchFirstLetterBlocks", updateInventory);
+    addEventListener("SendCurrentItems", getCurrentItemsFromUnity);
 
     return () => {
       removeEventListener("UpdateInventory", updateInventory);
-      removeEventListener("FetchFirstLetterBlocks", updateInventory);
+      removeEventListener("SendCurrentItems", getCurrentItemsFromUnity);
     };
-  }, [addEventListener, removeEventListener, updateInventory]);
+  }, [
+    addEventListener,
+    removeEventListener,
+    updateInventory,
+    getCurrentItemsFromUnity,
+  ]);
+
+  return { getCurrentItems };
 }

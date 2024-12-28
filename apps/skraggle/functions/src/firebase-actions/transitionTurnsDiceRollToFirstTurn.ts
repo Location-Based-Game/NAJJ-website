@@ -1,5 +1,5 @@
-import { GetLetterBlocks } from "../endpoints/setInventory";
 import { db } from "../lib/firebaseAdmin";
+import { getLetterBlocks } from "../lib/getLetterBlocks";
 import { GameStates, Inventories, PlayersData } from "../types";
 
 /**
@@ -27,7 +27,7 @@ export async function transitionTurnsDiceRollToFirstTurn(gameId: string) {
 
   const letterBlockInventories: Inventories = {};
   Object.keys(players).forEach((id) => {
-    letterBlockInventories[id] = GetLetterBlocks({}, id);
+    letterBlockInventories[id] = getLetterBlocks({}, id);
   });
 
   inventoriesRef.set(letterBlockInventories);

@@ -1,25 +1,32 @@
 import { Button } from "@/components/ui/button";
-import React, { forwardRef, HTMLAttributes, useContext } from "react";
+import React, { forwardRef, HTMLAttributes } from "react";
 import { motion, MotionProps } from "framer-motion";
 import { fetchApi } from "@/lib/fetchApi";
 import { useValidatedWordContext } from "./YourTurnUI";
-import { SubmittedWordType } from "@schemas/wordDataSchema";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
+import useSetInventories from "../useSetInventories";
+import useLogOut from "@/hooks/useLogOut";
+import { SubmittedChallengeWords } from "@schemas/challengeWordSchema";
 
 const MotionButton = motion.create(Button);
 
 type EndTurnButton = HTMLAttributes<HTMLButtonElement> & MotionProps;
 
 const EndTurnButton = forwardRef<HTMLSpanElement, EndTurnButton>(({}, ref) => {
-  const { showGameplayUI } = useGameplayUIContext();
+  const { showGameplayUI, getCurrentItems } = useGameplayUIContext();
   const { setEnableButton, enableButton, buttonLabel, wordsData } =
     useValidatedWordContext();
+  const { logOutOnError } = useLogOut();
 
   const handleEndTurn = async () => {
-    const data: SubmittedWordType = {
-      wordsData,
+    const { currentItems } = await getCurrentItems();
+    const data: SubmittedChallengeWords = {
+      submittedChallengeWords: wordsData,
+      currentItems,
     };
-    await fetchApi("endTurn");
+    await fetchApi("submitChallengeWords", data).catch((error) => {
+      logOutOnError(error);
+    });
   };
 
   return (

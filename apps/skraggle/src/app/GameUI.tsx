@@ -2,11 +2,11 @@
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import MainMenuPanel from "./_main-menu/MainMenuPanel";
-import useSetGameState from "./_gameplay-ui/useSetGameState";
+import useSetGameState from "./useSetGameState";
 import { useUnityReactContext } from "./_unity-player/UnityContext";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/tailwindUtils";
-import usePlayersData from "@/app/_gameplay-ui/usePlayersData";
+import usePlayersData from "@/app/usePlayersData";
 import GameplayUIContextProvider from "./_gameplay-ui/GameplayUIContextProvider";
 import GameplayUI from "./_gameplay-ui/GameplayUI";
 

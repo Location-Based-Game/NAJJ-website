@@ -17,7 +17,7 @@
         },
         "players": {
           ".read": true,
-          "$playerId" : {
+          "$playerId": {
             "isOnline": {
               ".read": true,
               ".write": "newData.isBoolean() && root.child('activeGames').child($gameId).child('players').child($playerId).exists()"
@@ -41,6 +41,11 @@
                 ".write": "(newData.val() === 'pending' || newData.val() === 'offline' || newData.val() === 'sent') && root.child('activeGames').child($gameId).child('signaling').child('players').child($playerId).exists()"
               }
             }
+          }
+        },
+        "challengeWords": {
+          "words": {
+            ".read": true
           }
         }
       }

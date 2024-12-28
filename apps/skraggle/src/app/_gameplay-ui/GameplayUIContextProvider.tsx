@@ -1,5 +1,5 @@
 import { RootState } from "@/store/store";
-import {
+import React, {
   useState,
   useCallback,
   useEffect,
@@ -8,9 +8,15 @@ import {
 } from "react";
 import { useSelector } from "react-redux";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
+import { ChallengeWordsRecord } from "@schemas/challengeWordSchema";
+import useSetInventories from "./useSetInventories";
+import { CurrentItemsType } from "@schemas/currentItemsSchema";
 
 export const GamePlayUIContext = createContext<{
   showGameplayUI: boolean;
+  challengeWords: ChallengeWordsRecord;
+  setChallengeWords: React.Dispatch<React.SetStateAction<ChallengeWordsRecord>>;
+  getCurrentItems: () => Promise<CurrentItemsType>
 } | null>(null);
 
 export default function GameplayUIContextProvider({
@@ -19,11 +25,16 @@ export default function GameplayUIContextProvider({
   children: React.ReactNode;
 }) {
   const [showGameplayUI, setShowGameplayUI] = useState(false);
+  const [challengeWords, setChallengeWords] = useState<ChallengeWordsRecord>(
+    {},
+  );
+
   const handleShowGamePlayUI = useCallback(() => {
     setShowGameplayUI(true);
   }, []);
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const { addEventListener, removeEventListener } = useUnityReactContext();
+  const { getCurrentItems } = useSetInventories();
 
   useEffect(() => {
     if (!isGameActive) {
@@ -42,7 +53,9 @@ export default function GameplayUIContextProvider({
   ]);
 
   return (
-    <GamePlayUIContext.Provider value={{ showGameplayUI }}>
+    <GamePlayUIContext.Provider
+      value={{ showGameplayUI, challengeWords, setChallengeWords, getCurrentItems }}
+    >
       {children}
     </GamePlayUIContext.Provider>
   );
