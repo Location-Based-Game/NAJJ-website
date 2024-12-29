@@ -25,12 +25,18 @@ export const submitChallengeWords = onAuthorizedRequest(
     const currentPlacedLettersRef = db.ref(
       `activeGames/${gameId}/challengeWords/placedLetters`,
     );
-    currentPlacedLettersRef.set(
-      Object.entries(currentItems)
-        .filter(([, value]) => value.isPlaced)
-        .map(([key]) => key),
-    );
     
+    const placedItems = Object.entries(currentItems).reduce<
+      typeof currentItems
+    >((obj, [key, value]) => {
+      if (value.isPlaced) {
+        obj[key] = value;
+      }
+      return obj;
+    }, {});
+
+    currentPlacedLettersRef.set(placedItems);
+
     await moveInventoryItemToGrid(gameId, playerId, currentItems as Inventory);
 
     response.send({ data: "Success" });

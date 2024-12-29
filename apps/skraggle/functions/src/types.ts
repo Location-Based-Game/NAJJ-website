@@ -1,3 +1,4 @@
+import { ChallengeWordsRecord } from "./schemas/challengeWordSchema";
 import type { Item } from "./schemas/itemSchema";
 
 export type GameStates = "Menu" | "TurnsDiceRoll" | "FirstTurn" | "Gameplay";
@@ -9,6 +10,10 @@ export type GameRoom = {
   inventories: Inventories;
   grid: Inventory;
   currentTurn: number;
+  challengeWords?: {
+    words: ChallengeWordsRecord;
+    placedLetters: Inventory
+  }
 };
 
 export enum ItemTypes {
