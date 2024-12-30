@@ -15,7 +15,7 @@ export const createRoom = onRequest(
 
     try {
       const validatedData = createRoomSchema.safeParse(
-        JSON.parse(request.body),
+        typeof request.body === "string" ? JSON.parse(request.body) : request.body,
       );
 
       if (!validatedData.success) {
