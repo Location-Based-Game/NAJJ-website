@@ -8,11 +8,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Skraggle - Play Online for Free!",
+  title: "Skraggl.io - Play Online for Free!",
   keywords:
     "video game, game, online, multiplayer, words, action, tabletop, party",
   description:
-    "Make your own rules! Skraggle is a free online multiplayer turn-based strategy game. Construct words, collect loot, and destroy your enemies!",
+    "Make your own rules! Skraggl.io is a free online multiplayer turn-based strategy game. Construct words, collect loot, and destroy your enemies!",
   authors: [{ name: "Andrew Cao" }],
   twitter: {
     images: [
@@ -20,13 +20,13 @@ export const metadata: Metadata = {
         url: "https://skraggle.netlify.app/Site-Screenshot.png",
         width: 2300,
         height: 1293,
-        alt: "screenshot of the Skraggle",
+        alt: "screenshot of the Skraggl.io",
       },
     ],
     card: "summary_large_image",
-    title: "Skraggle - Play Online for Free!",
+    title: "Skraggl.io - Play Online for Free!",
     description:
-      "Make your own rules! Skraggle is a free online multiplayer turn-based strategy game. Construct words, collect loot, and destroy your enemies!",
+      "Make your own rules! Skraggl.io is a free online multiplayer turn-based strategy game. Construct words, collect loot, and destroy your enemies!",
   },
   openGraph: {
     images: [
@@ -34,12 +34,12 @@ export const metadata: Metadata = {
         url: "https://skraggle.netlify.app/Site-Screenshot.png",
         width: 2300,
         height: 1293,
-        alt: "screenshot of the Skraggle",
+        alt: "screenshot of the Skraggl.io",
       },
     ],
-    title: "Skraggle - Play Online for Free!",
+    title: "Skraggl.io - Play Online for Free!",
     description:
-      "Make your own rules! Skraggle is a free online multiplayer turn-based strategy game. Construct words, collect loot, and destroy your enemies!",
+      "Make your own rules! Skraggl.io is a free online multiplayer turn-based strategy game. Construct words, collect loot, and destroy your enemies!",
     url: "https://skraggle.netlify.app/",
     type: "website",
   },

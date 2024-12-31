@@ -86,10 +86,10 @@ function DropdownTrigger() {
       </div>
       <div className="grid flex-1 text-left text-sm leading-tight">
         <span className="truncate font-extrabold tracking-wider">
-          {gameId ? gameId : "Skraggle"}
+          {gameId ? gameId : "Skraggl.io"}
         </span>
         <span className="truncate text-xs opacity-60">
-          {gameId ? "Party Mode" : "Play online for free!"}
+          {gameId ? "Skraggl.io" : "Play online for free!"}
         </span>
       </div>
       {gameId && <CaretSortIcon className="ml-auto" />}

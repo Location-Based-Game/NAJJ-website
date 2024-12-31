@@ -3,7 +3,9 @@ import EndTurnButton from "./EndTurnButton";
 import useGetValidatedWord from "./useGetValidatedWord";
 import CurrentTurnWordsList from "./CurrentTurnWordsList";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
-import ChallengeWords from "./ChallengeWords";
+import ChallengeWordsContainer from "./ChallengeWordsContainer";
+import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const ValidatedWordContext = createContext<ReturnType<
   typeof useGetValidatedWord
@@ -15,14 +17,20 @@ export default function YourTurnUI() {
 
   return (
     <ValidatedWordContext.Provider value={validatedWordData}>
-      {Object.keys(challengeWords).length === 0 ? (
-        <>
-          <CurrentTurnWordsList />
-          <EndTurnButton ref={validatedWordData.scopeLabel} />
-        </>
-      ) : (
-        <ChallengeWords />
-      )}
+      <AnimatePresence mode="wait">
+        {Object.keys(challengeWords).length === 0 ? (
+          <motion.div
+            exit={{ opacity: 0, y: 20 }}
+            key={0}
+            className="static flex h-full w-full items-center justify-center"
+          >
+            <CurrentTurnWordsList />
+            <EndTurnButton ref={validatedWordData.scopeLabel} />
+          </motion.div>
+        ) : (
+          <ChallengeWordsContainer />
+        )}
+      </AnimatePresence>
     </ValidatedWordContext.Provider>
   );
 }

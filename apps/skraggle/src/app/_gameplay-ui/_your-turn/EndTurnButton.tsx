@@ -4,7 +4,6 @@ import { motion, MotionProps } from "framer-motion";
 import { fetchApi } from "@/lib/fetchApi";
 import { useValidatedWordContext } from "./YourTurnUI";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
-import useSetInventories from "../useSetInventories";
 import useLogOut from "@/hooks/useLogOut";
 import { SubmittedChallengeWords } from "@schemas/challengeWordSchema";
 
