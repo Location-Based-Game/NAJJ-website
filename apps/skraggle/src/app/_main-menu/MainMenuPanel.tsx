@@ -11,6 +11,7 @@ import JoinGame from "./_join-game/JoinGame";
 import JoinLogIn from "./_join-game/JoinLogIn";
 import { useEffect, useState } from "react";
 import InnerPanelWrapper from "./InnerPanelWrapper";
+import Image from "next/image";
 
 export default function MainMenuPanel() {
   const { state } = useSelector((state: RootState) => state.mainMenu);
@@ -54,6 +55,9 @@ export default function MainMenuPanel() {
       className="pointer-events-auto relative z-10 flex h-full items-center justify-center"
       style={{ width: targetWidth }}
     >
+      <div className="absolute top-[4rem] h-[300px] w-[700px]">
+        <Image src="/Logo.png" alt="Skraggl.io Logo" fill objectFit="contain" />
+      </div>
       <AnimatePresence mode="popLayout" initial={false}>
         {currentUI}
       </AnimatePresence>
