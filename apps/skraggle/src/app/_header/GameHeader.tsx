@@ -1,7 +1,7 @@
 "use client";
 import { Separator } from "@/components/ui/separator";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar/sidebar";
 import MainMenuBreadCrumb from "./MainMenuBreadCrumb";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";

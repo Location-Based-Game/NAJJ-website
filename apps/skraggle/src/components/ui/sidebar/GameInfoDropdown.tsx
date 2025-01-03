@@ -11,7 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/sidebar/sidebar";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -21,6 +21,7 @@ import useLogOut from "@/hooks/useLogOut";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { useState } from "react";
 import { useLeaveGame } from "@/app/LeaveGameProvider";
+import { cn } from "@/lib/tailwindUtils";
 
 export function GameInfoDropdown() {
   const { leaveGame } = useLogOut();
@@ -47,7 +48,7 @@ export function GameInfoDropdown() {
                   setDropdownOpen(false);
                   await leaveGame("Home");
                   callUnityFunction("ResetGame");
-                }
+                };
                 setOpenDialogue(true);
               }}
             >
@@ -84,11 +85,16 @@ function DropdownTrigger() {
           {handleIcon()}
         </span>
       </div>
-      <div className="grid flex-1 text-left text-sm leading-tight">
+      <div
+        className={cn(
+          "grid flex-1 text-left text-sm leading-tight",
+          styles.headerText,
+        )}
+      >
         <span className="truncate font-extrabold tracking-wider">
           {gameId ? gameId : "Skraggl.io"}
         </span>
-        <span className="truncate text-xs opacity-60">
+        <span className="truncate text-xs opacity-80">
           {gameId ? "Skraggl.io" : "Play online for free!"}
         </span>
       </div>

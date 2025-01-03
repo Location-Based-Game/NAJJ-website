@@ -1,7 +1,7 @@
 import GameUI from "./GameUI";
 import UnityContextProvider from "./_unity-player/UnityContext";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar/sidebar";
 import GameHeader from "./_header/GameHeader";
 import LeaveGameProvider from "./LeaveGameProvider";
 

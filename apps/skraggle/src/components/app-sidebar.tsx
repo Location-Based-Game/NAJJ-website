@@ -1,36 +1,38 @@
 "use client";
 
-import { NavMain } from "@/components/NavMain";
-import { GameInfoDropdown } from "@/components/GameInfoDropdown";
+import { SidebarNavMain } from "@/components/SidebarNavMain";
+import { GameInfoDropdown } from "@/components/ui/sidebar/GameInfoDropdown";
 import {
-  Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/sidebar/sidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { NavGameplay } from "./NavGameplay";
+import { SidebarNavGameplay } from "./SidebarNavGameplay";
+import SidebarRail from "./ui/sidebar/SidebarRail";
+import SidebarBase from "./ui/sidebar/SidebarBase";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const {isGameActive} = useSelector((state:RootState) => state.gameState)
-  
+export function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof SidebarBase>) {
+  const { isGameActive } = useSelector((state: RootState) => state.gameState);
+
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <SidebarBase collapsible="icon" {...props}>
       <SidebarHeader>
         <GameInfoDropdown />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          {isGameActive ? <NavGameplay /> : <NavMain />}
+          {isGameActive ? <SidebarNavGameplay /> : <SidebarNavMain />}
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <></>
       </SidebarFooter>
       <SidebarRail />
-    </Sidebar>
+    </SidebarBase>
   );
 }

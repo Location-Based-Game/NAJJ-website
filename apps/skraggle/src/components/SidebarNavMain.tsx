@@ -6,7 +6,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/sidebar/sidebar";
 import Link from "next/link";
 
 export const navItems = [
@@ -37,7 +37,7 @@ export const navItems = [
   },
 ];
 
-export function NavMain() {
+export function SidebarNavMain() {
   return (
     <SidebarMenu>
       {navItems.map((item, i) => {

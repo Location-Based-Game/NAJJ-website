@@ -1,7 +1,7 @@
 "use client";
 
 import { BookA, List, Users } from "lucide-react";
-import { navItems } from "./NavMain";
+import { navItems } from "./SidebarNavMain";
 
 import {
   Collapsible,
@@ -16,7 +16,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/sidebar/sidebar";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,7 +26,7 @@ import { useSelector } from "react-redux";
 
 const AnimatedDropdown = motion.create(SidebarMenuSub);
 
-export function NavGameplay() {
+export function SidebarNavGameplay() {
   const players = useSelector((state: RootState) => state.players);
 
   return (
