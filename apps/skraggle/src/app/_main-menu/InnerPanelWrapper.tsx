@@ -1,7 +1,9 @@
+import { cn } from "@/lib/tailwindUtils";
 import { RootState } from "@/store/store";
 import { motion, MotionProps } from "framer-motion";
 import React, { createContext, forwardRef, HTMLAttributes, useContext, useState } from "react";
 import { useSelector } from "react-redux";
+import styles from "../panel.module.css"
 
 type InnerPanelWrapper = HTMLAttributes<HTMLDivElement> &
   MotionProps & {
@@ -38,9 +40,10 @@ const InnerPanelWrapper = forwardRef<HTMLDivElement, InnerPanelWrapper>(
           opacity: { duration: 0.2 }
         }}
         onAnimationComplete={() => setEnableButtons(true)}
-        className="flex w-full flex-col items-center justify-center gap-4 rounded-md bg-background p-8"
+        className={cn("flex w-full flex-col items-center relative justify-center gap-4", styles.woodBorder)}
         {...props}
       >
+        <div className={styles.woodBackground}></div>
         <MenuButtonsContext.Provider value={{enableButtons, setEnableButtons}}>
           {props.children}
         </MenuButtonsContext.Provider>
