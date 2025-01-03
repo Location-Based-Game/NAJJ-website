@@ -11,7 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar/sidebar";
+} from "@/components/sidebar/sidebar";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -76,7 +76,7 @@ function DropdownTrigger() {
   };
 
   const content = (
-    <>
+    <SidebarMenuButton className="h-12 text-sm hover:bg-transparent active:bg-transparent pr-6 group-data-[collapsible=icon]:!p-0">
       <div className={styles.tileIcon}>
         <span className="z-[2] text-lg font-black text-black">
           {handleIcon()}
@@ -87,8 +87,7 @@ function DropdownTrigger() {
       </div>
       <div
         className={cn(
-          "grid flex-1 text-left text-sm leading-tight",
-          styles.headerText,
+          "grid flex-1 text-left text-sm leading-tight [text-shadow:rgb(0,0,0)1px_0px_4px]",
         )}
       >
         <span className="truncate font-extrabold tracking-wider">
@@ -99,28 +98,12 @@ function DropdownTrigger() {
         </span>
       </div>
       {gameId && <CaretSortIcon className="ml-auto" />}
-    </>
+    </SidebarMenuButton>
   );
 
   if (gameId) {
-    return (
-      <DropdownMenuTrigger asChild>
-        <SidebarMenuButton
-          size="lg"
-          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-        >
-          {content}
-        </SidebarMenuButton>
-      </DropdownMenuTrigger>
-    );
+    return <DropdownMenuTrigger asChild>{content}</DropdownMenuTrigger>;
   } else {
-    return (
-      <SidebarMenuButton
-        size="lg"
-        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-      >
-        {content}
-      </SidebarMenuButton>
-    );
+    return content;
   }
 }

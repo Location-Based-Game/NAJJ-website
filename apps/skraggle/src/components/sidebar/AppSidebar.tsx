@@ -1,18 +1,18 @@
 "use client";
 
-import { SidebarNavMain } from "@/components/SidebarNavMain";
-import { GameInfoDropdown } from "@/components/ui/sidebar/GameInfoDropdown";
+import { SidebarNavMain } from "@/components/sidebar/SidebarNavMain";
+import { GameInfoDropdown } from "@/components/sidebar/GameInfoDropdown";
 import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-} from "@/components/ui/sidebar/sidebar";
+} from "@/components/sidebar/sidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { SidebarNavGameplay } from "./SidebarNavGameplay";
-import SidebarRail from "./ui/sidebar/SidebarRail";
-import SidebarBase from "./ui/sidebar/SidebarBase";
+import SidebarRail from "./SidebarRail";
+import SidebarBase from "./SidebarBase";
 
 export function AppSidebar({
   ...props

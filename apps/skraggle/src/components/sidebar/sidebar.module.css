@@ -96,7 +96,18 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, #3d2d20 0%, #d4d4d4 100%);
+  background: linear-gradient(180deg, #3d2d20 0%, #a18c80 100%);
   mix-blend-mode: multiply;
-  border-bottom: solid 2px #c9b9a2;
+  border-bottom: solid 2px #5e4c34;
+}
+
+.sidebarItemsBackground::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 150%;
+  background: linear-gradient(180deg, #3d2d20c4 0%, #62554bd0 35.5%, #9A928B 65%, #FFFFFF 100%);
+  mix-blend-mode: multiply;
 }

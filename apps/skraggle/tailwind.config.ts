@@ -69,7 +69,10 @@ const config: Config = {
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
   			}
-  		}
+  		},
+		dropShadow: {
+			dark:'0 2px 12px rgba(0, 0, 0, 1)'
+		}
   	}
   },
   plugins: [require("tailwindcss-animate")],

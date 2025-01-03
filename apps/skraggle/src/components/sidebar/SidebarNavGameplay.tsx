@@ -1,7 +1,6 @@
 "use client";
 
 import { BookA, List, Users } from "lucide-react";
-import { navItems } from "./SidebarNavMain";
 
 import {
   Collapsible,
@@ -16,13 +15,14 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from "@/components/ui/sidebar/sidebar";
+} from "@/components/sidebar/sidebar";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { navItems } from "./SidebarNavMain";
 
 const AnimatedDropdown = motion.create(SidebarMenuSub);
 
