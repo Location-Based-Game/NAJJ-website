@@ -1,9 +1,11 @@
-import GameUI from "./GameUI";
+import Viewport from "./Viewport";
 import UnityContextProvider from "./_unity-player/UnityContext";
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
-import { SidebarInset, SidebarProvider } from "@/components/sidebar/sidebar";
+import { SidebarProvider } from "@/components/sidebar/sidebar";
 import GameHeader from "./_header/GameHeader";
 import LeaveGameProvider from "./LeaveGameProvider";
+import styles from "./main.module.css";
+import { cn } from "@/lib/tailwindUtils";
 
 export default function Home() {
   return (
@@ -11,12 +13,41 @@ export default function Home() {
       <UnityContextProvider>
         <LeaveGameProvider>
           <AppSidebar className="pointer-events-auto" />
-          <SidebarInset>
-            <GameHeader />
-            <GameUI />
-          </SidebarInset>
+          <Main />
         </LeaveGameProvider>
       </UnityContextProvider>
     </SidebarProvider>
+  );
+}
+
+function Main() {
+  return (
+    <main
+      className={cn(
+        styles.mainBackground,
+        "relative flex h-dvh flex-1 bg-[#2A2A3C]",
+      )}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute h-full w-full mix-blend-multiply"
+      >
+        <filter id="noiseFilter">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.6"
+            numOctaves="3"
+            stitchTiles="stitch"
+          />
+        </filter>
+
+        <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+      </svg>
+      <div className="grow">
+        <GameHeader />
+        <Viewport className={styles.viewPort} />
+      </div>
+      <div className="w-[14rem]"></div>
+    </main>
   );
 }
