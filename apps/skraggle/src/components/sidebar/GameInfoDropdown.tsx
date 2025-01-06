@@ -47,7 +47,6 @@ export function GameInfoDropdown() {
                 onLeave.current = async () => {
                   setDropdownOpen(false);
                   await leaveGame("Home");
-                  callUnityFunction("ResetGame");
                 };
                 setOpenDialogue(true);
               }}

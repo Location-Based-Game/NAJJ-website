@@ -2,7 +2,6 @@
 
 import { useUnityContext } from "react-unity-webgl";
 import { UnityReactContext } from "@/app/_unity-player/UnityContext";
-import useWebRTC from "@/app/_unity-player/useWebRTC";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 
 export default function MockUnityPlayer({
@@ -40,10 +39,8 @@ export default function MockUnityPlayer({
     }
   };
 
-  const { playerPeers } = useWebRTC(false, callUnityFunction);
-
   return (
-    <UnityReactContext.Provider value={{...mockUnityContext, splashScreenComplete: false, playerPeers, callUnityFunction }}>
+    <UnityReactContext.Provider value={{...mockUnityContext, splashScreenComplete: false, callUnityFunction }}>
       {children}
     </UnityReactContext.Provider>
   );

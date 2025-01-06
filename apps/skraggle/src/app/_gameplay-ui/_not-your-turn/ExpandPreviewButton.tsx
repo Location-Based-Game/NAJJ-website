@@ -1,30 +1,20 @@
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useGameplayUIContext } from "../GameplayUIContextProvider";
 
 export default function ExpandPreviewButton() {
-  const { sendMessage, addEventListener, removeEventListener } =
-    useUnityReactContext();
-  const [enableButton, setEnableButton] = useState(true);
-
-  const handleShowButton = () => setEnableButton(true);
-
-  useEffect(() => {
-    addEventListener("ShowOtherPlayerPreviewButton", handleShowButton);
-
-    return () => {
-      removeEventListener("ShowOtherPlayerPreviewButton", handleShowButton);
-    };
-  }, [addEventListener, removeEventListener, handleShowButton]);
+  const { sendMessage } = useUnityReactContext();
+  const { showExpandPreviewButton, setShowExpandPreviewButton } =
+    useGameplayUIContext();
 
   return (
     <Button
       variant="ghost"
       onClick={() => {
         sendMessage("Receiver", "ExpandPreview");
-        setEnableButton(false);
+        setShowExpandPreviewButton(false);
       }}
-      disabled={!enableButton}
+      disabled={!showExpandPreviewButton}
       className="pointer-events-auto absolute right-[2%] top-[2%] h-[17%] w-[17%] transition-opacity hover:bg-accent/20 disabled:opacity-0"
     ></Button>
   );

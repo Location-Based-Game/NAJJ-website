@@ -3,7 +3,6 @@ import { useUnityContext } from "react-unity-webgl";
 import { useState, useEffect, createContext, useContext } from "react";
 import useUpdateGameState from "@/app/_unity-player/useUpdateGameState";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
-import useWebRTC, { PlayerPeers } from "./useWebRTC";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 
 export type CallUnityFunctionType = (
@@ -13,7 +12,6 @@ export type CallUnityFunctionType = (
 
 type UnityData = UnityContextHook & {
   splashScreenComplete: boolean;
-  playerPeers: React.MutableRefObject<PlayerPeers>;
   callUnityFunction: CallUnityFunctionType;
 };
 
@@ -65,14 +63,12 @@ export default function UnityContextProvider({
   }, [isLoaded]);
 
   useUpdateGameState(unityContext);
-  const { playerPeers } = useWebRTC(splashScreenComplete, callUnityFunction);
-
+  
   return (
     <UnityReactContext.Provider
       value={{
         ...unityContext,
         splashScreenComplete,
-        playerPeers,
         callUnityFunction,
       }}
     >

@@ -9,14 +9,14 @@ import { cn } from "@/lib/tailwindUtils";
 
 export default function Home() {
   return (
-    <SidebarProvider>
-      <UnityContextProvider>
+    <UnityContextProvider>
+      <SidebarProvider>
         <LeaveGameProvider>
           <AppSidebar className="pointer-events-auto" />
           <Main />
         </LeaveGameProvider>
-      </UnityContextProvider>
-    </SidebarProvider>
+      </SidebarProvider>
+    </UnityContextProvider>
   );
 }
 

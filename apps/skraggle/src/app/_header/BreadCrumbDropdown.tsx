@@ -56,7 +56,6 @@ export default function BreadCrumbDropdown({
                 onLeave.current = async () => {
                   setDropdownOpen(false);
                   await leaveGame(menuItem);
-                  callUnityFunction("ResetGame");
                 }
                 setOpenDialogue(true);
               } else {

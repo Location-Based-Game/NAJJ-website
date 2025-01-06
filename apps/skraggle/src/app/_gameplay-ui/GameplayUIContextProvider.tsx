@@ -11,12 +11,15 @@ import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { ChallengeWordsRecord } from "@schemas/challengeWordSchema";
 import useSetInventories from "./useSetInventories";
 import { CurrentItemsType } from "@schemas/currentItemsSchema";
+import useWebRTC from "../_unity-player/useWebRTC";
 
 export const GamePlayUIContext = createContext<{
   showGameplayUI: boolean;
   challengeWords: ChallengeWordsRecord;
   setChallengeWords: React.Dispatch<React.SetStateAction<ChallengeWordsRecord>>;
-  getCurrentItems: () => Promise<CurrentItemsType>
+  getCurrentItems: () => Promise<CurrentItemsType>;
+  setShowExpandPreviewButton: React.Dispatch<React.SetStateAction<boolean>>;
+  showExpandPreviewButton: boolean;
 } | null>(null);
 
 export default function GameplayUIContextProvider({
@@ -28,6 +31,7 @@ export default function GameplayUIContextProvider({
   const [challengeWords, setChallengeWords] = useState<ChallengeWordsRecord>(
     {},
   );
+  const [showExpandPreviewButton, setShowExpandPreviewButton] = useState(true);
 
   const handleShowGamePlayUI = useCallback(() => {
     setShowGameplayUI(true);
@@ -35,15 +39,26 @@ export default function GameplayUIContextProvider({
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const { addEventListener, removeEventListener } = useUnityReactContext();
   const { getCurrentItems } = useSetInventories();
+  useWebRTC();
+
+  const handleShowExpandPreviewButton = () => setShowExpandPreviewButton(true);
 
   useEffect(() => {
     if (!isGameActive) {
       setShowGameplayUI(false);
     }
     addEventListener("ShowGamePlayUI", handleShowGamePlayUI);
+    addEventListener(
+      "ShowOtherPlayerPreviewButton",
+      handleShowExpandPreviewButton,
+    );
 
     return () => {
       removeEventListener("ShowGamePlayUI", handleShowGamePlayUI);
+      removeEventListener(
+        "ShowOtherPlayerPreviewButton",
+        handleShowExpandPreviewButton,
+      );
     };
   }, [
     addEventListener,
@@ -54,7 +69,14 @@ export default function GameplayUIContextProvider({
 
   return (
     <GamePlayUIContext.Provider
-      value={{ showGameplayUI, challengeWords, setChallengeWords, getCurrentItems }}
+      value={{
+        showGameplayUI,
+        challengeWords,
+        setChallengeWords,
+        getCurrentItems,
+        showExpandPreviewButton,
+        setShowExpandPreviewButton,
+      }}
     >
       {children}
     </GamePlayUIContext.Provider>

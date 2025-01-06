@@ -1,13 +1,15 @@
+"use client"
 import { onValue, ref, set, onDisconnect } from "firebase/database";
-import { useEffect, useRef } from "react";
+import React, { createContext, useContext, useEffect, useRef } from "react";
 import { rtdb } from "../firebaseConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Peer from "simple-peer";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
-import { CallUnityFunctionType } from "./UnityContext";
+import { useUnityReactContext } from "./UnityContext";
 import { setStatus } from "@/store/peerStatusSlice";
+import {signal} from "@preact/signals-react"
 
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
@@ -21,10 +23,9 @@ type SignalStatusType = {
   };
 };
 
-export default function useWebRTC(
-  splashScreenComplete: boolean,
-  callUnityFunction: CallUnityFunctionType,
-) {
+export const playerPeers = signal<PlayerPeers>({})
+
+export default function useWebRTC() {
   const { gameId, playerId, playerName } = useSelector(
     (state: RootState) => state.logIn,
   );
@@ -32,11 +33,11 @@ export default function useWebRTC(
   const { enableWebRTCAfterFirstTurn } = useSelector(
     (state: RootState) => state.turnState,
   );
-  const { logOutOnError } = useLogOut(false);
-  const playerPeers = useRef<PlayerPeers>({});
+  const { logOutOnError } = useLogOut();
   const dispatch = useDispatch();
   const setPeers = useRef(false);
   const offersSent = useRef(false);
+  const { splashScreenComplete, callUnityFunction } = useUnityReactContext();
 
   useEffect(() => {
     if (!playerId) {
@@ -94,8 +95,8 @@ export default function useWebRTC(
 
       Object.keys(data).forEach((key) => {
         if (key === playerId) return;
-        if (playerPeers.current[key]) return;
-        playerPeers.current[key] = createPeer(true, key, data[key].name);
+        if (playerPeers.value[key]) return;
+        playerPeers.value[key] = createPeer(true, key, data[key].name);
         dispatch(setStatus({ playerId: key, status: "pending" }));
       });
     });
@@ -110,7 +111,7 @@ export default function useWebRTC(
       };
       const remotePeer = createPeer(false, data.playerId, data.name);
       remotePeer.signal(data.signal);
-      playerPeers.current[data.playerId] = remotePeer;
+      playerPeers.value[data.playerId] = remotePeer;
       dispatch(setStatus({ playerId: data.playerId, status: "pending" }));
     });
 
@@ -119,9 +120,9 @@ export default function useWebRTC(
       if (!snapshot.exists()) return;
       const data = snapshot.val();
       const key = data.playerId as string;
-      if (!playerPeers.current[key]) return;
-      if (playerPeers.current[key].connected) return;
-      playerPeers.current[key].signal(data.signal);
+      if (!playerPeers.value[key]) return;
+      if (playerPeers.value[key].connected) return;
+      playerPeers.value[key].signal(data.signal);
     });
 
     //unsubscribe listeners
@@ -159,8 +160,8 @@ export default function useWebRTC(
         });
       } catch (error) {
         logOutOnError(error);
-        Object.keys(playerPeers.current).forEach((key) => {
-          playerPeers.current[key].destroy(
+        Object.keys(playerPeers.value).forEach((key) => {
+          playerPeers.value[key].destroy(
             new Error(`disconnected from ${name}`),
           );
         });
@@ -177,21 +178,21 @@ export default function useWebRTC(
 
     //removes peer if player is not connected within a certain time
     setTimeout(() => {
-      if (!isConnected && playerPeers.current[peerId]) {
-        if (playerPeers.current[peerId].connected) return;
-        playerPeers.current[peerId].destroy(new Error(`${name} timed out`));
+      if (!isConnected && playerPeers.value[peerId]) {
+        if (playerPeers.value[peerId].connected) return;
+        playerPeers.value[peerId].destroy(new Error(`${name} timed out`));
       }
     }, 20000);
 
     peer.on("close", () => {
       console.log(`${name} left the game`);
-      delete playerPeers.current[peerId];
+      delete playerPeers.value[peerId];
       dispatch(setStatus({ playerId: peerId, status: "error" }));
     });
 
     peer.on("error", (error) => {
       console.log(error.message);
-      delete playerPeers.current[peerId];
+      delete playerPeers.value[peerId];
       dispatch(setStatus({ playerId: peerId, status: "error" }));
     });
 
@@ -202,10 +203,10 @@ export default function useWebRTC(
   useEffect(() => {
     if (!splashScreenComplete) return;
 
-    Object.keys(playerPeers.current).forEach((key) => {
-      playerPeers.current[key].removeAllListeners("data");
+    Object.keys(playerPeers.value).forEach((key) => {
+      playerPeers.value[key].removeAllListeners("data");
       if (!enableWebRTCAfterFirstTurn) return;
-      playerPeers.current[key].on("data", (data) => {
+      playerPeers.value[key].on("data", (data) => {
         try {
           const parsedData = JSON.parse(data);
           if (!("action" in parsedData)) return;
@@ -216,8 +217,6 @@ export default function useWebRTC(
       });
     });
   }, [splashScreenComplete, peerStatus, enableWebRTCAfterFirstTurn]);
-
-  return { playerPeers };
 }
 
 function getPreviousPeerId(

@@ -2,34 +2,27 @@ import { useDispatch } from "react-redux";
 import { useToast } from "./use-toast";
 import { MainMenuState, mainMenuState, MainMenuStates } from "@/store/store";
 import { resetClientSessionData } from "@/store/logInSlice";
-import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
-import { PlayerPeers } from "@/app/_unity-player/useWebRTC";
 import { fetchApi } from "@/lib/fetchApi";
 import { setGameState, setGameActive } from "@/store/gameStateSlice";
 import { resetTurnState } from "@/store/turnSlice";
+import { playerPeers } from "@/app/_unity-player/useWebRTC";
+import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 
 const defaultState: MainMenuState = {
   state: "Home",
   slideFrom: "left",
 };
 
-export default function useLogOut(disconnectPeers: boolean = true) {
+export default function useLogOut() {
   const dispatch = useDispatch();
   const { toast } = useToast();
-  let playerPeers: React.MutableRefObject<PlayerPeers>;
-
-  if (disconnectPeers) {
-    // eslint-disable-next-line
-    playerPeers = useUnityReactContext().playerPeers;
-  }
+  const { callUnityFunction } = useUnityReactContext();
 
   const disconnectWebRTCPeers = () => {
-    if (playerPeers) {
-      Object.keys(playerPeers.current).forEach((key) => {
-        playerPeers.current[key].destroy(new Error(`disconnected from ${key}`));
-      });
-    }
-  }
+    Object.keys(playerPeers.value).forEach((key) => {
+      playerPeers.value[key].destroy(new Error(`disconnected from ${key}`));
+    });
+  };
 
   const logOutOnError = (
     error: unknown,
@@ -49,14 +42,15 @@ export default function useLogOut(disconnectPeers: boolean = true) {
     dispatch(setGameState("Menu"));
     dispatch(setGameActive(false));
     dispatch(resetTurnState());
-    disconnectWebRTCPeers()
+    disconnectWebRTCPeers();
+    callUnityFunction("ResetGame");
   };
 
   const leaveGame = async (state: MainMenuStates = "Home") => {
     try {
       dispatch(resetClientSessionData());
       await fetchApi("leaveGame");
-      disconnectWebRTCPeers()
+      disconnectWebRTCPeers();
       dispatch(
         mainMenuState.updateState({
           state,
@@ -66,6 +60,7 @@ export default function useLogOut(disconnectPeers: boolean = true) {
       dispatch(setGameState("Menu"));
       dispatch(setGameActive(false));
       dispatch(resetTurnState());
+      callUnityFunction("ResetGame");
     } catch (error) {
       logOutOnError(error);
     }
