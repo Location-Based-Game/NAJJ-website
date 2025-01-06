@@ -58,8 +58,7 @@ export default function UnityContextProvider({
 
   useEffect(() => {
     if (!isLoaded) return;
-
-    //waits for Unity splash screen to finish
+    // Waits for Unity splash screen to finish
     setTimeout(() => {
       setSplashScreenComplete(true);
     }, 2500);

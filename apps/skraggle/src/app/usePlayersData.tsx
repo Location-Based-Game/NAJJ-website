@@ -23,8 +23,7 @@ import { PlayerData } from "@types";
 
 export default function usePlayersData() {
   const { gameId, playerId } = useSelector((state: RootState) => state.logIn);
-  const { isGameActive } = useSelector((state: RootState) => state.gameState);
-  const { callUnityFunction } = useUnityReactContext();
+  const { callUnityFunction, splashScreenComplete } = useUnityReactContext();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,17 +40,23 @@ export default function usePlayersData() {
     const addPlayerListener = onChildAdded(playersRef, (newPlayer) => {
       if (newPlayer.key === null) return;
       const data = newPlayer.val() as PlayerData;
-
+      
       dispatch(addPlayer({ key: newPlayer.key, value: data }));
       dispatch(addInitialStatus(newPlayer.key));
-      SetPlayer(data, newPlayer.key, "AddPlayer");
+      
+      // Update main player instead, since it has already been added
+      if (newPlayer.key === playerId) {
+        SetPlayer(data, newPlayer.key, "UpdatePlayer")
+      } else {
+        SetPlayer(data, newPlayer.key, "AddPlayer");
+      }
     });
 
     const playerChangedListener = onChildChanged(
       playersRef,
       (changedPlayer) => {
         if (changedPlayer.key === null) return;
-        if (!isGameActive) return;
+        if (!splashScreenComplete) return;
         const data = changedPlayer.val() as PlayerData;
 
         dispatch(
@@ -72,7 +77,7 @@ export default function usePlayersData() {
       if (removedPlayer.key === null) return;
       dispatch(removePlayer(removedPlayer.key));
 
-      if (removedPlayer.key !== playerId && isGameActive) {
+      if (removedPlayer.key !== playerId && splashScreenComplete) {
         callUnityFunction("RemovePlayer", removedPlayer.key);
       }
     });
@@ -82,10 +87,10 @@ export default function usePlayersData() {
       playerChangedListener();
       removePlayerListener();
     };
-  }, [gameId, isGameActive]);
+  }, [gameId, splashScreenComplete]);
 
   function SetPlayer(data: PlayerData, key: string, methodName: string) {
-    if (!isGameActive) return;
+    if (!splashScreenComplete) return;
     const isMainPlayer = key === playerId;
 
     callUnityFunction(methodName, {
