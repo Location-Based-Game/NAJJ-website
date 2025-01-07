@@ -11,6 +11,7 @@ import GameplayUIContextProvider from "./_gameplay-ui/GameplayUIContextProvider"
 import GameplayUI from "./_gameplay-ui/GameplayUI";
 import { forwardRef, useEffect, useState } from "react";
 import styles from "./main.module.css"
+import useTransmitWebRTCData from "./_gameplay-ui/useTransmitWebRTCData";
 
 const Unity = dynamic(
   () => import("react-unity-webgl").then((mod) => mod.Unity),
@@ -31,6 +32,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
 
     usePlayersData();
     useSetGameState();
+    useTransmitWebRTCData();
 
     const [viewPortCursor, setViewPortCursor] = useState(styles.auto)
     const updateCursor = (cursorType: any) => {

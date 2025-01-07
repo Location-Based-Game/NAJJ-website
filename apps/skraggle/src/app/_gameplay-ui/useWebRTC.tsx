@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { onValue, ref, set, onDisconnect } from "firebase/database";
-import React, { createContext, useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { rtdb } from "../firebaseConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -9,7 +9,7 @@ import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { setStatus } from "@/store/peerStatusSlice";
-import {signal} from "@preact/signals-react"
+import { signal } from "@preact/signals-react";
 
 export type PlayerPeers = {
   [playerId: string]: Peer.Instance;
@@ -23,21 +23,16 @@ type SignalStatusType = {
   };
 };
 
-export const playerPeers = signal<PlayerPeers>({})
+export const playerPeers = signal<PlayerPeers>({});
 
 export default function useWebRTC() {
   const { gameId, playerId, playerName } = useSelector(
     (state: RootState) => state.logIn,
   );
-  const peerStatus = useSelector((state: RootState) => state.peerStatus);
-  const { enableWebRTCAfterFirstTurn } = useSelector(
-    (state: RootState) => state.turnState,
-  );
   const { logOutOnError } = useLogOut();
   const dispatch = useDispatch();
   const setPeers = useRef(false);
   const offersSent = useRef(false);
-  const { splashScreenComplete, callUnityFunction } = useUnityReactContext();
 
   useEffect(() => {
     if (!playerId) {
@@ -199,24 +194,7 @@ export default function useWebRTC() {
     return peer;
   }
 
-  //listen for data when Unity player finishes loading
-  useEffect(() => {
-    if (!splashScreenComplete) return;
-
-    Object.keys(playerPeers.value).forEach((key) => {
-      playerPeers.value[key].removeAllListeners("data");
-      if (!enableWebRTCAfterFirstTurn) return;
-      playerPeers.value[key].on("data", (data) => {
-        try {
-          const parsedData = JSON.parse(data);
-          if (!("action" in parsedData)) return;
-          callUnityFunction("ControlBoardItem", data);
-        } catch (error) {
-          console.log(data);
-        }
-      });
-    });
-  }, [splashScreenComplete, peerStatus, enableWebRTCAfterFirstTurn]);
+  useReceiveWebRTCData();
 }
 
 function getPreviousPeerId(
@@ -236,4 +214,33 @@ function getPreviousPeerId(
   }
 
   return sortedPeers[targetIndex - 1][0];
+}
+
+function useReceiveWebRTCData() {
+  const { splashScreenComplete, callUnityFunction } = useUnityReactContext();
+  const peerStatus = useSelector((state: RootState) => state.peerStatus);
+  const { gameId } = useSelector((state: RootState) => state.logIn);
+  const { enableWebRTCAfterFirstTurn } = useSelector(
+    (state: RootState) => state.turnState,
+  );
+
+  //listen for data when Unity player finishes loading
+  useEffect(() => {
+    if (!splashScreenComplete) return;
+    if (!gameId) return;
+
+    Object.keys(playerPeers.value).forEach((key) => {
+      playerPeers.value[key].removeAllListeners("data");
+      if (!enableWebRTCAfterFirstTurn) return;
+      playerPeers.value[key].on("data", (data) => {
+        try {
+          const parsedData = JSON.parse(data);
+          if (!("data" in parsedData)) return;
+          callUnityFunction("ReceiveWebRTCData", data);
+        } catch (error) {
+          console.log(data);
+        }
+      });
+    });
+  }, [splashScreenComplete, peerStatus, enableWebRTCAfterFirstTurn, gameId]);
 }

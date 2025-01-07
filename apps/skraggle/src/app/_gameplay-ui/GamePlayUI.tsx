@@ -4,7 +4,6 @@ import NotYourTurnUI from "./_not-your-turn/NotYourTurnUI";
 import YourTurnUI from "./_your-turn/YourTurnUI";
 import PlayerListGameplay from "./PlayerListGameplay";
 import { useCallback } from "react";
-import useSendBoardItemData from "./useSendBoardItemData";
 import useSpawnItems from "./useSpawnItems";
 import useTurnListener from "./useTurnListener";
 import useChallengeWordsListener from "./useChallengeWordsListener";
@@ -16,7 +15,6 @@ export default function GameplayUI() {
   );
 
   useSpawnItems();
-  useSendBoardItemData();
   useTurnListener();
   useChallengeWordsListener();
 

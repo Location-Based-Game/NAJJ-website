@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { playerPeers } from "./useWebRTC";
 
-export default function useSendBoardItemData() {
+export default function useTransmitWebRTCData() {
   const { addEventListener, removeEventListener } = useUnityReactContext();
 
   const handleSendData = useCallback((data: any) => {
@@ -13,10 +13,10 @@ export default function useSendBoardItemData() {
   }, []);
 
   useEffect(() => {
-    addEventListener("TransmitBoardItem", handleSendData);
+    addEventListener("TransmitWebRTCData", handleSendData);
 
     return () => {
-      removeEventListener("TransmitBoardItem", handleSendData);
+      removeEventListener("TransmitWebRTCData", handleSendData);
     };
   }, [addEventListener, removeEventListener, handleSendData]);
 }
