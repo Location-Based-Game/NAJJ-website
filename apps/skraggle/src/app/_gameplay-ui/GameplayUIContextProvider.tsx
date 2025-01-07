@@ -11,7 +11,7 @@ import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { ChallengeWordsRecord } from "@schemas/challengeWordSchema";
 import useSetInventories from "./useSetInventories";
 import { CurrentItemsType } from "@schemas/currentItemsSchema";
-import useWebRTC from "../_unity-player/useWebRTC";
+import useWebRTC from "./useWebRTC";
 
 export const GamePlayUIContext = createContext<{
   showGameplayUI: boolean;

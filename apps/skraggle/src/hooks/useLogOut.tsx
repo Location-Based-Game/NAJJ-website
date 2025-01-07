@@ -5,7 +5,7 @@ import { resetClientSessionData } from "@/store/logInSlice";
 import { fetchApi } from "@/lib/fetchApi";
 import { setGameState, setGameActive } from "@/store/gameStateSlice";
 import { resetTurnState } from "@/store/turnSlice";
-import { playerPeers } from "@/app/_unity-player/useWebRTC";
+import { playerPeers } from "@/app/_gameplay-ui/useWebRTC";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 
 const defaultState: MainMenuState = {

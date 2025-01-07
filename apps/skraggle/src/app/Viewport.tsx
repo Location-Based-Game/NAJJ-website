@@ -9,7 +9,8 @@ import { cn } from "@/lib/tailwindUtils";
 import usePlayersData from "@/app/usePlayersData";
 import GameplayUIContextProvider from "./_gameplay-ui/GameplayUIContextProvider";
 import GameplayUI from "./_gameplay-ui/GameplayUI";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
+import styles from "./main.module.css"
 
 const Unity = dynamic(
   () => import("react-unity-webgl").then((mod) => mod.Unity),
@@ -21,10 +22,29 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
     const { state: gameState, isGameActive } = useSelector(
       (state: RootState) => state.gameState,
     );
-    const { splashScreenComplete, unityProvider } = useUnityReactContext();
+    const {
+      splashScreenComplete,
+      unityProvider,
+      addEventListener,
+      removeEventListener,
+    } = useUnityReactContext();
 
     usePlayersData();
     useSetGameState();
+
+    const [viewPortCursor, setViewPortCursor] = useState(styles.auto)
+    const updateCursor = (cursorType: any) => {
+      setViewPortCursor(styles[cursorType]);
+    };
+
+    useEffect(() => {
+      if (!splashScreenComplete) return;
+      addEventListener("SetCursorType", updateCursor);
+
+      return () => {
+        removeEventListener("SetCursorType", updateCursor);
+      };
+    }, [addEventListener, removeEventListener, splashScreenComplete]);
 
     return (
       <div
@@ -46,6 +66,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
             "h-full w-full transition-opacity duration-700",
             isGameActive ? "pointer-events-auto" : "pointer-events-none",
             splashScreenComplete ? "opacity-100" : "opacity-0",
+            viewPortCursor
           )}
         />
       </div>

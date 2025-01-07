@@ -7,7 +7,7 @@ import { RootState } from "@/store/store";
 import Peer from "simple-peer";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
-import { useUnityReactContext } from "./UnityContext";
+import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { setStatus } from "@/store/peerStatusSlice";
 import {signal} from "@preact/signals-react"
 

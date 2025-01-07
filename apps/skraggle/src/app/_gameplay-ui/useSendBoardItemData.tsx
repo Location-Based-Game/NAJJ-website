@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { playerPeers } from "../_unity-player/useWebRTC";
+import { playerPeers } from "./useWebRTC";
 
 export default function useSendBoardItemData() {
   const { addEventListener, removeEventListener } = useUnityReactContext();
