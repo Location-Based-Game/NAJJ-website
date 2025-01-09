@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import ChallengeWordsList from "../ChallengeWordsList";
+import ChallengeWordsList from "../_challenge-words/ChallengeWordsList";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useMemo } from "react";

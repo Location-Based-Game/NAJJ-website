@@ -9,6 +9,8 @@ const challengeWordSchema = z.object({
   wageredItems: z.record(z.custom<Item<any>>())
 });
 
+export type ChallengeWordSchemaType = z.infer<typeof challengeWordSchema>
+
 export const challengeWord = onAuthorizedRequest(async (request, response) => {
   const validatedData = challengeWordSchema.safeParse(JSON.parse(request.body));
   if (!validatedData.success) {

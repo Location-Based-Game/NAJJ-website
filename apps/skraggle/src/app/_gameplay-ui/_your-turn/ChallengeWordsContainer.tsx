@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import ChallengeWordsList from "../ChallengeWordsList";
+import ChallengeWordsList from "../_challenge-words/ChallengeWordsList";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";

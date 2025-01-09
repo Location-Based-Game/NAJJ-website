@@ -50,9 +50,11 @@ export default function WordItem({
 
   return (
     <motion.div
+      layout={!showBonusPoints}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
+      transition={{ layout: { duration: 0.3, type: "spring" } }}
       className={cn("flex gap-2", props.className)}
     >
       <div

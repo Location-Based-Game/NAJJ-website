@@ -1,9 +1,3 @@
-import { useGameplayUIContext } from "./GameplayUIContextProvider";
-import { Button } from "@/components/ui/button";
-import { SwordsIcon } from "lucide-react";
-import WordItem from "./_your-turn/WordItem";
-import { ChallengeWordType } from "@schemas/challengeWordSchema";
-import { cn } from "@/lib/tailwindUtils";
 import useLogOut from "@/hooks/useLogOut";
 import { fetchApi } from "@/lib/fetchApi";
 import {
@@ -16,41 +10,26 @@ import { ItemTypes, LetterBlock } from "@types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import TileIcon from "@/components/TileIcon";
 import { letterPoints } from "@/lib/letterPoints";
+import { ChallengeWordSchemaType } from "../../../../functions/src/endpoints/challengeWord";
+import { Button } from "@/components/ui/button";
+import { SwordsIcon } from "lucide-react";
+import { useGameplayUIContext } from "../GameplayUIContextProvider";
+import { motion } from "framer-motion";
 
-interface ChallengeWordsList {
-  showChallengeButton: boolean;
+const MotionButton = motion(Button);
+interface SelectLettersToWagerPopover {
+  wordId: string;
 }
 
-export default function ChallengeWordsList({
-  showChallengeButton,
-}: ChallengeWordsList) {
-  const { challengeWords } = useGameplayUIContext();
-  const challengeWordItem = (key: number, wordData: ChallengeWordType) => (
-    <div
-      key={key}
-      className={cn(
-        "flex w-full items-center justify-end gap-2",
-        showChallengeButton ? "justify-end" : "justify-center",
-      )}
-    >
-      <WordItem wordData={wordData} />
-      {showChallengeButton && <SelectLettersToWagerPopover />}
-    </div>
-  );
-
-  return (
-    <div className="flex flex-col items-center gap-2">
-      {Object.values(challengeWords).map((wordData, i) => {
-        return challengeWordItem(i, wordData);
-      })}
-    </div>
-  );
-}
-
-function SelectLettersToWagerPopover() {
+export default function SelectLettersToWagerPopover({
+  wordId,
+}: SelectLettersToWagerPopover) {
   const { getCurrentItems } = useGameplayUIContext();
   const [letterBlocks, setLetterBlocks] = useState<LetterBlock[]>([]);
   const [letterSelection, setLetterSelection] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
+  const [isChallenged, setIsChallenged] = useState(false);
+  const { logOutOnError } = useLogOut();
 
   const getPointsFromSelection = () => {
     const letter = (index: string) =>
@@ -79,12 +58,39 @@ function SelectLettersToWagerPopover() {
     setLetterBlocks(letterBlocksArr as LetterBlock[]);
   };
 
+  const handleSubmit = async () => {
+    setOpen(false);
+    setIsChallenged(true);
+
+    const wageredItems = letterSelection
+      .map((index) => letterBlocks[parseInt(index)])
+      .reduce<Record<string, LetterBlock>>((obj, current) => {
+        obj[current.itemId] = current;
+        return obj;
+      }, {});
+
+    const data: ChallengeWordSchemaType = {
+      wordId,
+      wageredItems,
+    };
+
+    await fetchApi("challengeWord", data).catch((error) => {
+      logOutOnError(error);
+    });
+  };
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button className="px-2" onClick={async () => getLettersOnStand()}>
+        <MotionButton
+          layout
+          transition={{ duration: 0.3, type: "spring" }}
+          disabled={isChallenged}
+          className="px-2"
+          onClick={async () => getLettersOnStand()}
+        >
           <SwordsIcon />
-        </Button>
+        </MotionButton>
       </PopoverTrigger>
       <PopoverContent className="flex flex-col gap-2 p-2">
         <ToggleGroup type="multiple" onValueChange={setLetterSelection}>
@@ -100,7 +106,11 @@ function SelectLettersToWagerPopover() {
             );
           })}
         </ToggleGroup>
-        <Button className="w-full" disabled={letterSelection.length === 0}>
+        <Button
+          className="w-full"
+          disabled={letterSelection.length === 0}
+          onClick={handleSubmit}
+        >
           {letterSelection.length === 0 ? (
             "Select letters to wager"
           ) : (
