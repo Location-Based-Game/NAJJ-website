@@ -44,3 +44,5 @@ export enum TileType
     TripleWordScore,
     CenterStart
 }
+
+export type LetterBlock = Item<{ letter: string }>;

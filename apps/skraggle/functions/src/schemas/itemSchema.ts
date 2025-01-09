@@ -9,6 +9,7 @@ export const itemSchema = z.object({
   isPlaced: z.boolean().default(false),
   //Vector2 float array. If length = 0, object is on stand
   gridPosition: z.number().array().default([]),
+  standOrder: z.number().optional()
 });
 
 export type Item<T> = Omit<z.infer<typeof itemSchema>, "itemData"> & {

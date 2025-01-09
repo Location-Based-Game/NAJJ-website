@@ -1,13 +1,10 @@
-import { Item } from "../schemas/itemSchema";
-import { Inventory, ItemTypes } from "../types";
+import { Inventory, ItemTypes, LetterBlock } from "../types";
 import { v4 as uuidv4 } from "uuid";
 
 const letters =
   "AAAAABBCCDDDDEEEEEEFFFGGGGHHHIIIIIIJJKKLLLLMMMNNNOOOOOOPPPQRRRRRRSSSSSSTTTTTUUUUUVVWWXYYYZ___".split(
     "",
   );
-
-type LetterBlock = Item<{ letter: string }>;
 
 export function getLetterBlocks(currentItems: Inventory, playerId: string) {
   const letterBlocks: Record<string, LetterBlock> = {};

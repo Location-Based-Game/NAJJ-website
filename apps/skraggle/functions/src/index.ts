@@ -11,6 +11,7 @@
 // https://firebase.google.com/docs/functions/typescript
 
 export { addPlayer } from "./endpoints/addPlayer";
+export { challengeWord } from "./endpoints/challengeWord";
 export { changePlayerColor } from "./endpoints/changePlayerColor";
 export { createRoom } from "./endpoints/createRoom";
 export { endTurnGetNewLetters } from "./endpoints/endTurnGetNewLetters";
