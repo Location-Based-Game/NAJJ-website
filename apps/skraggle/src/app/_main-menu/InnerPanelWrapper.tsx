@@ -3,7 +3,7 @@ import { RootState } from "@/store/store";
 import { motion, MotionProps } from "framer-motion";
 import React, { createContext, forwardRef, HTMLAttributes, useContext, useState } from "react";
 import { useSelector } from "react-redux";
-import styles from "../panel.module.css"
+import styles from "@styles/panel.module.css"
 
 type InnerPanelWrapper = HTMLAttributes<HTMLDivElement> &
   MotionProps & {

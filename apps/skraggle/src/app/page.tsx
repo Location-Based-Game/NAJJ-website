@@ -4,7 +4,7 @@ import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import { SidebarProvider } from "@/components/sidebar/sidebar";
 import GameHeader from "./_header/GameHeader";
 import LeaveGameProvider from "./LeaveGameProvider";
-import styles from "./main.module.css";
+import styles from "@styles/main.module.css";
 import { cn } from "@/lib/tailwindUtils";
 
 export default function Home() {

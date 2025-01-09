@@ -12,8 +12,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
-import { CurrentItemsType } from "@schemas/currentItemsSchema";
 import { ItemTypes, LetterBlock } from "@types";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import TileIcon from "@/components/TileIcon";
+import { letterPoints } from "@/lib/letterPoints";
 
 interface ChallengeWordsList {
   showChallengeButton: boolean;
@@ -32,9 +34,7 @@ export default function ChallengeWordsList({
       )}
     >
       <WordItem wordData={wordData} />
-      {showChallengeButton && (
-        <SelectLettersToWagerPopover />
-      )}
+      {showChallengeButton && <SelectLettersToWagerPopover />}
     </div>
   );
 
@@ -50,12 +50,24 @@ export default function ChallengeWordsList({
 function SelectLettersToWagerPopover() {
   const { getCurrentItems } = useGameplayUIContext();
   const [letterBlocks, setLetterBlocks] = useState<LetterBlock[]>([]);
+  const [letterSelection, setLetterSelection] = useState<string[]>([]);
+
+  const getPointsFromSelection = () => {
+    const letter = (index: string) =>
+      letterBlocks[parseInt(index)].itemData.letter;
+
+    const totalPoints = letterSelection
+      .map((index) => letterPoints[letter(index)])
+      .reduce((a, b) => a + b, 0);
+
+    return totalPoints;
+  };
 
   const getLettersOnStand = async () => {
     const { currentItems } = await getCurrentItems();
-    Object.keys(currentItems).forEach(key => {
+    Object.keys(currentItems).forEach((key) => {
       currentItems[key].itemData = JSON.parse(currentItems[key].itemData);
-    })
+    });
 
     const letterBlocksArr = Object.values(currentItems).filter(
       (e) =>
@@ -74,13 +86,31 @@ function SelectLettersToWagerPopover() {
           <SwordsIcon />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col gap-2">
-        <div className="flex gap-4">
+      <PopoverContent className="flex flex-col gap-2 p-2">
+        <ToggleGroup type="multiple" onValueChange={setLetterSelection}>
           {letterBlocks.map((e, i) => {
-            return <Button key={i}>{e.itemData.letter}</Button>;
+            return (
+              <ToggleGroupItem
+                value={i.toString()}
+                key={i}
+                className="p-2 hover:bg-primary/30 data-[state=on]:bg-primary"
+              >
+                <TileIcon letter={e.itemData.letter} showPoints />
+              </ToggleGroupItem>
+            );
           })}
-        </div>
-        <Button>Wager</Button>
+        </ToggleGroup>
+        <Button className="w-full" disabled={letterSelection.length === 0}>
+          {letterSelection.length === 0 ? (
+            "Select letters to wager"
+          ) : (
+            <>
+              Wager&nbsp;
+              <span className="font-bold">{getPointsFromSelection()}</span>
+              &nbsp;{getPointsFromSelection() === 1 ? "point" : "points"}
+            </>
+          )}
+        </Button>
       </PopoverContent>
     </Popover>
   );

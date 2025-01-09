@@ -10,7 +10,7 @@ import usePlayersData from "@/app/usePlayersData";
 import GameplayUIContextProvider from "./_gameplay-ui/GameplayUIContextProvider";
 import GameplayUI from "./_gameplay-ui/GameplayUI";
 import { forwardRef, useEffect, useState } from "react";
-import styles from "./main.module.css"
+import cursors from "@styles/cursors.module.css"
 import useTransmitWebRTCData from "./_gameplay-ui/useTransmitWebRTCData";
 
 const Unity = dynamic(
@@ -34,9 +34,9 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
     useSetGameState();
     useTransmitWebRTCData();
 
-    const [viewPortCursor, setViewPortCursor] = useState(styles.auto)
+    const [viewPortCursor, setViewPortCursor] = useState(cursors.auto)
     const updateCursor = (cursorType: any) => {
-      setViewPortCursor(styles[cursorType]);
+      setViewPortCursor(cursors[cursorType]);
     };
 
     useEffect(() => {

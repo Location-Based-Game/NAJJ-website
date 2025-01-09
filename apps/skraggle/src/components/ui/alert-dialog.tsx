@@ -5,7 +5,7 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
 import { cn } from "@/lib/tailwindUtils";
 import { buttonVariants } from "@/components/ui/button";
-import styles from "../../app/panel.module.css";
+import styles from "@styles/panel.module.css";
 
 const AlertDialog = AlertDialogPrimitive.Root;
 

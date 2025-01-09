@@ -20,23 +20,3 @@
   border-image-source: url("/Metal-Border.png");
   pointer-events: none;
 }
-
-.auto {
-  cursor: auto !important;
-}
-
-.grab {
-  cursor: grab !important;
-}
-
-.grabbing {
-  cursor: grabbing !important;
-}
-
-.move {
-  cursor: move !important
-}
-
-.not-allowed {
-  cursor: not-allowed !important;
-}
