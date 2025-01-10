@@ -36,7 +36,12 @@ export default function SelectLettersToWagerPopover({
       letterBlocks[parseInt(index)].itemData.letter;
 
     const totalPoints = letterSelection
-      .map((index) => letterPoints[letter(index)])
+      .map((index) => {
+        if (!(letter(index) in letterPoints)) {
+          return 0;
+        }
+        return letterPoints[letter(index)];
+      })
       .reduce((a, b) => a + b, 0);
 
     return totalPoints;
