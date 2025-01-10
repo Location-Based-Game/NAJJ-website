@@ -3,13 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type TurnState = {
   currentTurn: number;
   playerTurn: number | null;
-  enableWebRTCAfterFirstTurn: boolean;
+  firstTurnPassed: boolean;
 };
 
 const initialState: TurnState = {
   currentTurn: 0,
   playerTurn: null,
-  enableWebRTCAfterFirstTurn: true,
+  firstTurnPassed: false,
 };
 
 export const turnSlice = createSlice({
@@ -29,11 +29,11 @@ export const turnSlice = createSlice({
      * in order to fix board persist bugs, disable WebRTC data transfer
      * for the first turn if the player joins during GamePlay state
      */
-    enableWebRTCAfterFirstTurn: (
+    setFirstTurnPassed: (
       state: TurnState,
       action: PayloadAction<boolean>,
     ) => {
-      state.enableWebRTCAfterFirstTurn = action.payload;
+      state.firstTurnPassed = action.payload;
     },
   },
 });
@@ -42,5 +42,5 @@ export const {
   setCurrentTurn,
   setPlayerTurn,
   resetTurnState,
-  enableWebRTCAfterFirstTurn,
+  setFirstTurnPassed,
 } = turnSlice.actions;

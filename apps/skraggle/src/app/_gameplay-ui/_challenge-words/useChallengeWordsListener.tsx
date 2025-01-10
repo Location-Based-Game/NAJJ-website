@@ -7,13 +7,15 @@ import {
 } from "firebase/database";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { rtdb } from "../firebaseConfig";
+import { rtdb } from "../../firebaseConfig";
 import { challengeWordSchema } from "@schemas/challengeWordSchema";
-import { useGameplayUIContext } from "./GameplayUIContextProvider";
+import { useGameplayUIContext } from "../GameplayUIContextProvider";
+import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 
 export default function useChallengeWordsListener() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const { setChallengeWords } = useGameplayUIContext();
+  const { callUnityFunction } = useUnityReactContext();
 
   useEffect(() => {
     if (!gameId) {
@@ -23,9 +25,10 @@ export default function useChallengeWordsListener() {
     const challengeWordsRef = ref(rtdb, `activeGames/${gameId}/challengeWords/words`);
     const addWordListener = onChildAdded(challengeWordsRef, (newWord) => {
       if (newWord.key === null) return;
-      const data = challengeWordSchema.parse(newWord.val());
+      const data = challengeWordSchema.safeParse(newWord.val());
+      if (!data.success) return;
       setChallengeWords((prev) => {
-        return { ...prev, [newWord.key!]: data };
+        return { ...prev, [newWord.key!]: data.data };
       });
     });
 
@@ -33,10 +36,12 @@ export default function useChallengeWordsListener() {
       challengeWordsRef,
       (changedWord) => {
         if (changedWord.key === null) return;
-        const data = challengeWordSchema.parse(changedWord.val());
+        const data = challengeWordSchema.safeParse(changedWord.val());
+        if (!data.success) return;
         setChallengeWords((prev) => {
-          return { ...prev, [changedWord.key!]: data };
+          return { ...prev, [changedWord.key!]: data.data };
         });
+        callUnityFunction("PlayChallengeWordSound");
       },
     );
 

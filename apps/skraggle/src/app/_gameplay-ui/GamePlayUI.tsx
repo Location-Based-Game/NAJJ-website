@@ -6,7 +6,8 @@ import PlayerListGameplay from "./PlayerListGameplay";
 import { useCallback } from "react";
 import useSpawnItems from "./useSpawnItems";
 import useTurnListener from "./useTurnListener";
-import useChallengeWordsListener from "./useChallengeWordsListener";
+import useChallengeWordsListener from "./_challenge-words/useChallengeWordsListener";
+import WordDefinitions from "./WordDefinitions";
 
 export default function GameplayUI() {
   const { state } = useSelector((state: RootState) => state.gameState);
@@ -31,6 +32,7 @@ export default function GameplayUI() {
     <>
       {getGamePlayUI()}
       <PlayerListGameplay />
+      <WordDefinitions />
     </>
   );
 }

@@ -19,13 +19,16 @@ const EndTurnButton = forwardRef<HTMLSpanElement, EndTurnButton>(({}, ref) => {
 
   const handleEndTurn = async () => {
     const { currentItems } = await getCurrentItems();
-    const data: SubmittedChallengeWords = {
+    const challengeWordsData: SubmittedChallengeWords = {
       submittedChallengeWords: wordsData,
       currentItems,
     };
-    await fetchApi("submitChallengeWords", data).catch((error) => {
-      logOutOnError(error);
-    });
+
+    await fetchApi("submitChallengeWords", challengeWordsData).catch(
+      (error) => {
+        logOutOnError(error);
+      },
+    );
   };
 
   return (

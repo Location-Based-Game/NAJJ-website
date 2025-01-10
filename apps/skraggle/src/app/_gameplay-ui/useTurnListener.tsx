@@ -3,7 +3,7 @@ import { onValue, ref } from "firebase/database";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
-import { enableWebRTCAfterFirstTurn, setCurrentTurn } from "@/store/turnSlice";
+import { setFirstTurnPassed, setCurrentTurn } from "@/store/turnSlice";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { GameStates } from "@types";
 
@@ -45,7 +45,7 @@ export default function useTurnListener() {
         }
 
         if (firstTurn.current !== turn) {
-          dispatch(enableWebRTCAfterFirstTurn(true))
+          dispatch(setFirstTurnPassed(true))
         }
       }
     });
@@ -64,7 +64,10 @@ export default function useTurnListener() {
     firstState.current = true;
 
     if (state === "Gameplay" || state === "FirstTurn") {
-      dispatch(enableWebRTCAfterFirstTurn(false))
+      dispatch(setFirstTurnPassed(false))
+    }
+    else {
+      dispatch(setFirstTurnPassed(true))
     }
   }
 }

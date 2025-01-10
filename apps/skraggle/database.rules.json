@@ -47,6 +47,9 @@
           "words": {
             ".read": true
           }
+        },
+        "currentDefinitions": {
+          ".read": true
         }
       }
     }

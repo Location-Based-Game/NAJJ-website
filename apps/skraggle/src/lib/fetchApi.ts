@@ -8,7 +8,7 @@ export async function fetchApi(route: string, payload: object = {}) {
     credentials: "include",
   });
   const res = await data.json();
-  if (res.error) {
+  if ("error" in res) {
     throw new Error(res.error);
   } else {
     return res.data;

@@ -75,7 +75,7 @@ export default function GameplayUIContextProvider({
         setChallengeWords,
         getCurrentItems,
         showExpandPreviewButton,
-        setShowExpandPreviewButton,
+        setShowExpandPreviewButton
       }}
     >
       {children}

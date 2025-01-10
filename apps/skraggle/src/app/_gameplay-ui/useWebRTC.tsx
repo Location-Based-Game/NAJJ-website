@@ -220,8 +220,11 @@ function useReceiveWebRTCData() {
   const { splashScreenComplete, callUnityFunction } = useUnityReactContext();
   const peerStatus = useSelector((state: RootState) => state.peerStatus);
   const { gameId } = useSelector((state: RootState) => state.logIn);
-  const { enableWebRTCAfterFirstTurn } = useSelector(
+  const { firstTurnPassed } = useSelector(
     (state: RootState) => state.turnState,
+  );
+  const { state:gameState } = useSelector(
+    (state: RootState) => state.gameState,
   );
 
   //listen for data when Unity player finishes loading
@@ -231,7 +234,7 @@ function useReceiveWebRTCData() {
 
     Object.keys(playerPeers.value).forEach((key) => {
       playerPeers.value[key].removeAllListeners("data");
-      if (!enableWebRTCAfterFirstTurn) return;
+      if (!firstTurnPassed && gameState !== "Menu") return;
       playerPeers.value[key].on("data", (data) => {
         try {
           const parsedData = JSON.parse(data);
@@ -242,5 +245,5 @@ function useReceiveWebRTCData() {
         }
       });
     });
-  }, [splashScreenComplete, peerStatus, enableWebRTCAfterFirstTurn, gameId]);
+  }, [splashScreenComplete, peerStatus, firstTurnPassed, gameId, gameState]);
 }
