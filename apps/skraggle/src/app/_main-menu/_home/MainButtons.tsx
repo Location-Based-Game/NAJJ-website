@@ -11,7 +11,7 @@ export default function MainButtons() {
     <>
       <Button
         disabled={!enableButtons}
-        variant={"outline"}
+        variant={"secondary"}
         className="h-12 w-full"
         onClick={() => {
           setEnableButtons(false);

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Baloo_Chettan_2 } from "next/font/google";
 import "@styles/globals.css";
 import ReduxProvider from "./ReduxProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-const inter = Inter({ subsets: ["latin"] });
+const baloo = Baloo_Chettan_2({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Skraggl.io - Play Online for Free!",
@@ -54,7 +54,7 @@ export default function RootLayout({
     <html lang="en">
       <ReduxProvider>
         <TooltipProvider>
-          <body className={inter.className}>
+          <body className={baloo.className}>
             {children}
             <Toaster />
           </body>

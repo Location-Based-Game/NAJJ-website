@@ -9,6 +9,7 @@ import HostIcon from "./HostIcon";
 import ConnectionIcon from "./ConnectionIcon";
 import styles from "./selectionGradient.module.css"
 import { PlayersData } from "../../../../functions/src/types";
+import { cn } from "@/lib/tailwindUtils";
 
 export default function PlayerList() {
   const players = useSelector((state: RootState) => state.players);
@@ -20,7 +21,7 @@ export default function PlayerList() {
         {Object.keys(players).map((key, i) => (
           <TableRow
             key={i}
-            className={playerId === key ? styles.selectionGradient : ""}
+            className={cn(styles.background, playerId === key && styles.selectionGradient)}
           >
             <TableCell className="font-medium">
               {i === 0 && <HostIcon name={players[key].name} />}

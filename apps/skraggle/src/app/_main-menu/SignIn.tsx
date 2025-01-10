@@ -19,7 +19,7 @@ export default function SignIn({ back, submitHandler, enableButtons }: SignIn) {
     <>
       <Button
         disabled={!enableButtons}
-        variant={"outline"}
+        variant={"secondary"}
         className="h-12 w-full"
         onClick={() => {
           dispatch(mainMenuState.updateState(back));
@@ -34,7 +34,7 @@ export default function SignIn({ back, submitHandler, enableButtons }: SignIn) {
       >
         <Button
           disabled={!enableButtons || nameInput.length < 1}
-          className="h-12 w-full"
+          className="h-12 mt-4 w-full"
           type="submit"
         >
           {!enableButtons && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
