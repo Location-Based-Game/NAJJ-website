@@ -25,9 +25,11 @@ export async function moveInventoryItemToGrid(
   );
 
   async function MoveItem(item: Item<any>) {
-    await inventoriesRef.child(item.itemId).remove();
+    await Promise.all([
+      inventoriesRef.child(item.itemId).remove(),
+      gridRef.child(item.itemId).set(item)
+    ])
     delete currentItems[item.itemId];
-    await gridRef.child(item.itemId).set(item);
 
     if (
       gameState === "TurnsDiceRoll" &&

@@ -1,10 +1,15 @@
 import { RootState } from "@/store/store";
-import { onChildAdded, onChildChanged, onChildRemoved, ref, remove } from "firebase/database";
-import { useEffect } from "react";
+import {
+  child,
+  onChildAdded,
+  onChildRemoved,
+  ref,
+  Unsubscribe,
+} from "firebase/database";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { Inventory } from "@types";
 import { Item, itemSchema } from "@schemas/itemSchema";
 
 /**
@@ -12,68 +17,82 @@ import { Item, itemSchema } from "@schemas/itemSchema";
  */
 export default function useSpawnItems() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
-  const { isGameActive } = useSelector((state: RootState) => state.gameState);
-  const { callUnityFunction } = useUnityReactContext();
+  const { callUnityFunction, splashScreenComplete } = useUnityReactContext();
 
+  const allInventoriesRef = useRef<Record<string, Unsubscribe[]>>({});
   useEffect(() => {
     if (!gameId) return;
+    if (!splashScreenComplete) return;
+
+    // Listen for new player inventories being added
     const inventoriesRef = ref(rtdb, `activeGames/${gameId}/inventories`);
     const inventoryAddedListener = onChildAdded(
       inventoriesRef,
       (newInventory) => {
         if (newInventory.key === null) return;
-        const data = newInventory.val() as Inventory;
-        SpawnPlayerItems(data);
+
+        // Add listeners for items on player inventory
+        const playerInventoryRef = child(inventoriesRef, newInventory.key);
+        allInventoriesRef.current[newInventory.key] = [
+          onChildAdded(playerInventoryRef, (newItem) => {
+            if (newItem.key === null) return;
+            const data = itemSchema.parse(newItem.val()) as Item<any>;
+            spawnItem(data);
+          }),
+
+          onChildRemoved(playerInventoryRef, (removedItem) => {
+            if (removedItem.key === null) return;
+            const data = itemSchema.parse(removedItem.val()) as Item<any>;
+            if (data.isDestroyed) {
+              callUnityFunction("DestroyItem", data.itemId)
+            }
+          }),
+        ];
       },
     );
 
-    const inventoryChangedListener = onChildChanged(
+    const inventoryDeletedListener = onChildRemoved(
       inventoriesRef,
-      (newInventory) => {
-        if (newInventory.key === null) return;
-        const data = newInventory.val() as Inventory;
-        SpawnPlayerItems(data);
+      (removedInventory) => {
+        if (removedInventory.key === null) return;
+        // Unsubscribe listener on player inventory
+        allInventoriesRef.current[removedInventory.key].forEach((unsubscribe) =>
+          unsubscribe(),
+        );
       },
     );
 
     const gridRef = ref(rtdb, `activeGames/${gameId}/grid`);
-    const gridItemAddedListener = onChildAdded(
-      gridRef,
-      (newItem) => {
-        if (newItem.key === null) return;
-        const data = newItem.val();
-        const validatedData = itemSchema.parse(data);
-        SpawnItem(validatedData as Item<any>);
-      },
-    );
+    const gridItemAddedListener = onChildAdded(gridRef, (newItem) => {
+      if (newItem.key === null) return;
+      const data = newItem.val();
+      const validatedData = itemSchema.parse(data);
+      spawnItem(validatedData as Item<any>);
+    });
 
-    const gridItemRemovedListener = onChildRemoved(
-      gridRef,
-      (removedItem) => {
-        if (removedItem.key === null) return;
-        const data = removedItem.val();
-        const validatedData = itemSchema.parse(data);
-        callUnityFunction("DestroyItem", validatedData)
+    const gridItemRemovedListener = onChildRemoved(gridRef, (removedItem) => {
+      if (removedItem.key === null) return;
+      const data = removedItem.val();
+      const validatedData = itemSchema.parse(data);
+      if (validatedData.isDestroyed) {
+        callUnityFunction("DestroyItem", validatedData.itemId)
       }
-    )
+    });
 
     return () => {
       inventoryAddedListener();
-      inventoryChangedListener();
+      inventoryDeletedListener();
       gridItemAddedListener();
       gridItemRemovedListener();
+      Object.values(allInventoriesRef.current).forEach((inventoryListeners) => {
+        inventoryListeners.forEach((unsubscribe) => unsubscribe());
+      });
+      allInventoriesRef.current = {};
     };
-  }, [gameId, isGameActive]);
+  }, [gameId, splashScreenComplete]);
 
-  function SpawnPlayerItems(inventory: Inventory) {
-    Object.values(inventory).forEach((values) => {
-      const validatedData = itemSchema.parse(values);
-      SpawnItem(validatedData as Item<any>);
-    });
-  }
-
-  function SpawnItem(item: Item<any>) {
-    //timeout ensures items are spawned after players are instantiated
+  function spawnItem(item: Item<any>) {
+    // Timeout ensures items are spawned after players are instantiated
     setTimeout(() => {
       callUnityFunction("SpawnItem", {
         ...item,

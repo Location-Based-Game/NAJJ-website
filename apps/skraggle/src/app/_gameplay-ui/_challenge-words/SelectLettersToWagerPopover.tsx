@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { SwordsIcon } from "lucide-react";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
 import { motion } from "framer-motion";
+import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 
 const MotionButton = motion(Button);
 interface SelectLettersToWagerPopover {
@@ -30,6 +31,7 @@ export default function SelectLettersToWagerPopover({
   const [open, setOpen] = useState(false);
   const [isChallenged, setIsChallenged] = useState(false);
   const { logOutOnError } = useLogOut();
+  const { callUnityFunction } = useUnityReactContext()
 
   const getPointsFromSelection = () => {
     const letter = (index: string) =>
@@ -82,6 +84,10 @@ export default function SelectLettersToWagerPopover({
     await fetchApi("challengeWord", data).catch((error) => {
       logOutOnError(error);
     });
+
+    Object.keys(wageredItems).forEach(itemId => {      
+      callUnityFunction("SelectWageredLetters", itemId)
+    })
   };
 
   return (

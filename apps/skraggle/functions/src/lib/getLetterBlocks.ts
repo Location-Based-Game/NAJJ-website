@@ -26,6 +26,7 @@ export function getLetterBlocks(currentItems: Inventory, playerId: string) {
       type: ItemTypes.LetterBlock,
       isPlaced: false,
       gridPosition: [],
+      isDestroyed: false
     };
   }
 

@@ -11,7 +11,7 @@ import moveChallengedItemsToInventory from "./moveChallengedItemsToInventory";
 export default async function calculatePoints(
   gameId: string,
   playerId: string,
-) {
+): Promise<{ returnedLetters: boolean }> {
   const wordsRef = db.ref(`activeGames/${gameId}/challengeWords/words`);
   const wordsSnapshot = (await wordsRef.get()).val();
   const words = challengeWordRecordSchema.parse(wordsSnapshot);
@@ -53,18 +53,28 @@ export default async function calculatePoints(
 
   // Destroy wagered items from failed challengers
   failedChallengersArr.forEach((challengers) => {
-    Object.entries(challengers).forEach(([playerId, items]) => {
-      const playerInventoryRef = db.ref(
-        `activeGames/${gameId}/inventories/${playerId}`,
-      );
-      playerInventoryRef.transaction((inventory: Inventory) => {
-        if (inventory === null) return inventory;
-        Object.keys(items).forEach((itemId) => {
-          delete inventory[itemId];
+    Promise.all([
+      Object.entries(challengers).map(async ([playerId, items]) => {
+        const playerInventoryRef = db.ref(
+          `activeGames/${gameId}/inventories/${playerId}`,
+        );
+        await playerInventoryRef.transaction((inventory: Inventory) => {
+          if (inventory === null) return inventory;
+          Object.keys(items).forEach((itemId) => {
+            inventory[itemId].isDestroyed = true;
+          });
+          return inventory;
         });
-        return inventory;
-      });
-    });
+  
+        playerInventoryRef.transaction((inventory: Inventory) => {
+          if (inventory === null) return inventory;
+          Object.keys(items).forEach((itemId) => {
+            delete inventory[itemId];
+          });
+          return inventory;
+        });
+      })
+    ])
   });
 
   if (successfulChallengersArr.length > 0) {
@@ -73,7 +83,8 @@ export default async function calculatePoints(
       awardPointsToChallengers(challengers, gameId);
     });
 
-    await moveChallengedItemsToInventory(gameId, playerId)
+    await moveChallengedItemsToInventory(gameId, playerId);
+    return { returnedLetters: true };
   } else {
     // Add points if there are no successful challengers
     const playerPointsRef = db.ref(
@@ -85,6 +96,7 @@ export default async function calculatePoints(
       currentPoints += points;
       return currentPoints;
     });
+    return { returnedLetters: false };
   }
 }
 

@@ -32,6 +32,7 @@ export async function createTurnNumbers(gameId: string) {
       type: ItemTypes.StartingDice,
       isPlaced: false,
       gridPosition: [],
+      isDestroyed: false,
     };
 
     const startingDice2: StartingDice = {
@@ -44,6 +45,7 @@ export async function createTurnNumbers(gameId: string) {
       type: ItemTypes.StartingDice,
       isPlaced: false,
       gridPosition: [],
+      isDestroyed: false
     };
 
     updates[playerIds[i]] = {
