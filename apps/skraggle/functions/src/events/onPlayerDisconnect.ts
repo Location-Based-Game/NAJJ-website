@@ -4,6 +4,7 @@ import { db } from "../lib/firebaseAdmin";
 import { logger } from "firebase-functions";
 import { incrementTurn } from "../firebase-actions/incrementTurn";
 import { transitionTurnsDiceRollToFirstTurn } from "../firebase-actions/transitionTurnsDiceRollToFirstTurn";
+import moveChallengedItemsToInventory from "../firebase-actions/moveChallengedItemsToInventory";
 
 const path = { ref: "/activeGames/{gameId}/players/{playerId}/isOnline" };
 export const onPlayerDisconnect = onValueUpdated(path, async (event) => {
@@ -28,7 +29,13 @@ export const onPlayerDisconnect = onValueUpdated(path, async (event) => {
     const playerId = (await playerRef.get()).key as string;
     // Will increment turn if it is the current player's turn
     const { validTurn } = await incrementTurn(gameId, playerId);
-    if (validTurn) moveItems(gameId, playerId);
+    if (validTurn) {
+      // If the player disconnects during their turn after they submitted their words
+      // Remove the placed items from the grid and put them back into their inventory
+      moveChallengedItemsToInventory(gameId, playerId)
+      const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
+      await challengeWordsRef.remove();
+    }
 
     transitionTurnsDiceRollToFirstTurn(gameId);
 
@@ -45,40 +52,3 @@ export const onPlayerDisconnect = onValueUpdated(path, async (event) => {
     logger.error(`${error}`);
   }
 });
-
-/**
- * If the player disconnects during their turn after they submitted their words
- * Remove the placed items from the grid and put them back into their inventory
- */
-async function moveItems(gameId: string, playerId: string) {
-  const currentPlacedLettersRef = db.ref(
-    `activeGames/${gameId}/challengeWords/placedLetters`,
-  );
-  const currentPlacedLetters = (
-    await currentPlacedLettersRef.get()
-  ).val() as Inventory;
-  const gridRef = db.ref(`activeGames/${gameId}/grid`);
-  await Promise.all(
-    Object.keys(currentPlacedLetters).map(async (itemId) => {
-      await gridRef.child(itemId).remove();
-    }),
-  );
-
-  const inventoriesRef = db.ref(
-    `activeGames/${gameId}/inventories/${playerId}`,
-  );
-  inventoriesRef.update(
-    Object.entries(currentPlacedLetters).reduce<typeof currentPlacedLetters>(
-      (obj, [key, value]) => {
-        value.isPlaced = false;
-        value.gridPosition = []
-        obj[key] = value;
-        return obj;
-      },
-      {},
-    ),
-  );
-  
-  const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
-  await challengeWordsRef.remove();
-}

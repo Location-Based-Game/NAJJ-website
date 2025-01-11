@@ -1,16 +1,15 @@
 import { z } from "zod";
 
 export const urbanDictionaryDefinitionSchema = z.object({
-    definition: z.string().optional().default("This is a made up word!"),
-    permalink: z.string().optional().default(""),
-    thumbs_up: z.number().optional().default(0),
-    author: z.string().optional().default(""),
+    definition: z.string(),
+    permalink: z.string(),
+    thumbs_up: z.number(),
+    author: z.string(),
     word: z.string(),
-    defid: z.number().optional().default(-1),
-    written_on: z.string().optional().default(""),
-    example: z.string().optional().default(""),
-    thumbs_down: z.number().optional().default(0),
-    real_word: z.boolean().optional().default(false),
+    defid: z.number(),
+    written_on: z.string(),
+    example: z.string(),
+    thumbs_down: z.number(),
 })
 
 export type UrbanDictionaryDefinition = z.infer<typeof urbanDictionaryDefinitionSchema>

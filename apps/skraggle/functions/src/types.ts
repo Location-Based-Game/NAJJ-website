@@ -31,6 +31,7 @@ export type PlayerData = {
   color: string;
   turn: number;
   isOnline: boolean;
+  points: number;
 };
 
 export type PlayersData = Record<string, PlayerData>;

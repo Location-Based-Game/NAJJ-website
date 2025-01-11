@@ -9,7 +9,7 @@ import { useState } from "react";
 import { ItemTypes, LetterBlock } from "@types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import TileIcon from "@/components/TileIcon";
-import { letterPoints } from "@/lib/letterPoints";
+import { letterPoints } from "../../../../functions/src/lib/letterPoints";
 import { ChallengeWordSchemaType } from "../../../../functions/src/endpoints/challengeWord";
 import { Button } from "@/components/ui/button";
 import { SwordsIcon } from "lucide-react";

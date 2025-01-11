@@ -11,10 +11,6 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { onValue, ref } from "firebase/database";
 import { rtdb } from "../firebaseConfig";
-import {
-  urbanDictionaryDefinitionSchema,
-  UrbanDictionaryDefinition,
-} from "@schemas/urbanDictionaryDefinitionSchema";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import {
@@ -27,6 +23,10 @@ import {
 } from "@/components/ui/dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import {
+  WordDefinition,
+  wordDefinitionSchema,
+} from "@schemas/wordDefinitionSchema";
 
 export default function WordDefinitions() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
@@ -35,9 +35,7 @@ export default function WordDefinitions() {
   const { firstTurnPassed } = useSelector(
     (state: RootState) => state.turnState,
   );
-  const [definitions, setDefinitions] = useState<UrbanDictionaryDefinition[]>(
-    [],
-  );
+  const [definitions, setDefinitions] = useState<WordDefinition[]>([]);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -53,11 +51,9 @@ export default function WordDefinitions() {
       if (!firstTurnPassed) return;
 
       if (!snapshot.exists()) return;
-      const data = urbanDictionaryDefinitionSchema
-        .array()
-        .parse(snapshot.val());
-
-      setDefinitions(data);
+      const data = wordDefinitionSchema.array().safeParse(snapshot.val());
+      if (!data.success) return;
+      setDefinitions(data.data);
       setOpen(true);
     });
 

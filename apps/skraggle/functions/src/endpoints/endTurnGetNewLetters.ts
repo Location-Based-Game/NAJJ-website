@@ -1,11 +1,10 @@
+import calculatePoints from "../firebase-actions/calculatePoints";
 import { incrementTurn } from "../firebase-actions/incrementTurn";
 import { db } from "../lib/firebaseAdmin";
 import { getLetterBlocks } from "../lib/getLetterBlocks";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
-import { ChallengeWordsRecord } from "../schemas/challengeWordSchema";
 import { currentItemsSchema } from "../schemas/currentItemsSchema";
-import { urbanDictionaryAPISchema, UrbanDictionaryDefinition } from "../schemas/urbanDictionaryDefinitionSchema";
 import { GameStates, Inventory } from "../types";
 
 export const endTurnGetNewLetters = onAuthorizedRequest(
@@ -28,16 +27,8 @@ export const endTurnGetNewLetters = onAuthorizedRequest(
       await gameStateRef.set(newState);
     }
 
+    await calculatePoints(gameId, playerId);
     const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
-    const wordsRef = challengeWordsRef.child("words");
-    const wordsSnapshot = (await wordsRef.get()).val() as ChallengeWordsRecord;
-
-    const wordDefinitions = await getWordDefinitions(
-      Object.values(wordsSnapshot).map((x) => x.word),
-    );
-    const currentDefinitionsRef = db.ref(`activeGames/${gameId}/currentDefinitions`);
-    await currentDefinitionsRef.set(wordDefinitions)
-
     await challengeWordsRef.remove();
 
     // Get new letter blocks
@@ -50,32 +41,3 @@ export const endTurnGetNewLetters = onAuthorizedRequest(
     response.send({ data: "Success" });
   },
 );
-
-async function getWordDefinitions(
-  words: string[],
-): Promise<UrbanDictionaryDefinition[]> {
-  //remove duplicates
-  words = [...new Set(words)];
-
-  return await Promise.all(
-    words.map(async (word) => {
-      const res = await fetch(
-        `https://api.urbandictionary.com/v0/define?term=${word}`,
-      );
-      const data = await res.json();
-      const { list } = urbanDictionaryAPISchema.parse(data)
-      const topDefinition = list
-        .filter((e) => e.word.toLowerCase() === word.toLowerCase())
-        .reduce(
-          (max, current) => {
-            return current.thumbs_up > max.thumbs_up ? current : max;
-          },
-          { thumbs_up: -1 } as UrbanDictionaryDefinition,
-        );
-
-      return topDefinition.thumbs_up > 200
-        ? { ...topDefinition, real_word: true }
-        : ({ word, real_word: false } as UrbanDictionaryDefinition);
-    }),
-  );
-}

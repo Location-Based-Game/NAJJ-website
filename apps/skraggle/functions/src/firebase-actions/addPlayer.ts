@@ -80,7 +80,8 @@ async function addPlayerTransaction(playersRef: Reference, playerName: string) {
           name: playerName,
           color: pastelColors[playerCount],
           turn: playerCount,
-          isOnline: true
+          isOnline: true,
+          points: 0
         };
       } else {
         throw new Error("Player key not created");

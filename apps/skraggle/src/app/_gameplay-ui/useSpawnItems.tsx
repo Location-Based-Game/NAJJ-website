@@ -1,5 +1,5 @@
 import { RootState } from "@/store/store";
-import { onChildAdded, onChildChanged, ref } from "firebase/database";
+import { onChildAdded, onChildChanged, onChildRemoved, ref, remove } from "firebase/database";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
@@ -47,10 +47,21 @@ export default function useSpawnItems() {
       },
     );
 
+    const gridItemRemovedListener = onChildRemoved(
+      gridRef,
+      (removedItem) => {
+        if (removedItem.key === null) return;
+        const data = removedItem.val();
+        const validatedData = itemSchema.parse(data);
+        callUnityFunction("DestroyItem", validatedData)
+      }
+    )
+
     return () => {
       inventoryAddedListener();
       inventoryChangedListener();
       gridItemAddedListener();
+      gridItemRemovedListener();
     };
   }, [gameId, isGameActive]);
 

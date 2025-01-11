@@ -1,4 +1,4 @@
-import { letterPoints } from "@/lib/letterPoints";
+import { letterPoints } from "../../functions/src/lib/letterPoints";
 import styles from "./tileIcon.module.css";
 
 interface TileIcon {
