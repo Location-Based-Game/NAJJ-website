@@ -7,7 +7,7 @@ import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
 import HostIcon from "./HostIcon";
 import ConnectionIcon from "./ConnectionIcon";
-import styles from "./selectionGradient.module.css"
+import selectionStyles from "@styles/selectionGradient.module.css"
 import { PlayersData } from "../../../../functions/src/types";
 import { cn } from "@/lib/tailwindUtils";
 
@@ -21,7 +21,7 @@ export default function PlayerList() {
         {Object.keys(players).map((key, i) => (
           <TableRow
             key={i}
-            className={cn(styles.background, playerId === key && styles.selectionGradient)}
+            className={cn(selectionStyles.background, playerId === key && selectionStyles.selectionGradient)}
           >
             <TableCell className="font-medium">
               {i === 0 && <HostIcon name={players[key].name} />}

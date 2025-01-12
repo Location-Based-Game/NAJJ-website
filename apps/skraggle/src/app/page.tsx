@@ -6,6 +6,7 @@ import GameHeader from "./_header/GameHeader";
 import LeaveGameProvider from "./LeaveGameProvider";
 import styles from "@styles/main.module.css";
 import { cn } from "@/lib/tailwindUtils";
+import PlayerSidebar from "./_player-sidebar/PlayerSidebar";
 
 export default function Home() {
   return (
@@ -30,7 +31,7 @@ function Main() {
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute h-full w-full mix-blend-multiply"
+        className="absolute h-full w-full mix-blend-multiply pointer-events-none"
       >
         <filter id="noiseFilter">
           <feTurbulence
@@ -47,7 +48,7 @@ function Main() {
         <GameHeader />
         <Viewport className={styles.viewPort} />
       </div>
-      <div className="w-[14rem]"></div>
+      <PlayerSidebar />
     </main>
   );
 }

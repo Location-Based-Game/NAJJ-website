@@ -5,7 +5,8 @@ import {
   challengeWordRecordSchema,
   Challengers,
 } from "../schemas/challengeWordSchema";
-import { Inventory, ItemTypes, LetterBlock } from "../types";
+import { WordData } from "../schemas/wordDataSchema";
+import { Inventory, ItemTypes, LetterBlock, TileType } from "../types";
 import moveChallengedItemsToInventory from "./moveChallengedItemsToInventory";
 
 export default async function calculatePoints(
@@ -35,11 +36,9 @@ export default async function calculatePoints(
     );
     if (definition === undefined) return total;
 
-    // Add points if it's a real word
-    if (definition.isRealWord) {
-      for (let i = 0; i < definition.word.length; i++) {
-        total += letterPoints[definition.word[i].toUpperCase()];
-      }
+    // Add points if it's a real word or if there are no challengers
+    if (definition.isRealWord || Object.keys(data.challengers).length === 0) {
+      total += calculateWordPoints(data);
       failedChallengersArr.push(data.challengers);
     } else if (
       !definition.isRealWord &&
@@ -98,6 +97,22 @@ export default async function calculatePoints(
     });
     return { returnedLetters: false };
   }
+}
+
+function calculateWordPoints(wordData:WordData) {
+  let wordPoints = 0;
+  for (let i = 0; i < wordData.word.length; i++) {
+    wordPoints += letterPoints[wordData.word[i].toUpperCase()];
+  }
+  wordPoints += wordData.doubleBonus + wordData.tripleBonus
+  wordData.scoreMultipliers.forEach((multiplier:TileType) => {
+    if (multiplier === TileType.TripleWordScore) {
+      wordPoints *= 3;
+    } else if (multiplier === TileType.DoubleWordScore) {
+      wordPoints *= 2;
+    }
+  });
+  return wordPoints;
 }
 
 function awardPointsToChallengers(challengers: Challengers, gameId: string) {

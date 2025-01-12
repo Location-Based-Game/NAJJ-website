@@ -2,7 +2,6 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import NotYourTurnUI from "./_not-your-turn/NotYourTurnUI";
 import YourTurnUI from "./_your-turn/YourTurnUI";
-import PlayerListGameplay from "./PlayerListGameplay";
 import { useCallback } from "react";
 import useSpawnItems from "./useSpawnItems";
 import useTurnListener from "./useTurnListener";
@@ -31,7 +30,6 @@ export default function GameplayUI() {
   return (
     <>
       {getGamePlayUI()}
-      <PlayerListGameplay />
       <WordDefinitions />
     </>
   );
