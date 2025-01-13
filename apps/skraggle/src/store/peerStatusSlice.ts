@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type PeerStatus = "pending" | "connected" | "not connected" | "error";
-type PeerStatuses = Record<string, PeerStatus>
+export type PeerStatuses = Record<string, PeerStatus>
 
 const initialState: PeerStatuses = {};
 

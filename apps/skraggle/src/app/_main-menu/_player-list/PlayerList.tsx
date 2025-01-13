@@ -7,30 +7,38 @@ import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
 import HostIcon from "./HostIcon";
 import ConnectionIcon from "./ConnectionIcon";
-import selectionStyles from "@styles/selectionGradient.module.css"
+import selectionStyles from "@styles/selectionGradient.module.css";
 import { PlayersData } from "../../../../functions/src/types";
 import { cn } from "@/lib/tailwindUtils";
 
 export default function PlayerList() {
   const players = useSelector((state: RootState) => state.players);
   const { playerId } = useSelector((state: RootState) => state.logIn);
+  const peerStatuses = useSelector((state: RootState) => state.peerStatus);
 
   return (
     <Table>
       <TableBody>
-        {Object.keys(players).map((key, i) => (
+        {Object.keys(players).map((id, i) => (
           <TableRow
             key={i}
-            className={cn(selectionStyles.background, playerId === key && selectionStyles.selectionGradient)}
+            className={cn(
+              selectionStyles.background,
+              playerId === id && selectionStyles.selectionGradient,
+            )}
           >
             <TableCell className="font-medium">
-              {i === 0 && <HostIcon name={players[key].name} />}
+              {i === 0 && <HostIcon name={players[id].name} />}
             </TableCell>
             <TableCell className="font-medium">
-              <ConnectionIcon peerId={key} name={players[key].name} />
+              <ConnectionIcon
+                isMainPlayer={id === playerId}
+                name={players[id].name}
+                peerStatus={peerStatuses[id]}
+              />
             </TableCell>
-            <TableCell className="w-full">{players[key].name}</TableCell>
-            <PlayerColor playerData={players} playerKey={key} />
+            <TableCell className="w-full">{players[id].name}</TableCell>
+            <PlayerColor playerData={players} playerKey={id} />
           </TableRow>
         ))}
       </TableBody>
@@ -56,7 +64,7 @@ function PlayerColor({ playerData, playerKey }: PlayerColor) {
           onClose={async (value) => {
             try {
               setColor(value);
-              await fetchApi("changePlayerColor", {color: value});
+              await fetchApi("changePlayerColor", { color: value });
             } catch (error) {
               logOutOnError(error);
             }
