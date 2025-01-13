@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/accordion";
 import panelStyles from "@styles/panel.module.css";
 import { cn } from "@/lib/tailwindUtils";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { onValue, ref } from "firebase/database";
@@ -31,7 +31,6 @@ import {
 export default function WordDefinitions() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const { splashScreenComplete } = useUnityReactContext();
-  const containerRef = useRef<HTMLDivElement>(null!);
   const { firstTurnPassed } = useSelector(
     (state: RootState) => state.turnState,
   );
@@ -60,6 +59,19 @@ export default function WordDefinitions() {
     return () => unsubscribe();
   }, [gameId, firstTurnPassed, splashScreenComplete]);
 
+  return (
+    <WordDefinitionsView open={open} setOpen={setOpen} definitions={definitions}/>
+  );
+}
+
+interface WordDefinitionsView {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  definitions: WordDefinition[]
+}
+
+export function WordDefinitionsView({open, setOpen, definitions}:WordDefinitionsView) {
+  const containerRef = useRef<HTMLDivElement>(null!);
   return (
     <>
       <div
@@ -118,5 +130,5 @@ export default function WordDefinitions() {
         </AnimatePresence>
       </Dialog>
     </>
-  );
+  )
 }

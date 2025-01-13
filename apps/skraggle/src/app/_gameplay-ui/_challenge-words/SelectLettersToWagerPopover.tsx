@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { ItemTypes, LetterBlock } from "@types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import TileIcon from "@/components/TileIcon";
@@ -31,23 +31,7 @@ export default function SelectLettersToWagerPopover({
   const [open, setOpen] = useState(false);
   const [isChallenged, setIsChallenged] = useState(false);
   const { logOutOnError } = useLogOut();
-  const { callUnityFunction } = useUnityReactContext()
-
-  const getPointsFromSelection = () => {
-    const letter = (index: string) =>
-      letterBlocks[parseInt(index)].itemData.letter;
-
-    const totalPoints = letterSelection
-      .map((index) => {
-        if (!(letter(index) in letterPoints)) {
-          return 0;
-        }
-        return letterPoints[letter(index)];
-      })
-      .reduce((a, b) => a + b, 0);
-
-    return totalPoints;
-  };
+  const { callUnityFunction } = useUnityReactContext();
 
   const getLettersOnStand = async () => {
     const { currentItems } = await getCurrentItems();
@@ -85,13 +69,20 @@ export default function SelectLettersToWagerPopover({
       logOutOnError(error);
     });
 
-    Object.keys(wageredItems).forEach(itemId => {      
-      callUnityFunction("SelectWageredLetters", itemId)
-    })
+    Object.keys(wageredItems).forEach((itemId) => {
+      callUnityFunction("SelectWageredLetters", itemId);
+    });
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <SelectLettersToWagerPopoverContent
+      letterSelection={letterSelection}
+      setLetterSelection={setLetterSelection}
+      letterBlocks={letterBlocks}
+      handleSubmit={handleSubmit}
+      open={open}
+      setOpen={setOpen}
+    >
       <PopoverTrigger asChild>
         <MotionButton
           layout
@@ -103,6 +94,48 @@ export default function SelectLettersToWagerPopover({
           <SwordsIcon />
         </MotionButton>
       </PopoverTrigger>
+    </SelectLettersToWagerPopoverContent>
+  );
+}
+
+interface SelectLettersToWagerPopoverContent {
+  letterSelection: string[];
+  setLetterSelection: React.Dispatch<React.SetStateAction<string[]>>;
+  letterBlocks: LetterBlock[];
+  handleSubmit: () => Promise<void>;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  children: React.ReactNode;
+}
+
+export function SelectLettersToWagerPopoverContent({
+  letterSelection,
+  setLetterSelection,
+  letterBlocks,
+  handleSubmit,
+  open,
+  setOpen,
+  children,
+}: SelectLettersToWagerPopoverContent) {
+  const getPointsFromSelection = () => {
+    const letter = (index: string) =>
+      letterBlocks[parseInt(index)].itemData.letter;
+
+    const totalPoints = letterSelection
+      .map((index) => {
+        if (!(letter(index) in letterPoints)) {
+          return 0;
+        }
+        return letterPoints[letter(index)];
+      })
+      .reduce((a, b) => a + b, 0);
+
+    return totalPoints;
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      {children}
       <PopoverContent className="flex flex-col gap-2 p-2">
         <ToggleGroup type="multiple" onValueChange={setLetterSelection}>
           {letterBlocks.map((e, i) => {
