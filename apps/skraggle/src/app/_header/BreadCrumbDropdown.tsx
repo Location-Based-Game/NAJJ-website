@@ -26,7 +26,6 @@ export default function BreadCrumbDropdown({
   const { gameId } = useSelector((state: RootState) => state.logIn);
   const dispatch = useDispatch();
   const { leaveGame } = useLogOut();
-  const { callUnityFunction } = useUnityReactContext();
   const { setOpenDialogue, onLeave } = useLeaveGame();
 
   const handleNavigate = (state: MainMenuStates) => {
@@ -41,7 +40,7 @@ export default function BreadCrumbDropdown({
   return (
     <DropdownMenu open={isDropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger
-        className="flex items-center gap-1 outline-none"
+        className="flex items-center gap-1 outline-none text-white/60"
         aria-label="Toggle menu"
       >
         {children}

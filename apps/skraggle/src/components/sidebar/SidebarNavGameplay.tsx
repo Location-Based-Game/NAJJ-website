@@ -86,6 +86,7 @@ function SidebarCollapsible({
               setOpen(isSidebarOpen ? !open : true)
               setSidebarOpen(true);
             }}
+            className="h-12 gap-4 pl-6 text-sm group-data-[collapsible=icon]:!pl-4 text-sidebar-foreground"
           >
             {icon}
             <span className="truncate">{title}</span>

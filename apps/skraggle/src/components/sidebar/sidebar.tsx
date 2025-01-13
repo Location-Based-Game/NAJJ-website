@@ -160,7 +160,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <Menu opacity={0.6} />
+      <Menu color="white" opacity={0.3} />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

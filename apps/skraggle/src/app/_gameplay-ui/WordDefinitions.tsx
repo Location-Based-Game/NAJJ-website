@@ -77,7 +77,7 @@ export default function WordDefinitions() {
                   exit={{ opacity: 0, y: 30 }}
                   transition={{ type: "spring", duration: 0.4 }}
                   className={cn(
-                    "pointer-events-auto absolute top-4 z-20 w-[36rem] border-none p-4 text-white",
+                    "pointer-events-auto absolute top-4 z-20 w-[36rem] border-none text-white",
                     panelStyles.woodBorder,
                   )}
                 >
@@ -96,12 +96,12 @@ export default function WordDefinitions() {
                           key={i}
                           className="drop-shadow-dark"
                         >
-                          <AccordionTrigger className="outline-none">
+                          <AccordionTrigger className="outline-none text-xl font-bold">
                             {e.word}
                           </AccordionTrigger>
-                          <AccordionContent>
+                          <AccordionContent className="text-md">
                             <div>{e.definition}</div>
-                            <div>{e.example}</div>
+                            <div className="mt-3">{e.example}</div>
                           </AccordionContent>
                         </AccordionItem>
                       );

@@ -28,7 +28,7 @@ export default function NavPreviousBreadCrumb({
     <BreadcrumbItem>
       <Button
         variant="ghost"
-        className="px-2 py-2"
+        className="px-2 py-2 font-normal text-white/60 hover:bg-[#4b4e5344] hover:text-white/60"
         onClick={() => {
           if (!!gameId) {
             onLeave.current = async () => {
