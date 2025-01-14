@@ -30,54 +30,37 @@ export default function LeaveGameProvider({ children }: LeaveGameProvider) {
   const onLeave = useRef<() => Promise<void>>(async () => {});
   const [enableButtons, setEnableButtons] = useState(false);
 
+  const handleCancel = () => {
+    onCancel.current();
+    setOpenDialogue(false);
+  };
+
+  const handleAction = async () => {
+    try {
+      setEnableButtons(false);
+      await onLeave.current();
+      await new Promise((res) =>
+        setTimeout(() => {
+          res("");
+        }, 200),
+      );
+    } finally {
+      setOpenDialogue(false);
+    }
+  };
+
   useEffect(() => {
     setEnableButtons(openDialogue);
   }, [openDialogue]);
 
   return (
     <LeaveGameContext.Provider value={{ setOpenDialogue, onCancel, onLeave }}>
-      <AlertDialog open={openDialogue}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Leave Game?</AlertDialogTitle>
-            <AlertDialogDescription>
-              You will be removed from this room.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel
-              onClick={() => {
-                onCancel.current();
-                setOpenDialogue(false);
-              }}
-              disabled={!enableButtons}
-            >
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={async () => {
-                try {
-                  setEnableButtons(false);
-                  await onLeave.current();
-                  await new Promise((res) =>
-                    setTimeout(() => {
-                      res("");
-                    }, 200),
-                  );
-                } finally {
-                  setOpenDialogue(false);
-                }
-              }}
-              disabled={!enableButtons}
-            >
-              {!enableButtons && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Leave
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <LeaveGameView
+        openDialogue={openDialogue}
+        handleCancel={handleCancel}
+        handleAction={handleAction}
+        enableButtons={enableButtons}
+      />
       {children}
     </LeaveGameContext.Provider>
   );
@@ -92,4 +75,48 @@ export function useLeaveGame() {
   }
 
   return context;
+}
+
+interface LeaveGameView {
+  openDialogue: boolean;
+  handleCancel: () => void;
+  handleAction: () => Promise<void>;
+  enableButtons: boolean;
+}
+
+export function LeaveGameView({
+  openDialogue,
+  handleCancel,
+  handleAction,
+  enableButtons,
+}: LeaveGameView) {
+  return (
+    <AlertDialog open={openDialogue}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Leave Game?</AlertDialogTitle>
+          <AlertDialogDescription>
+            You will be removed from this room.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel
+            onClick={() => handleCancel()}
+            disabled={!enableButtons}
+          >
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => handleAction()}
+            disabled={!enableButtons}
+          >
+            {!enableButtons && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Leave
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
 }

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { HexColorPicker } from "react-colorful";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -10,40 +10,43 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/tailwindUtils";
 
-type ColorPickerProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+interface ColorPickerProps {
   value: string;
+  onChange: (value: string) => void;
   onBlur?: () => void;
-  onClose: (value:string) => void;
-};
+  onClose: () => void; 
+}
 
 const ColorPicker = ({
+  disabled,
   value,
+  onChange,
   onBlur,
-  onClose,
+  name,
   className,
+  onClose,
   ...props
-}: ColorPickerProps) => {
+}: ColorPickerProps & ButtonProps) => {
   const [open, setOpen] = useState(false);
-  const [color, setColor] = useState("");
 
   const parsedValue = useMemo(() => {
     return value || "#FFFFFF";
   }, [value]);
 
   return (
-    <Popover
-      onOpenChange={(open) => {
-        if (!open) {
-          onClose(color);
-        }
-        setOpen(open);
-      }}
-      open={open}
-    >
-      <PopoverTrigger asChild disabled={props.disabled} onBlur={onBlur}>
+    <Popover 
+    onOpenChange={(open) => {
+      if (!open) {
+        onClose();
+      }
+      setOpen(open);
+    }}
+     open={open}>
+      <PopoverTrigger asChild disabled={disabled} onBlur={onBlur}>
         <Button
           {...props}
           className={cn("block", className)}
+          name={name}
           onClick={() => {
             setOpen(true);
           }}
@@ -52,17 +55,16 @@ const ColorPicker = ({
             backgroundColor: parsedValue,
           }}
           variant="outline"
-        ></Button>
+        >
+          <div />
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full">
-        <HexColorPicker
-          color={parsedValue}
-          onChange={(color) => setColor(color)}
-        />
+        <HexColorPicker color={parsedValue} onChange={onChange} />
         <Button
           className="mt-4 w-full"
           onClick={() => {
-            onClose(color);
+            onClose();
             setOpen(false);
           }}
         >
@@ -72,6 +74,7 @@ const ColorPicker = ({
     </Popover>
   );
 };
+
 ColorPicker.displayName = "ColorPicker";
 
 export { ColorPicker };
