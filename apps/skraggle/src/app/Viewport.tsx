@@ -10,7 +10,8 @@ import usePlayersData from "@/app/usePlayersData";
 import GameplayUIContextProvider from "./_gameplay-ui/GameplayUIContextProvider";
 import GameplayUI from "./_gameplay-ui/GameplayUI";
 import { forwardRef, useEffect, useState } from "react";
-import cursors from "@styles/cursors.module.css"
+import cursors from "@styles/cursors.module.css";
+import loadingBackground from "@styles/loadingBackground.module.css";
 import useTransmitWebRTCData from "./_gameplay-ui/useTransmitWebRTCData";
 
 const Unity = dynamic(
@@ -34,7 +35,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
     useSetGameState();
     useTransmitWebRTCData();
 
-    const [viewPortCursor, setViewPortCursor] = useState(cursors.auto)
+    const [viewPortCursor, setViewPortCursor] = useState(cursors.auto);
     const updateCursor = (cursorType: any) => {
       setViewPortCursor(cursors[cursorType]);
     };
@@ -52,11 +53,18 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
       <div
         ref={ref}
         className={cn(
-          "relative flex h-[calc(100dvh-3rem)] items-center justify-center bg-secondary",
+          "relative flex h-[calc(100dvh-3rem)] items-center justify-center bg-[#eaae6a]",
           className,
         )}
         {...props}
       >
+        <div
+          className={cn(
+            loadingBackground.loadingBackground,
+            "transition-opacity",
+            !splashScreenComplete ? "opacity-100" : "opacity-0",
+          )}
+        ></div>
         <div className="pointer-events-none absolute z-10 flex h-full w-full items-center justify-center overflow-hidden">
           <GameplayUIContextProvider>
             {gameState === "Menu" ? <MainMenuPanel /> : <GameplayUI />}
@@ -68,7 +76,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
             "h-full w-full transition-opacity duration-700",
             isGameActive ? "pointer-events-auto" : "pointer-events-none",
             splashScreenComplete ? "opacity-100" : "opacity-0",
-            viewPortCursor
+            viewPortCursor,
           )}
         />
       </div>

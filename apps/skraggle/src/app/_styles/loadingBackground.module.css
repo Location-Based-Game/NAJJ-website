@@ -1,0 +1,63 @@
+.loadingBackground {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #eaae6a;
+}
+
+.loadingBackground::before {
+  content: "";
+  position: absolute;
+  overflow: hidden;
+  left: 50%;
+  translate: -50% 0%;
+  width: 100%;
+  height: 100%;
+  background-image: url("/Loading-Words.png");
+  background-size: 50%;
+  animation:
+    pan 60s linear infinite,
+    opacity-pulse 4s linear infinite;
+  will-change: background-position;
+  transform: scale(4);
+}
+
+@media (min-width: 400px) {
+  .loadingBackground::before {
+    transform: scale(3);
+  }
+}
+
+@media (min-width: 800px) {
+  .loadingBackground::before {
+    transform: scale(2);
+  }
+}
+
+@media (min-width: 1200px) {
+  .loadingBackground::before {
+    transform: scale(1);
+  }
+}
+
+@keyframes opacity-pulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes pan {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
