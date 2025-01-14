@@ -85,6 +85,7 @@
     "prettier-plugin-tailwindcss": "^0.6.6",
     "react-cosmos": "^6.2.3",
     "react-cosmos-next": "^6.2.0",
+    "react-cosmos-plugin-boolean-input": "^6.2.3",
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.2.5",
     "typescript": "^5"

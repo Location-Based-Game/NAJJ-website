@@ -1,6 +1,6 @@
 "use client";
 
-import { BookA, List, Users } from "lucide-react";
+import { BookA, List } from "lucide-react";
 
 import {
   Collapsible,
@@ -20,15 +20,11 @@ import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import { navItems } from "./SidebarNavMain";
 
 const AnimatedDropdown = motion.create(SidebarMenuSub);
 
 export function SidebarNavGameplay() {
-  const players = useSelector((state: RootState) => state.players);
-
   return (
     <SidebarMenu>
       <SidebarCollapsible title="Main Menu" icon={<List />}>
@@ -41,11 +37,6 @@ export function SidebarNavGameplay() {
               </Link>
             </SidebarMenuSubButton>
           </SidebarMenuSubItem>
-        ))}
-      </SidebarCollapsible>
-      <SidebarCollapsible title="Players" icon={<Users />} defaultOpen>
-        {Object.values(players).map((player, i) => (
-          <SidebarMenuSubItem key={i}>{player.name}</SidebarMenuSubItem>
         ))}
       </SidebarCollapsible>
       <SidebarCollapsible title="Words" icon={<BookA />} defaultOpen>

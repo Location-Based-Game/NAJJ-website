@@ -16,7 +16,6 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { ArrowRightFromLine } from "lucide-react";
-import styles from "@styles/tileIcon.module.css";
 import useLogOut from "@/hooks/useLogOut";
 import { useState } from "react";
 import { useLeaveGame } from "@/app/LeaveGameProvider";
@@ -27,29 +26,52 @@ export function GameInfoDropdown() {
   const { leaveGame } = useLogOut();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const { setOpenDialogue, onLeave } = useLeaveGame();
+  const { gameId } = useSelector((state: RootState) => state.logIn);
 
+  const onDropdownSelect = (e: Event) => {
+    e.preventDefault();
+    onLeave.current = async () => {
+      setDropdownOpen(false);
+      await leaveGame("Home");
+    };
+    setOpenDialogue(true);
+  };
+
+  return (
+    <GameInfoDropdownView
+      isDropdownOpen={isDropdownOpen}
+      setDropdownOpen={setDropdownOpen}
+      gameId={gameId}
+      onDropdownSelect={onDropdownSelect}
+    />
+  );
+}
+
+interface GameInfoDropdownView {
+  isDropdownOpen: boolean;
+  setDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  gameId: string;
+  onDropdownSelect: (e: Event) => void;
+}
+
+export function GameInfoDropdownView({
+  isDropdownOpen,
+  setDropdownOpen,
+  gameId,
+  onDropdownSelect,
+}: GameInfoDropdownView) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu open={isDropdownOpen} onOpenChange={setDropdownOpen}>
-          <DropdownTrigger />
+          <DropdownTrigger gameId={gameId} />
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
             align="start"
             side="bottom"
             sideOffset={4}
           >
-            <DropdownMenuItem
-              className="gap-4 p-2"
-              onSelect={(e) => {
-                e.preventDefault();
-                onLeave.current = async () => {
-                  setDropdownOpen(false);
-                  await leaveGame("Home");
-                };
-                setOpenDialogue(true);
-              }}
-            >
+            <DropdownMenuItem className="gap-4 p-2" onSelect={onDropdownSelect}>
               <ArrowRightFromLine className="size-4 opacity-70" />
               <div className="font-medium text-muted-foreground">
                 Leave Game
@@ -62,9 +84,7 @@ export function GameInfoDropdown() {
   );
 }
 
-function DropdownTrigger() {
-  const { gameId } = useSelector((state: RootState) => state.logIn);
-
+function DropdownTrigger({ gameId }: { gameId: string }) {
   const getLetter = () => {
     if (gameId) {
       return gameId.toUpperCase()[0];

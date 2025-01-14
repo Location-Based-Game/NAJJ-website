@@ -61,7 +61,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
         <div
           className={cn(
             loadingBackground.loadingBackground,
-            "transition-opacity",
+            "transition-opacity pointer-events-none",
             !splashScreenComplete ? "opacity-100" : "opacity-0",
           )}
         ></div>
