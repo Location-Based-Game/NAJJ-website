@@ -9,7 +9,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test": "npm run build && firebase emulators:exec --only database,functions \"jest __tests-endpoints__\""
+    "test": "npm run build && firebase emulators:exec --only database,functions \"jest __tests-functions__\""
   },
   "engines": {
     "node": "20"

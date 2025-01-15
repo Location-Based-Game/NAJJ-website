@@ -6,7 +6,10 @@ const letters =
     "",
   );
 
-export function getLetterBlocks(currentItems: Inventory, playerId: string) {
+export function getLetterBlocks(
+  currentItems: Inventory,
+  playerId: string,
+): Inventory {
   const letterBlocks: Record<string, LetterBlock> = {};
   const lettersOnStandCount = Object.values(currentItems).filter((item) => {
     if (item.type !== ItemTypes.LetterBlock) return false;
@@ -26,7 +29,7 @@ export function getLetterBlocks(currentItems: Inventory, playerId: string) {
       type: ItemTypes.LetterBlock,
       isPlaced: false,
       gridPosition: [],
-      isDestroyed: false
+      isDestroyed: false,
     };
   }
 

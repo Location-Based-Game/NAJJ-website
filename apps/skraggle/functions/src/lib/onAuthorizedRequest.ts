@@ -17,7 +17,7 @@ export function onAuthorizedRequest(
     } catch (error) {
       deleteSession(response);
       logger.error(`${error}`);
-      response.send({ error: `${error}` });
+      response.status(400).send({ error: `${error}` });
     }
   });
 }
