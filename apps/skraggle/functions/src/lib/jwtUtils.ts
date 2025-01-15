@@ -1,6 +1,5 @@
 import { jwtVerify, SignJWT } from "jose";
 
-//UPDATE SECRET KEY
 const secretKey = process.env.JWT_SECRET_TOKEN;
 const key = new TextEncoder().encode(secretKey);
 

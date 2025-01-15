@@ -1,5 +1,5 @@
 import { serverTimestamp } from "firebase/database";
-import { db, Reference } from "../lib/firebaseAdmin";
+import { db } from "../lib/firebaseAdmin";
 import { GameStates, PlayerData } from "../types";
 import { getLetterBlocks } from "../lib/getLetterBlocks";
 
@@ -9,22 +9,7 @@ export async function addPlayer(
 ): Promise<string> {
   const gameStateRef = db.ref(`activeGames/${gameId}/gameState`);
   const gameState = (await gameStateRef.get()).val() as GameStates;
-
-  const playersRef = db.ref(`activeGames/${gameId}/players`);
-  let playerId = "";
-
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.NEXT_PUBLIC_USE_PLACEHOLDER_CODE === "true"
-  ) {
-    const testPlayerRef = db.ref(
-      `activeGames/${gameId}/players/testPlayer/name`,
-    );
-    await testPlayerRef.set(playerName);
-    playerId = "testPlayer";
-  } else {
-    playerId = await addPlayerTransaction(playersRef, playerName);
-  }
+  const playerId = await addPlayerTransaction(gameId, playerName);
 
   //add player to webRTC peers list
   const signalingRef = db.ref(
@@ -59,18 +44,20 @@ const pastelColors: string[] = [
   "#91ffd1", // Light mint
 ];
 
-async function addPlayerTransaction(playersRef: Reference, playerName: string) {
+async function addPlayerTransaction(gameId: string, playerName: string) {
   let playerId = "";
-
-  await playersRef.transaction(
-    (currentPlayers: Record<string, PlayerData>) => {
+  let errorMessage = "";
+  const playersRef = db.ref(`activeGames/${gameId}/players`);
+  const result = await playersRef.transaction(
+    (currentPlayers: Record<string, PlayerData> | null) => {
       if (currentPlayers === null) {
         currentPlayers = {};
       }
 
       const playerCount = Object.keys(currentPlayers).length;
       if (playerCount >= 8) {
-        throw new Error("Max players reached!");
+        errorMessage = "Max players reached!";
+        return null;
       }
 
       const newPlayerRef = playersRef.push();
@@ -81,15 +68,20 @@ async function addPlayerTransaction(playersRef: Reference, playerName: string) {
           color: pastelColors[playerCount],
           turn: playerCount,
           isOnline: true,
-          points: 0
+          points: 0,
         };
       } else {
-        throw new Error("Player key not created");
+        errorMessage = "Player key not created";
+        return null;
       }
 
       return currentPlayers;
     },
   );
 
-  return playerId;
+  if (!errorMessage) {
+    return playerId;
+  } else {
+    throw new Error(errorMessage);
+  }
 }

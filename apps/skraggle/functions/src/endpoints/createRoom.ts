@@ -2,9 +2,9 @@ import { z } from "zod";
 import { getSessionData, setSessionCookie } from "../lib/sessionUtils";
 import { addPlayer } from "../firebase-actions/addPlayer";
 import { db } from "../lib/firebaseAdmin";
-import { GameRoom } from "../types";
 import validateBody from "../lib/validateBody";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
+import { createRoomData } from "../firebase-actions/createRoomData";
 
 const createRoomSchema = z.object({
   playerName: z.string().min(1),
@@ -18,16 +18,7 @@ export const createRoom = onAuthorizedRequest(async (request, response) => {
 
   const { playerName } = validatedData;
   const { gameId } = await getSessionData(request);
-  const gameRoomData: GameRoom = {
-    id: gameId,
-    gameState: "Menu",
-    currentTurn: 0,
-    players: {},
-    inventories: {},
-    grid: {},
-  };
-
-  await db.ref(`activeGames/${gameId}`).set(gameRoomData);
+  await createRoomData(gameId);
 
   const playerId = await addPlayer(gameId, playerName);
 
