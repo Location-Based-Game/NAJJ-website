@@ -43,7 +43,7 @@ export async function moveInventoryItemToGrid(
     const diceCount = (await gridRef.get()).numChildren();
     if (diceCount === playerCount * 2 && !hasTransitionedToGameplay) {
       hasTransitionedToGameplay = true;
-      transitionTurnsDiceRollToFirstTurn(gameId);
+      await transitionTurnsDiceRollToFirstTurn(gameId);
     }
   }
 

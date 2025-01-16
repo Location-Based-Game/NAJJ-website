@@ -16,7 +16,6 @@ export const addPlayer = onAuthorizedRequest(async (request, response) => {
   );
 
   const { playerName } = validatedData;
-
   const { gameId } = await getSessionData(request);
 
   //first check if room exists

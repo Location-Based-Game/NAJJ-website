@@ -3,15 +3,15 @@ import { Inventory } from "../types";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { currentItemsSchema } from "../schemas/currentItemsSchema";
 import { moveInventoryItemToGrid } from "../firebase-actions/moveInventoryItemToGrid";
+import validateBody from "../lib/validateBody";
 
 export const setInventory = onAuthorizedRequest(async (request, response) => {
-  const validatedData = currentItemsSchema.safeParse(JSON.parse(request.body));
-  if (!validatedData.success) {
-    response.send({ error: "Invalid Data!" });
-    return;
-  }
+  const validatedData = validateBody<typeof currentItemsSchema>(
+    request.body,
+    currentItemsSchema,
+  );
 
-  const { currentItems } = validatedData.data;
+  const { currentItems } = validatedData;
   const { gameId, playerId } = await getSessionData(request);
 
   await moveInventoryItemToGrid(gameId, playerId, currentItems as Inventory);

@@ -4,7 +4,7 @@ import { addPlayer } from "../../src/firebase-actions/addPlayer";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
 import { SessionData } from "../../src/schemas/sessionSchema";
 import { encryptJWT } from "../../src/lib/jwtUtils";
-import { GameStates, PlayersData } from "../../src/types";
+import { GameStates, Inventory, ItemTypes, PlayersData } from "../../src/types";
 import { createGameId } from "../../src/lib/createGameId";
 
 const express = require("express");
@@ -53,6 +53,13 @@ describe("startGame endpoint", () => {
     const gameState = (await gameStateRef.get()).val() as GameStates;
     expect(gameState).toEqual("TurnsDiceRoll");
 
+    // Check if starting dice is in inventory
+    const inventoryRef = db.ref(`activeGames/${gameId}/inventories/${hostPlayerId}`);
+    const inventorySnapshot = await inventoryRef.get();
+    expect(inventorySnapshot.exists()).toBeTruthy();
+    const items = Object.values(inventorySnapshot.val() as Inventory)
+    expect(items.every(item => item.type === ItemTypes.StartingDice)).toBeTruthy()
+
     // Turn numbers are different
     const playersData2 = (await playersRef.get()).val() as PlayersData;
     expect(playersData2[hostPlayerId].turn).not.toEqual(
@@ -83,5 +90,24 @@ describe("startGame endpoint", () => {
 
     expect(response.status).toBe(403);
     expect(response.body).toHaveProperty("error");
+  }, 100000);
+
+  test("Throws an error if trying to start a game that does not exist", async () => {
+    const sessionData: SessionData = {
+      gameId: "xxxx",
+      playerId: "",
+      playerName: "",
+    };
+    const sessionJWT = await encryptJWT(sessionData);
+
+    const response = await supertest(app)
+      .post("/startGame")
+      .set("Origin", "http://localhost")
+      .set("Content-Type", "application/json")
+      .set("Cookie", [`session=${sessionJWT}`]);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toEqual("Error: Game not available!")
   }, 100000);
 });

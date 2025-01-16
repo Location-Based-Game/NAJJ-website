@@ -30,5 +30,5 @@ export async function transitionTurnsDiceRollToFirstTurn(gameId: string) {
     letterBlockInventories[id] = getLetterBlocks({}, id);
   });
 
-  inventoriesRef.set(letterBlockInventories);
+  await inventoriesRef.set(letterBlockInventories);
 }
