@@ -1,9 +1,10 @@
 import { createRoom } from "../../src";
 import { db } from "../../src/lib/firebaseAdmin";
+import { createGameId } from "../../src/lib/createGameId";
 const express = require("express");
 const supertest = require("supertest");
 
-const gameId = "aaaa";
+const gameId = createGameId()
 
 jest.mock("../../src/lib/sessionUtils", () => ({
   getSessionData: jest.fn(() => Promise.resolve({ gameId })),

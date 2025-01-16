@@ -2,11 +2,12 @@ import { addPlayer } from "../../src/firebase-actions/addPlayer";
 import { addPlayer as addPlayerEndPoint } from "../../src";
 import { db } from "../../src/lib/firebaseAdmin";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
+import { createGameId } from "../../src/lib/createGameId";
 
 const express = require("express");
 const supertest = require("supertest");
 
-const gameId = "aaab";
+const gameId = createGameId();
 
 jest.mock("../../src/lib/sessionUtils", () => ({
   getSessionData: jest.fn(() => Promise.resolve({ gameId })),

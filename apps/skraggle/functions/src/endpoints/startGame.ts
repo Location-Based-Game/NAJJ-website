@@ -1,32 +1,23 @@
-import { onRequest } from "firebase-functions/https";
-import { getSessionData, deleteSession } from "../lib/sessionUtils";
+import { getSessionData } from "../lib/sessionUtils";
 import getHost from "../firebase-actions/getHost";
 import setGameState from "../firebase-actions/setGameState";
 import { createTurnNumbers } from "../firebase-actions/createTurnNumbers";
+import * as logger from "firebase-functions/logger";
+import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 
-export const startGame = onRequest(
-  { cors: true },
-  async (request, response) => {
-    response.set("Access-Control-Allow-Credentials", "true");
+export const startGame = onAuthorizedRequest(async (request, response) => {
+  const { gameId, playerId } = await getSessionData(request);
 
-    try {
-      const { gameId, playerId } = await getSessionData(request);
+  const host = await getHost(gameId);
+  if (host !== playerId) {
+    const error = "Only the host can start the game";
+    response.status(403).send({ error });
+    logger.error(error);
+    return;
+  }
 
-      const host = await getHost(gameId);
-      if (host !== playerId) {
-        response
-          .status(403)
-          .send({ error: "Only the host can start the game" });
-        return;
-      }
+  await setGameState(gameId, "TurnsDiceRoll");
+  await createTurnNumbers(gameId);
 
-      await setGameState(gameId, "TurnsDiceRoll");
-      await createTurnNumbers(gameId);
-
-      response.send({ data: "Success" });
-    } catch (error) {
-      deleteSession(response);
-      response.send({ error: `${error}` });
-    }
-  },
-);
+  response.send({ data: "Success" });
+});

@@ -4,6 +4,7 @@ import { db } from "../../src/lib/firebaseAdmin";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
 import { SessionData } from "../../src/schemas/sessionSchema";
 import { encryptJWT } from "../../src/lib/jwtUtils";
+import { createGameId } from "../../src/lib/createGameId";
 const express = require("express");
 const supertest = require("supertest");
 
@@ -13,7 +14,8 @@ app.post("/leaveGame", (req: any, res: any) => leaveGame(req as any, res));
 
 describe("leaveGame endpoint", () => {
   test("host and only player leaves the game and room is deleted", async () => {
-    const gameId = "aaac";
+    const gameId = createGameId();
+
     await createRoomData(gameId);
     const playerId = await addPlayer(gameId, "Host Player");
     const sessionData: SessionData = {
@@ -33,7 +35,7 @@ describe("leaveGame endpoint", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
-    
+
     // Check if room is deleted
     const gameRef = db.ref(`activeGames/${gameId}`);
     const gameExists = (await gameRef.get()).exists();
@@ -41,16 +43,17 @@ describe("leaveGame endpoint", () => {
   }, 100000);
 
   test("host leaves the game and a different player becomes host", async () => {
-    const gameId = "aaad";
+    const gameId = createGameId();
+
     await createRoomData(gameId);
     const hostId = await addPlayer(gameId, "Host Player");
 
     // Adds two players. The first player should become host when the current host leaves
-    const otherPlayerId1 = await addPlayer(gameId, "Other Player 1")
-    await addPlayer(gameId, "Other Player 2")
+    const otherPlayerId1 = await addPlayer(gameId, "Other Player 1");
+    await addPlayer(gameId, "Other Player 2");
 
     // Check if host player is added
-    const hostPlayerRef = db.ref(`activeGames/${gameId}/players/${hostId}`)
+    const hostPlayerRef = db.ref(`activeGames/${gameId}/players/${hostId}`);
     const hostExists = (await hostPlayerRef.get()).exists();
     expect(hostExists).toBeTruthy();
 
@@ -61,7 +64,7 @@ describe("leaveGame endpoint", () => {
     };
     const sessionJWT = await encryptJWT(sessionData);
 
-    const hostIdRef = db.ref(`activeGames/${gameId}/host`)
+    const hostIdRef = db.ref(`activeGames/${gameId}/host`);
     await hostIdRef.set(hostId);
     const response = await supertest(app)
       .post("/leaveGame")
@@ -78,7 +81,7 @@ describe("leaveGame endpoint", () => {
     expect(hostStillExists).toBeFalsy();
 
     // Check if game host is set to Other Player 1's ID
-    const newHostId = (await hostIdRef.get()).val()
-    expect(newHostId).toEqual(otherPlayerId1)
+    const newHostId = (await hostIdRef.get()).val();
+    expect(newHostId).toEqual(otherPlayerId1);
   }, 100000);
 });
