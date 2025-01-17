@@ -2,8 +2,8 @@ import { db } from "../lib/firebaseAdmin";
 import getWordDefinitions from "../lib/getWordDefinitions";
 import { letterPoints } from "../lib/letterPoints";
 import {
-  challengeWordRecordSchema,
   Challengers,
+  ChallengeWordsData,
 } from "../schemas/challengeWordSchema";
 import { WordData } from "../schemas/wordDataSchema";
 import { Inventory, ItemTypes, LetterBlock, TileType } from "../types";
@@ -11,11 +11,14 @@ import moveChallengedItemsToInventory from "./moveChallengedItemsToInventory";
 
 export default async function calculatePoints(
   gameId: string,
-  playerId: string,
+  challengeWordsData: ChallengeWordsData,
 ): Promise<{ returnedLetters: boolean }> {
-  const wordsRef = db.ref(`activeGames/${gameId}/challengeWords/words`);
-  const wordsSnapshot = (await wordsRef.get()).val();
-  const words = challengeWordRecordSchema.parse(wordsSnapshot);
+  const { words, playerId, countdown } = challengeWordsData;
+
+  // Give 1 second of leeway for good measure
+  if ((countdown.seconds - 1) * 1000 - (Date.now() - countdown.startAt) > 0) {
+    throw new Error("Cannot end turn prematurely!")
+  }
 
   // Get definitions
   const wordDefinitions = await getWordDefinitions(
@@ -64,7 +67,7 @@ export default async function calculatePoints(
           });
           return inventory;
         });
-  
+
         playerInventoryRef.transaction((inventory: Inventory) => {
           if (inventory === null) return inventory;
           Object.keys(items).forEach((itemId) => {
@@ -72,8 +75,8 @@ export default async function calculatePoints(
           });
           return inventory;
         });
-      })
-    ])
+      }),
+    ]);
   });
 
   if (successfulChallengersArr.length > 0) {
@@ -99,13 +102,13 @@ export default async function calculatePoints(
   }
 }
 
-function calculateWordPoints(wordData:WordData) {
+function calculateWordPoints(wordData: WordData) {
   let wordPoints = 0;
   for (let i = 0; i < wordData.word.length; i++) {
     wordPoints += letterPoints[wordData.word[i].toUpperCase()];
   }
-  wordPoints += wordData.doubleBonus + wordData.tripleBonus
-  wordData.scoreMultipliers.forEach((multiplier:TileType) => {
+  wordPoints += wordData.doubleBonus + wordData.tripleBonus;
+  wordData.scoreMultipliers.forEach((multiplier: TileType) => {
     if (multiplier === TileType.TripleWordScore) {
       wordPoints *= 3;
     } else if (multiplier === TileType.DoubleWordScore) {

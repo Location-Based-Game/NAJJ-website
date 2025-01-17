@@ -3,6 +3,7 @@ import ChallengeWordsList from "../_challenge-words/ChallengeWordsList";
 import { fetchApi } from "@/lib/fetchApi";
 import useLogOut from "@/hooks/useLogOut";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
+import { useEffect, useRef } from "react";
 
 export default function ChallengeWordsContainer() {
   const { getCurrentItems } = useGameplayUIContext();
@@ -13,6 +14,19 @@ export default function ChallengeWordsContainer() {
       logOutOnError(error);
     });
   };
+
+  const timerRef = useRef<NodeJS.Timeout>();
+  useEffect(() => {
+    timerRef.current = setTimeout(() => {
+      handleChallengeTimeout();
+    }, 10000);
+    
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <motion.div
@@ -26,7 +40,6 @@ export default function ChallengeWordsContainer() {
           className="absolute bottom-0 right-0 h-full w-full origin-left bg-[#d4d4d4]"
           animate={{ scaleX: 0 }}
           transition={{ duration: 10, ease: "linear" }}
-          onAnimationComplete={handleChallengeTimeout}
         />
         <span className="animate-pulse text-gray-600">
           Waiting for challengers

@@ -2,8 +2,11 @@ import { moveInventoryItemToGrid } from "../firebase-actions/moveInventoryItemTo
 import { db } from "../lib/firebaseAdmin";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
-import { submittedChallengeWordsSchema } from "../schemas/challengeWordSchema";
+import { ChallengeWordsData, submittedChallengeWordsSchema } from "../schemas/challengeWordSchema";
 import { Inventory } from "../types";
+import { ServerValue } from "firebase-admin/database";
+
+export const COUNTDOWN_SECONDS = 10;
 
 export const submitChallengeWords = onAuthorizedRequest(
   async (request, response) => {
@@ -17,15 +20,7 @@ export const submitChallengeWords = onAuthorizedRequest(
     const { submittedChallengeWords, currentItems } = validatedData.data;
 
     const { gameId, playerId } = await getSessionData(request);
-    const challengeWordsRef = db.ref(
-      `activeGames/${gameId}/challengeWords/words`,
-    );
-    await challengeWordsRef.set(submittedChallengeWords);
-
-    const currentPlacedLettersRef = db.ref(
-      `activeGames/${gameId}/challengeWords/placedLetters`,
-    );
-    
+    const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
     const placedItems = Object.entries(currentItems).reduce<
       typeof currentItems
     >((obj, [key, value]) => {
@@ -35,7 +30,18 @@ export const submitChallengeWords = onAuthorizedRequest(
       return obj;
     }, {});
 
-    currentPlacedLettersRef.set(placedItems);
+    const data: ChallengeWordsData = {
+      playerId,
+      words: submittedChallengeWords,
+      placedLetters: placedItems as Inventory,
+      // Set timestamp to ensure a minimum amount of time as has passed before turn can end
+      countdown: {
+        startAt: ServerValue.TIMESTAMP,
+        seconds: COUNTDOWN_SECONDS,
+      },
+    };
+
+    await challengeWordsRef.set(data);
 
     await moveInventoryItemToGrid(gameId, playerId, currentItems as Inventory);
 

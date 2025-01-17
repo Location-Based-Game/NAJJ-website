@@ -1,4 +1,4 @@
-import { ChallengeWordsRecord } from "./schemas/challengeWordSchema";
+import { ChallengeWordsData } from "./schemas/challengeWordSchema";
 import type { Item } from "./schemas/itemSchema";
 
 export type GameStates = "Menu" | "TurnsDiceRoll" | "FirstTurn" | "Gameplay";
@@ -10,10 +10,7 @@ export type GameRoom = {
   inventories: Inventories;
   grid: Inventory;
   currentTurn: number;
-  challengeWords?: {
-    words: ChallengeWordsRecord;
-    placedLetters: Inventory
-  }
+  challengeWords?: ChallengeWordsData;
 };
 
 export enum ItemTypes {
@@ -36,14 +33,13 @@ export type PlayerData = {
 
 export type PlayersData = Record<string, PlayerData>;
 
-export enum TileType
-{
-    Blank,
-    DoubleLetterScore,
-    TripleLetterScore,
-    DoubleWordScore,
-    TripleWordScore,
-    CenterStart
+export enum TileType {
+  Blank,
+  DoubleLetterScore,
+  TripleLetterScore,
+  DoubleWordScore,
+  TripleWordScore,
+  CenterStart,
 }
 
 export type LetterBlock = Item<{ letter: string }>;

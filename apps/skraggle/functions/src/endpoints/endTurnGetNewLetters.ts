@@ -4,6 +4,7 @@ import { db } from "../lib/firebaseAdmin";
 import { getLetterBlocks } from "../lib/getLetterBlocks";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
+import { challengeWordsDataSchema } from "../schemas/challengeWordSchema";
 import { currentItemsSchema } from "../schemas/currentItemsSchema";
 import { GameStates, Inventory } from "../types";
 
@@ -20,8 +21,10 @@ export const endTurnGetNewLetters = onAuthorizedRequest(
 
     const { gameId, playerId } = await getSessionData(request);
 
-    const { returnedLetters } = await calculatePoints(gameId, playerId);
     const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
+    const challengeWordsSnapshot = await challengeWordsRef.get()
+    const challengeWordsData = challengeWordsDataSchema.parse(challengeWordsSnapshot.val());
+    const { returnedLetters } = await calculatePoints(gameId, challengeWordsData);
     await challengeWordsRef.remove();
 
     // Get new letter blocks if the placed letters did not return to stand
