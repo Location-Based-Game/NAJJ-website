@@ -53,7 +53,7 @@ export default function SelectLettersToWagerPopover({
     setOpen(false);
     setIsChallenged(true);
 
-    const wageredItems = letterSelection
+    const wageredLetters = letterSelection
       .map((index) => letterBlocks[parseInt(index)])
       .reduce<Record<string, LetterBlock>>((obj, current) => {
         obj[current.itemId] = current;
@@ -62,14 +62,14 @@ export default function SelectLettersToWagerPopover({
 
     const data: ChallengeWordSchemaType = {
       wordId,
-      wageredItems,
+      wageredLetters,
     };
 
     await fetchApi("challengeWord", data).catch((error) => {
       logOutOnError(error);
     });
 
-    Object.keys(wageredItems).forEach((itemId) => {
+    Object.keys(wageredLetters).forEach((itemId) => {
       callUnityFunction("SelectWageredLetters", itemId);
     });
   };

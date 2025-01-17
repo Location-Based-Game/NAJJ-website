@@ -2,28 +2,40 @@ import { z } from "zod";
 import { db } from "../lib/firebaseAdmin";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
-import { Item } from "../schemas/itemSchema";
+import { LetterBlock } from "../types";
+import validateBody from "../lib/validateBody";
 
 const challengeWordSchema = z.object({
   wordId: z.string(),
-  wageredItems: z.record(z.custom<Item<any>>())
+  wageredLetters: z.record(z.custom<LetterBlock>()),
 });
 
-export type ChallengeWordSchemaType = z.infer<typeof challengeWordSchema>
+export type ChallengeWordSchemaType = z.infer<typeof challengeWordSchema>;
 
 export const challengeWord = onAuthorizedRequest(async (request, response) => {
-  const validatedData = challengeWordSchema.safeParse(JSON.parse(request.body));
-  if (!validatedData.success) {
-    response.send({ error: "Invalid Data!" });
-    return;
+  const validatedData = validateBody<typeof challengeWordSchema>(
+    request.body,
+    challengeWordSchema,
+  );
+  const { wordId, wageredLetters } = validatedData;
+
+  if (Object.keys(wageredLetters).length === 0) {
+    throw new Error("No letters wagered!");
   }
-  const { wordId, wageredItems } = validatedData.data;
 
   const { gameId, playerId } = await getSessionData(request);
-  const challengersRef = db.ref(
-    `activeGames/${gameId}/challengeWords/words/${wordId}/challengers`,
+
+  const wordIdRef = db.ref(
+    `activeGames/${gameId}/challengeWords/words/${wordId}`,
   );
-  await challengersRef.update({ [playerId]: wageredItems });
-  
+  const wordIdSnapshot = await wordIdRef.get();
+  if (!wordIdSnapshot.exists()) {
+    response.status(400).send({ error: "Error: Invalid wordId!" });
+    return;
+  }
+
+  const challengersRef = wordIdRef.child("challengers")
+  await challengersRef.update({ [playerId]: wageredLetters });
+
   response.send({ data: "Success" });
 });
