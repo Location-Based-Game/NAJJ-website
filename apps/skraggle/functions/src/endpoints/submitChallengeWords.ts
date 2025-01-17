@@ -2,7 +2,11 @@ import { moveInventoryItemToGrid } from "../firebase-actions/moveInventoryItemTo
 import { db } from "../lib/firebaseAdmin";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
-import { ChallengeWordsData, submittedChallengeWordsSchema } from "../schemas/challengeWordSchema";
+import validateBody from "../lib/validateBody";
+import {
+  ChallengeWordsData,
+  submittedChallengeWordsSchema,
+} from "../schemas/challengeWordSchema";
 import { Inventory } from "../types";
 import { ServerValue } from "firebase-admin/database";
 
@@ -10,19 +14,15 @@ export const COUNTDOWN_SECONDS = 10;
 
 export const submitChallengeWords = onAuthorizedRequest(
   async (request, response) => {
-    const validatedData = submittedChallengeWordsSchema.safeParse(
-      JSON.parse(request.body),
+    const validatedData = validateBody<typeof submittedChallengeWordsSchema>(
+      request.body,
+      submittedChallengeWordsSchema,
     );
-    if (!validatedData.success) {
-      response.send({ error: "Invalid Data!" });
-      return;
-    }
-    const { submittedChallengeWords, currentItems } = validatedData.data;
-
+    const { submittedChallengeWords, currentItems } = validatedData;
     const { gameId, playerId } = await getSessionData(request);
-    const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
+
     const placedItems = Object.entries(currentItems).reduce<
-      typeof currentItems
+    typeof currentItems
     >((obj, [key, value]) => {
       if (value.isPlaced) {
         obj[key] = value;
@@ -30,6 +30,10 @@ export const submitChallengeWords = onAuthorizedRequest(
       return obj;
     }, {});
 
+    if (Object.keys(placedItems).length === 0) {
+      throw new Error("No items placed!")
+    }
+    
     const data: ChallengeWordsData = {
       playerId,
       words: submittedChallengeWords,
@@ -40,7 +44,8 @@ export const submitChallengeWords = onAuthorizedRequest(
         seconds: COUNTDOWN_SECONDS,
       },
     };
-
+    
+    const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
     await challengeWordsRef.set(data);
 
     await moveInventoryItemToGrid(gameId, playerId, currentItems as Inventory);

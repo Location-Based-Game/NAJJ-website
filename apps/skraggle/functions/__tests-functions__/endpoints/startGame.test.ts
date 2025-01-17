@@ -92,7 +92,7 @@ describe("startGame endpoint", () => {
     expect(response.body).toHaveProperty("error");
   }, 100000);
 
-  test("Throws an error if trying to start a game that does not exist", async () => {
+  test("Returns error message if trying to start a game that does not exist", async () => {
     const sessionData: SessionData = {
       gameId: "xxxx",
       playerId: "",
