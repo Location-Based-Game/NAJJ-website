@@ -60,17 +60,25 @@ export default function WordDefinitions() {
   }, [gameId, firstTurnPassed, splashScreenComplete]);
 
   return (
-    <WordDefinitionsView open={open} setOpen={setOpen} definitions={definitions}/>
+    <WordDefinitionsView
+      open={open}
+      setOpen={setOpen}
+      definitions={definitions}
+    />
   );
 }
 
 interface WordDefinitionsView {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  definitions: WordDefinition[]
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  definitions: WordDefinition[];
 }
 
-export function WordDefinitionsView({open, setOpen, definitions}:WordDefinitionsView) {
+export function WordDefinitionsView({
+  open,
+  setOpen,
+  definitions,
+}: WordDefinitionsView) {
   const containerRef = useRef<HTMLDivElement>(null!);
   return (
     <>
@@ -100,24 +108,12 @@ export function WordDefinitionsView({open, setOpen, definitions}:WordDefinitions
                     <DialogDescription>List of Definitions</DialogDescription>
                   </VisuallyHidden>
                   <div className={panelStyles.woodBackground}></div>
-                  <Accordion type="single" collapsible>
-                    {definitions.map((e, i) => {
-                      return (
-                        <AccordionItem
-                          value={e.word}
-                          key={i}
-                          className="drop-shadow-dark"
-                        >
-                          <AccordionTrigger className="outline-none text-xl font-bold">
-                            {e.word}
-                          </AccordionTrigger>
-                          <AccordionContent className="text-md">
-                            <div>{e.definition}</div>
-                            <div className="mt-3">{e.example}</div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      );
-                    })}
+                  <Accordion
+                    type="single"
+                    className={panelStyles.darkenedBackground}
+                    collapsible
+                  >
+                    <Definitions definitions={definitions} />
                   </Accordion>
                   <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                     <Cross2Icon className="h-4 w-4" />
@@ -130,5 +126,45 @@ export function WordDefinitionsView({open, setOpen, definitions}:WordDefinitions
         </AnimatePresence>
       </Dialog>
     </>
-  )
+  );
+}
+
+function Definitions({ definitions }: { definitions: WordDefinition[] }) {
+  const removeBrackets = (string: string) => {
+    return string.replaceAll("[", "").replaceAll("]", "");
+  };
+
+  return definitions.map((e, i) => {
+    if (!e.definition) {
+      return (
+        <div
+          key={i}
+          className="flex flex-1 items-center gap-4 py-4 pl-[3.25rem] pr-5 outline-none transition-all"
+        >
+          <div className="text-left text-xl font-bold text-sidebar-foreground">
+            {e.word}
+          </div>
+          <div className="text-sm ml-2 bg-black/20 rounded-md px-2 py-1 text-gray-400">NOT A REAL WORD</div>
+        </div>
+      );
+    }
+
+    return (
+      <AccordionItem value={e.word} key={i} className={"drop-shadow-dark"}>
+        <AccordionTrigger className="px-5 text-xl font-bold text-sidebar-foreground outline-none">
+          {e.word}
+        </AccordionTrigger>
+        <AccordionContent className="text-md relative px-[3.25rem] py-5 before:absolute before:left-0 before:top-0 before:z-[-1] before:h-full before:w-full before:bg-[#310f0246] before:mix-blend-multiply">
+          <div className="text-xs text-white/50">DEFINITION</div>
+          <div>{removeBrackets(e.definition)}</div>
+          {e.example && (
+            <>
+              <div className="mt-3 text-xs text-white/50">EXAMPLE</div>
+              <div>{removeBrackets(e.example)}</div>
+            </>
+          )}
+        </AccordionContent>
+      </AccordionItem>
+    );
+  });
 }

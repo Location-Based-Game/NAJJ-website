@@ -1,7 +1,6 @@
 "use client";
 
 import { BookA, List } from "lucide-react";
-
 import {
   Collapsible,
   CollapsibleContent,
@@ -21,17 +20,19 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { navItems } from "./SidebarNavMain";
+import styles from "./sidebar.module.css";
+import { cn } from "@/lib/tailwindUtils";
 
 const AnimatedDropdown = motion.create(SidebarMenuSub);
 
 export function SidebarNavGameplay() {
   return (
-    <SidebarMenu>
+    <SidebarMenu className={cn(styles.sidebarItemsBackground, "py-2 overflow-hidden")}>
       <SidebarCollapsible title="Main Menu" icon={<List />}>
         {navItems.slice(1).map((item, i) => (
-          <SidebarMenuSubItem key={i}>
-            <SidebarMenuSubButton asChild>
-              <Link href={item.url}>
+          <SidebarMenuSubItem key={i} className="p-0 m-0">
+            <SidebarMenuSubButton className="before:hover:bg-black/15 before:hover:transition-colors before:active:bg-black/30 before:absolute before:w-full before:h-full before:left-0" asChild>
+              <Link href={item.url} className="pl-[3rem]">
                 {item.icon}
                 <span>{item.title}</span>
               </Link>
@@ -40,7 +41,7 @@ export function SidebarNavGameplay() {
         ))}
       </SidebarCollapsible>
       <SidebarCollapsible title="Words" icon={<BookA />} defaultOpen>
-        hi
+        
       </SidebarCollapsible>
     </SidebarMenu>
   );
@@ -48,14 +49,14 @@ export function SidebarNavGameplay() {
 
 interface SidebarCollapsible {
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   icon: React.ReactNode;
   defaultOpen?: boolean;
 }
 
 function SidebarCollapsible({
   title,
-  children,
+  children = <></>,
   icon,
   defaultOpen = false,
 }: SidebarCollapsible) {
@@ -65,7 +66,7 @@ function SidebarCollapsible({
   return (
     <Collapsible
       asChild
-      className="group/collapsible"
+      className="group/collapsible m-0 p-0"
       open={open}
       defaultOpen={defaultOpen}
     >
@@ -74,17 +75,17 @@ function SidebarCollapsible({
           <SidebarMenuButton
             tooltip={title}
             onClick={() => {
-              setOpen(isSidebarOpen ? !open : true)
+              setOpen(isSidebarOpen ? !open : true);
               setSidebarOpen(true);
             }}
-            className="h-12 gap-4 pl-6 text-sm group-data-[collapsible=icon]:!pl-4 text-sidebar-foreground"
+            className="h-12 gap-4 pl-6 text-sm text-sidebar-foreground group-data-[collapsible=icon]:!pl-4"
           >
             {icon}
             <span className="truncate">{title}</span>
-            <ChevronRightIcon className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+            <ChevronRightIcon className="ml-auto mr-[2rem] transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
           </SidebarMenuButton>
         </CollapsibleTrigger>
-        <CollapsibleContent forceMount>
+        <CollapsibleContent className="bg-black/20" forceMount>
           <AnimatePresence>
             {open && (
               <AnimatedDropdown

@@ -1,5 +1,5 @@
 .woodBorder {
-    padding: 3rem;
+    padding: 1rem;
 }
 
 .woodBorder::before {
@@ -82,4 +82,16 @@
   );
   mix-blend-mode: multiply;
   opacity: 0.5;
+}
+
+.darkenedBackground::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+  background: linear-gradient(180deg, #705945c4 0%, #79685bd0 35.5%, #7e6f63 100%);
+  mix-blend-mode: multiply;
+  z-index: -1;
 }

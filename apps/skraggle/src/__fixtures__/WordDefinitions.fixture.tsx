@@ -10,10 +10,24 @@ export default () => {
       setOpen={setOpen}
       definitions={[
         {
-          definition: "Test definition",
+          definition: "Test definition 1",
           author: "",
-          word: "Test Word",
+          word: "Test Word 1",
           example: "Booyeah",
+          isRealWord: true,
+        },
+        {
+          definition: "Test definition 2",
+          author: "",
+          word: "Test Word 2",
+          example: "",
+          isRealWord: true,
+        },
+        {
+          definition: "",
+          author: "",
+          word: "Test Word 3",
+          example: "",
           isRealWord: false,
         },
       ]}

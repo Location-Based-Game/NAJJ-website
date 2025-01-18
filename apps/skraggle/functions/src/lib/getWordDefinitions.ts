@@ -31,7 +31,7 @@ export default async function getWordDefinitions(
   const parsedDefinitions = definitions.map<WordDefinition>((data) => {
     if (!data.hasOwnProperty("definition")) {
       return {
-        definition: "This is a made up word!",
+        definition: "",
         author: "",
         word: data.word,
         example: "",

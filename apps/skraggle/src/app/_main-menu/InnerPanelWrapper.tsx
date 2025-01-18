@@ -1,9 +1,15 @@
 import { cn } from "@/lib/tailwindUtils";
 import { RootState } from "@/store/store";
 import { motion, MotionProps } from "framer-motion";
-import React, { createContext, forwardRef, HTMLAttributes, useContext, useState } from "react";
+import React, {
+  createContext,
+  forwardRef,
+  HTMLAttributes,
+  useContext,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
-import styles from "@styles/panel.module.css"
+import styles from "@styles/panel.module.css";
 
 type InnerPanelWrapper = HTMLAttributes<HTMLDivElement> &
   MotionProps & {
@@ -12,8 +18,8 @@ type InnerPanelWrapper = HTMLAttributes<HTMLDivElement> &
 
 const MenuButtonsContext = createContext<{
   enableButtons: boolean;
-  setEnableButtons: React.Dispatch<React.SetStateAction<boolean>>
-} | null>(null)
+  setEnableButtons: React.Dispatch<React.SetStateAction<boolean>>;
+} | null>(null);
 
 const InnerPanelWrapper = forwardRef<HTMLDivElement, InnerPanelWrapper>(
   ({ translateX, ...props }, ref) => {
@@ -37,14 +43,20 @@ const InnerPanelWrapper = forwardRef<HTMLDivElement, InnerPanelWrapper>(
         }}
         transition={{
           x: { duration: 0.3, ease: "circOut" },
-          opacity: { duration: 0.2 }
+          opacity: { duration: 0.2 },
         }}
         onAnimationComplete={() => setEnableButtons(true)}
-        className={cn("flex w-full flex-col items-center relative justify-center gap-4", styles.woodBorder)}
+        className={cn(
+          "relative flex w-full flex-col items-center justify-center gap-4",
+          styles.woodBorder,
+          "!p-[3rem]",
+        )}
         {...props}
       >
         <div className={styles.woodBackground}></div>
-        <MenuButtonsContext.Provider value={{enableButtons, setEnableButtons}}>
+        <MenuButtonsContext.Provider
+          value={{ enableButtons, setEnableButtons }}
+        >
           {props.children}
         </MenuButtonsContext.Provider>
       </motion.div>
