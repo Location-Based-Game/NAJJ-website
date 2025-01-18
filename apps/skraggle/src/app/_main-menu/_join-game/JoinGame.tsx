@@ -43,12 +43,11 @@ export default function JoinGame() {
     <>
       <LeaveGame />
       <div className="w-full grow">
-        <h2 className="my-6 w-full text-center">Players</h2>
         <PlayerList />
       </div>
       <div className="relative inline-flex h-12 w-full items-center justify-center whitespace-nowrap rounded-md border-2 border-border text-sm font-medium text-secondary-foreground transition-colors">
         <Progress
-          className="absolute left-0 h-full rounded-md"
+          className="absolute left-0 h-full rounded-none"
           classNameIndicator="bg-secondary"
           value={loadingProgression}
         />

@@ -49,11 +49,11 @@ export default function GameplayBreadCrumb() {
         customElements={[
           <>
             <ArrowRightFromLine className="size-4 opacity-70" />
-            <div className="font-medium text-muted-foreground">Leave Game</div>
+            <div>Leave Game</div>
           </>,
         ]}
       >
-        <div className="mr-2">{gameId}</div>
+        <div className="mr-2 text-white/60">{gameId}</div>
       </BreadCrumbDropdown>
       <BreadcrumbSeparator />
       <BreadcrumbItem>

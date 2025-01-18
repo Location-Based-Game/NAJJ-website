@@ -8,7 +8,6 @@ import useLogOut from "@/hooks/useLogOut";
 import { MainMenuStates, RootState, mainMenuState } from "@/store/store";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { useLeaveGame } from "../LeaveGameProvider";
 
 interface NavCollapsedDropdown {
@@ -40,7 +39,7 @@ export default function BreadCrumbDropdown({
   return (
     <DropdownMenu open={isDropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger
-        className="flex items-center gap-1 outline-none text-white/60"
+        className="flex items-center gap-1 outline-none"
         aria-label="Toggle menu"
       >
         {children}

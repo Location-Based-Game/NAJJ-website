@@ -28,7 +28,6 @@ export default function CreateGame() {
       <div className="flex w-full grow gap-8">
         <QRCode />
         <div className="w-full grow">
-          <h2 className="my-6 w-full text-center">Players</h2>
           <PlayerList />
         </div>
       </div>

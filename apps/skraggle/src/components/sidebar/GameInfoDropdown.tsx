@@ -66,14 +66,14 @@ export function GameInfoDropdownView({
         <DropdownMenu open={isDropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownTrigger gameId={gameId} />
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
             align="start"
             side="bottom"
             sideOffset={4}
           >
             <DropdownMenuItem className="gap-4 p-2" onSelect={onDropdownSelect}>
               <ArrowRightFromLine className="size-4 opacity-70" />
-              <div className="font-medium text-muted-foreground">
+              <div>
                 Leave Game
               </div>
             </DropdownMenuItem>

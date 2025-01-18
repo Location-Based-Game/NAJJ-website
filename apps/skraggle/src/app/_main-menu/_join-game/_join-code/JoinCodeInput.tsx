@@ -61,7 +61,7 @@ export default function JoinCodeInput({
             control={form.control}
             name="code"
             render={() => (
-              <FormItem className="pb-5">
+              <FormItem className="pt-6 pb-10">
                 <FormLabel className="block text-center" htmlFor="join-code">
                   Enter Join Code
                 </FormLabel>

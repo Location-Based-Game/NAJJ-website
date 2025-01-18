@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React, { useState, forwardRef } from "react";
+import React, { useState } from "react";
 import { ItemTypes, LetterBlock } from "@types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import TileIcon from "@/components/TileIcon";
@@ -134,16 +134,21 @@ export function SelectLettersToWagerPopoverContent({
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={(open) => {
+      if (open) {
+        setLetterSelection([])
+      }
+      setOpen(open);
+    }}>
       {children}
-      <PopoverContent className="flex flex-col gap-2 p-2">
+      <PopoverContent className="flex flex-col gap-2 p-3 w-auto">
         <ToggleGroup type="multiple" onValueChange={setLetterSelection}>
           {letterBlocks.map((e, i) => {
             return (
               <ToggleGroupItem
                 value={i.toString()}
                 key={i}
-                className="p-2 hover:bg-primary/30 data-[state=on]:bg-primary"
+                className="hover:bg-primary/30 data-[state=on]:bg-primary p-0"
               >
                 <TileIcon letter={e.itemData.letter} showPoints />
               </ToggleGroupItem>
@@ -151,7 +156,7 @@ export function SelectLettersToWagerPopoverContent({
           })}
         </ToggleGroup>
         <Button
-          className="w-full"
+          className={letterBlocks.length > 4 ? "w-full" : "w-[12rem]"}
           disabled={letterSelection.length === 0}
           onClick={handleSubmit}
         >
