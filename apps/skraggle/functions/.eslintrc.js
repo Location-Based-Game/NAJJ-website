@@ -20,6 +20,8 @@ module.exports = {
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
     "/generated/**/*", // Ignore generated files.
+    "/__tests-functions__/**/*",
+    "jest.config.js"
   ],
   plugins: [
     "@typescript-eslint",
@@ -38,6 +40,9 @@ module.exports = {
     "spaced-comment": "off",
     "max-len": "off",
     "no-trailing-spaces": "off",
-    "no-prototype-builtins": "off"
+    "no-prototype-builtins": "off",
+    "quote-props": "off",
+    "valid-jsdoc": "off",
+    "padded-blocks": "off"
   },
 };

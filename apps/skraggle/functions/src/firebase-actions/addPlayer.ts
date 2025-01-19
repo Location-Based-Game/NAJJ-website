@@ -48,7 +48,7 @@ async function addPlayerTransaction(gameId: string, playerName: string) {
   let playerId = "";
   let errorMessage = "";
   const playersRef = db.ref(`activeGames/${gameId}/players`);
-  const result = await playersRef.transaction(
+  await playersRef.transaction(
     (currentPlayers: Record<string, PlayerData> | null) => {
       if (currentPlayers === null) {
         currentPlayers = {};

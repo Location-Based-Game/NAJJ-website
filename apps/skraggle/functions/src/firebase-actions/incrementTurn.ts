@@ -28,7 +28,7 @@ export async function incrementTurn(
     await currentTurnRef.transaction((currentTurn: number) => {
       if (currentTurn === null || playerAmount === 1) return currentTurn;
 
-      let nextTurn: number = 0;
+      let nextTurn = 0;
       //find the next online player
       for (let i = 1; i < playerAmount; i++) {
         nextTurn = (currentTurn + i) % playerAmount;

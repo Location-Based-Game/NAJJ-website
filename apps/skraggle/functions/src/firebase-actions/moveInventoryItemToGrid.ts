@@ -35,11 +35,11 @@ export async function moveInventoryItemToGrid(
       gameState === "TurnsDiceRoll" &&
       item.type === ItemTypes.StartingDice
     ) {
-      await SetDiceInventory(JSON.parse(item.itemData).playerAmount);
+      await setDiceInventory(JSON.parse(item.itemData).playerAmount);
     }
   }
 
-  async function SetDiceInventory(playerCount: number) {
+  async function setDiceInventory(playerCount: number) {
     const diceCount = (await gridRef.get()).numChildren();
     if (diceCount === playerCount * 2 && !hasTransitionedToGameplay) {
       hasTransitionedToGameplay = true;

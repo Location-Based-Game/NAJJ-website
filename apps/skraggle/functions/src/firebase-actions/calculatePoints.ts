@@ -29,8 +29,8 @@ export default async function calculatePoints(
   );
   await currentDefinitionsRef.set(wordDefinitions);
 
-  let successfulChallengersArr: Challengers[] = [];
-  let failedChallengersArr: Challengers[] = [];
+  const successfulChallengersArr: Challengers[] = [];
+  const failedChallengersArr: Challengers[] = [];
 
   // Calculate points
   const points = Object.values(words).reduce((total, data) => {
