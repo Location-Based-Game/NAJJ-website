@@ -1,5 +1,5 @@
+import { GameStates, PlayerData } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
-import { GameStates, PlayerData } from "../types";
 import { getLetterBlocks } from "../lib/getLetterBlocks";
 import { ServerValue } from "firebase-admin/database";
 

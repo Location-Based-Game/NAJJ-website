@@ -1,9 +1,9 @@
-import { ItemTypes } from "../src/types";
+import { Inventory, ItemTypes } from "../../types";
 import { getLetterBlocks } from "../src/lib/getLetterBlocks";
 
 describe("getLetterBlocks function", () => {
   test("gets 7 letter blocks from empty inventory and items have the right data", () => {
-    const inventory = getLetterBlocks({}, "testPlayerId");
+    const inventory = getLetterBlocks({}, "testPlayerId") as Inventory;
     expect(Object.keys(inventory).length).toBe(7);
     expect(
       Object.values(inventory).every((item) => {

@@ -1,10 +1,10 @@
 import { onValueUpdated } from "firebase-functions/v2/database";
-import { PlayersData } from "../types";
 import { db } from "../lib/firebaseAdmin";
 import { logger } from "firebase-functions";
 import { incrementTurn } from "../firebase-actions/incrementTurn";
 import { transitionTurnsDiceRollToFirstTurn } from "../firebase-actions/transitionTurnsDiceRollToFirstTurn";
 import moveChallengedItemsToInventory from "../firebase-actions/moveChallengedItemsToInventory";
+import { PlayersData } from "../../../types";
 
 const path = { ref: "/activeGames/{gameId}/players/{playerId}/isOnline" };
 export const onPlayerDisconnect = onValueUpdated(path, async (event) => {

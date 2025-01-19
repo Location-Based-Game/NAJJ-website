@@ -1,6 +1,6 @@
 import removePlayer from "./removePlayer";
 import { db } from "../lib/firebaseAdmin";
-import { PlayersData } from "../types";
+import { PlayersData } from "../../../types";
 
 export default async function removePlayerHost(gameId: string, playerId: string) {
   await removePlayer(gameId, playerId);

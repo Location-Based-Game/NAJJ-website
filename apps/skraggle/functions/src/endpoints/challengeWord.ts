@@ -2,8 +2,8 @@ import { z } from "zod";
 import { db } from "../lib/firebaseAdmin";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
-import { LetterBlock } from "../types";
 import validateBody from "../lib/validateBody";
+import { LetterBlock } from "../../../types";
 
 const challengeWordSchema = z.object({
   wordId: z.string(),

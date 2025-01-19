@@ -2,13 +2,13 @@ import { submitChallengeWords } from "../../src";
 import { db } from "../../src/lib/firebaseAdmin";
 import { addPlayer } from "../../src/firebase-actions/addPlayer";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
-import { SessionData } from "../../src/schemas/sessionSchema";
+import { SessionData } from "../../../schemas/sessionSchema";
 import { encryptJWT } from "../../src/lib/jwtUtils";
-import { Inventory } from "../../src/types";
+import { Inventory } from "../../../types";
 import { createGameId } from "../../src/lib/createGameId";
 import setGameState from "../../src/firebase-actions/setGameState";
 import { getLetterBlocks } from "../../src/lib/getLetterBlocks";
-import { SubmittedChallengeWords } from "../../src/schemas/challengeWordSchema";
+import { SubmittedChallengeWords } from "../../../schemas/challengeWordSchema";
 
 const express = require("express");
 const supertest = require("supertest");
@@ -34,7 +34,7 @@ describe("submitChallengeWords endpoint", () => {
     const inventoriesRef = db.ref(
       `activeGames/${gameId}/inventories/${hostPlayerId}`,
     );
-    const letterBlocks = getLetterBlocks({}, hostPlayerId);
+    const letterBlocks = getLetterBlocks({}, hostPlayerId) as Inventory;
     await inventoriesRef.set(letterBlocks);
 
     let placedCount = 0;
@@ -111,7 +111,7 @@ describe("submitChallengeWords endpoint", () => {
     const inventoriesRef = db.ref(
       `activeGames/${gameId}/inventories/${hostPlayerId}`,
     );
-    const letterBlocks = getLetterBlocks({}, hostPlayerId);
+    const letterBlocks = getLetterBlocks({}, hostPlayerId) as Inventory;
     await inventoriesRef.set(letterBlocks);
 
     let placedCount = 0;

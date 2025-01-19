@@ -1,6 +1,6 @@
+import { GameStates, Inventories, PlayersData } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
 import { getLetterBlocks } from "../lib/getLetterBlocks";
-import { GameStates, Inventories, PlayersData } from "../types";
 
 /**
  * in order to prevent the game from being stuck on TurnsDiceRoll state,

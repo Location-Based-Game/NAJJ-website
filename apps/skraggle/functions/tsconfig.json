@@ -9,5 +9,5 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": ["src", "../node_modules/zod", "../node_modules/uuid"]
+  "include": ["src", "../node_modules/zod", "../node_modules/uuid", "../types.ts", "../schemas/*"]
 }
