@@ -4,8 +4,7 @@
       "$gameId": {
         ".read": false,
         "currentTurn": {
-          ".read": true,
-          ".write": "newData.isNumber()"
+          ".read": true
         },
         "gameState": {
           ".read": true
@@ -14,12 +13,22 @@
           ".read": true
         },
         "id": {
-          ".read": true,
-          ".write": false
+          ".read": true
         },
         "players": {
           ".read": true,
-          ".write": false
+          "$playerId": {
+            "isOnline": {
+              ".read": true,
+              ".write": "newData.isBoolean() && root.child('activeGames').child($gameId).child('players').child($playerId).exists()"
+            }
+          }
+        },
+        "inventories": {
+          ".read": true
+        },
+        "grid": {
+          ".read": true
         },
         "signaling": {
           "$playerId": {
@@ -29,10 +38,18 @@
             ".read": true,
             "$playerId": {
               "signalStatus": {
-                ".write": "newData.val() === 'pending' || newData.val() === 'offline' || newData.val() === 'sent'"
+                ".write": "(newData.val() === 'pending' || newData.val() === 'offline' || newData.val() === 'sent') && root.child('activeGames').child($gameId).child('signaling').child('players').child($playerId).exists()"
               }
             }
           }
+        },
+        "challengeWords": {
+          "words": {
+            ".read": true
+          }
+        },
+        "currentDefinitions": {
+          ".read": true
         }
       }
     }

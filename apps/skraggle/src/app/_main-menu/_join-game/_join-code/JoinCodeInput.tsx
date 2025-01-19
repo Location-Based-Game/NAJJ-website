@@ -9,7 +9,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
-import getRoom from "@/server-actions/getRoom";
+import getRoom from "@/firebase-actions/getRoom";
 
 const FormSchema = z.object({
   code: z.string(),
@@ -61,7 +61,7 @@ export default function JoinCodeInput({
             control={form.control}
             name="code"
             render={() => (
-              <FormItem className="pb-5">
+              <FormItem className="pt-6 pb-10">
                 <FormLabel className="block text-center" htmlFor="join-code">
                   Enter Join Code
                 </FormLabel>

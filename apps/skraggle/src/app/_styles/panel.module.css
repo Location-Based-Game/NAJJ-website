@@ -1,0 +1,97 @@
+.woodBorder {
+    padding: 1rem;
+}
+
+.woodBorder::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-image-slice: 18;
+  border-image-width: 18px;
+  border-image-outset: 0px 0px 0px 0px;
+  border-image-repeat: stretch repeat;
+  border-image-source: url("/Wood-Border.png");
+  pointer-events: none;
+  z-index: -3;
+  filter: drop-shadow(-4px 0px 3px rgba(0, 0, 0, 0.57))
+    drop-shadow(2px 0px 3px rgba(0, 0, 0, 0.57));
+}
+
+.woodBorder::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -2;
+  mix-blend-mode: overlay;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(180deg, #161414 0%, #ffffff 50.5%, #1f1a1a 100%) border-box;
+  border-radius: 5px;
+  border: 18px solid transparent;
+  opacity: 0.5;
+}
+
+.woodBackground {
+  position: absolute;
+  left: 17px;
+  top: 17px;
+  width: calc(100% - 34px);
+  height: calc(100% - 34px);
+  z-index: -1;
+  background-color: #e4a064;
+  box-shadow:
+    inset 0px 0px 10px rgb(0, 0, 0),
+    inset 0px 0px 20px rgb(0, 0, 0, 0.5);
+}
+
+.woodBackground::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+
+  background: url("/Wood-texture.png") 0 0 repeat;
+  background-size: 500px;
+  mix-blend-mode: overlay;
+  opacity: 0.27;
+}
+
+.woodBackground::before {
+  content: "";
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+
+  background: radial-gradient(
+    65.48% 55.75% at 50% 50%,
+    #ffffff 21%,
+    #e2dedb 60%,
+    #4a2300 100%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+.darkenedBackground::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+  background: linear-gradient(180deg, #705945c4 0%, #79685bd0 35.5%, #7e6f63 100%);
+  mix-blend-mode: multiply;
+  z-index: -1;
+}

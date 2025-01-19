@@ -1,19 +1,17 @@
 import { logInCreate } from "@/store/logInSlice";
-import { AppDispatch, RootState } from "@/store/store";
-import { useEffect, useState } from "react";
+import { AppDispatch, mainMenuState, RootState } from "@/store/store";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SignIn from "../SignIn";
-import usePanelTransition from "@/hooks/usePanelTransition";
-import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { GuestNameType } from "../GuestNameInput";
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
+import { useMenuButtons } from "../InnerPanelWrapper";
 
 export default function CreateLogIn() {
-  const [enableButtons, setEnableButtons] = useState(true);
-  const { scope, animationCallback } = usePanelTransition();
+  const {enableButtons, setEnableButtons} = useMenuButtons()
   const dispatch = useDispatch<AppDispatch>();
   const sessionData = useSelector((state: RootState) => state.logIn);
-  const { logOutOnError } = useLogOutOnError();
+  const { logOutOnError } = useLogOut();
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
@@ -21,7 +19,9 @@ export default function CreateLogIn() {
     }
 
     if (!sessionData.error && sessionData.gameId) {
-      animationCallback({ state: "Create Game", slideFrom: "right" });
+      dispatch(
+        mainMenuState.updateState({ state: "Create Game", slideFrom: "right" }),
+      );
     }
   }, [sessionData]);
 
@@ -31,16 +31,13 @@ export default function CreateLogIn() {
   };
 
   return (
-    <InnerPanelWrapper ref={scope}>
-      <SignIn
-        back={{
-          state: "Home",
-          slideFrom: "left",
-        }}
-        submitHandler={handleSubmit}
-        animationCallback={animationCallback}
-        enableButtons={enableButtons}
-      />
-    </InnerPanelWrapper>
+    <SignIn
+      back={{
+        state: "Home",
+        slideFrom: "left",
+      }}
+      submitHandler={handleSubmit}
+      enableButtons={enableButtons}
+    />
   );
 }

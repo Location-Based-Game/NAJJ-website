@@ -1,11 +1,11 @@
 import { RootState } from "@/store/store";
 import { onValue, ref } from "firebase/database";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { rtdb } from "../firebaseConfig";
-import { setCurrentTurn } from "@/store/turnSlice";
+import { setFirstTurnPassed, setCurrentTurn } from "@/store/turnSlice";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { useGetPlayers } from "@/components/GetPlayers";
+import { GameStates } from "@types";
 
 export default function useTurnListener() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
@@ -14,24 +14,60 @@ export default function useTurnListener() {
   );
   const dispatch = useDispatch();
   const { splashScreenComplete, callUnityFunction } = useUnityReactContext();
-  const { playerData } = useGetPlayers();
+  const players = useSelector((state:RootState) => state.players)
+  const firstTurn = useRef<number>()
+  const firstState = useRef(false)
 
   useEffect(() => {
-    if (!gameId) return;
+    if (!gameId) {
+      firstTurn.current = undefined;
+      firstState.current = false;
+      return;
+    };
     if (!splashScreenComplete) return;
-    if (!playerData) return;
 
     const turnRef = ref(rtdb, `activeGames/${gameId}/currentTurn`);
     const unsubscribe = onValue(turnRef, (snapshot) => {
       if (!snapshot.exists()) return;
-      if (gameState !== "Gameplay") return;
-      const turn = snapshot.val() as number;
-      dispatch(setCurrentTurn(turn % Object.keys(playerData).length));
-      callUnityFunction("SetTurn", turn % Object.keys(playerData).length);
+
+      if (gameState !== "Menu") {
+        getFirstJoinState(gameState)
+      }
+
+      if (gameState === "Gameplay" || gameState === "FirstTurn") {
+        const turn = snapshot.val() as number;
+
+        dispatch(setCurrentTurn(turn));
+        callUnityFunction("SetTurn", turn);
+
+        if (firstTurn.current === undefined) {
+          firstTurn.current = turn;
+        }
+
+        if (firstTurn.current !== turn) {
+          dispatch(setFirstTurnPassed(true))
+        }
+      }
     });
 
     return () => {
       unsubscribe();
     };
-  }, [gameId, splashScreenComplete, playerData, gameState]);
+  }, [gameId, splashScreenComplete, players, gameState]);
+  
+  /**
+   * in order to fix board persist bugs, disable WebRTC data transfer
+   * for the first turn if the player joins during GamePlay state
+   */
+  function getFirstJoinState(state: GameStates) {
+    if (firstState.current) return;
+    firstState.current = true;
+
+    if (state === "Gameplay" || state === "FirstTurn") {
+      dispatch(setFirstTurnPassed(false))
+    }
+    else {
+      dispatch(setFirstTurnPassed(true))
+    }
+  }
 }

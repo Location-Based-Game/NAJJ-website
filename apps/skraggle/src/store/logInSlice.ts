@@ -1,6 +1,6 @@
 import { fetchApi } from "@/lib/fetchApi";
-import { SessionData } from "@/schemas/sessionSchema";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SessionData } from "@schemas/sessionSchema";
 
 export type LogInType = SessionData & {
   loading: boolean;
@@ -53,12 +53,8 @@ export const logInSlice = createSlice({
 export const logInCreate = createAsyncThunk(
   "log in/create room",
   async (playerName: string) => {
-    const gameId = await fetchApi(`/api/logIn`);
-
-    const params = new URLSearchParams({
-      playerName,
-    }).toString();
-    const playerId = await fetchApi(`/api/create-room?${params}`);
+    const gameId = await fetchApi("logIn", { gameId: null });
+    const playerId = await fetchApi("createRoom", { playerName });
 
     const sessionData: LogInType = {
       loading: false,
@@ -76,15 +72,8 @@ export const logInJoin = createAsyncThunk(
   async (payload: { playerName: string; joinCode: string }) => {
     const { playerName, joinCode } = payload;
 
-    const logInParams = new URLSearchParams({
-      gameId: joinCode,
-    }).toString();
-    const gameId = await fetchApi(`/api/logIn?${logInParams}`);
-
-    const params = new URLSearchParams({
-      playerName,
-    }).toString();
-    const playerId = await fetchApi(`/api/add-player?${params}`);
+    const gameId = await fetchApi("logIn", { gameId: joinCode });
+    const playerId = await fetchApi("addPlayer", { playerName });
 
     const sessionData: LogInType = {
       loading: false,

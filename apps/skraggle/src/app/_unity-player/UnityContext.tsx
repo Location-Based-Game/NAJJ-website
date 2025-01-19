@@ -3,13 +3,7 @@ import { useUnityContext } from "react-unity-webgl";
 import { useState, useEffect, createContext, useContext } from "react";
 import useUpdateGameState from "@/app/_unity-player/useUpdateGameState";
 import { UnityContextHook } from "react-unity-webgl/distribution/types/unity-context-hook";
-import useSetGameState from "../_gameplay-ui/useSetGameState";
-import dynamic from "next/dynamic";
-import useWebRTC, { PlayerPeers } from "./useWebRTC";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
-import useSendBoardItemData from "../_gameplay-ui/useSendBoardItemData";
-import useStartingDice from "../_gameplay-ui/useStartingDice";
-import { useGetPlayers } from "@/components/GetPlayers";
 
 export type CallUnityFunctionType = (
   functionName: string,
@@ -18,18 +12,12 @@ export type CallUnityFunctionType = (
 
 type UnityData = UnityContextHook & {
   splashScreenComplete: boolean;
-  playerPeers: React.MutableRefObject<PlayerPeers>;
   callUnityFunction: CallUnityFunctionType;
 };
 
 export const UnityReactContext = createContext<UnityData | null>(null);
 
-const Unity = dynamic(
-  () => import("react-unity-webgl").then((mod) => mod.Unity),
-  { ssr: false },
-);
-
-export default function UnityPlayer({
+export default function UnityContextProvider({
   children,
 }: {
   children: React.ReactNode;
@@ -46,12 +34,14 @@ export default function UnityPlayer({
     codeUrl: `./${buildDir}/Build/${name}.wasm${extension}`,
   });
 
-  const { sendMessage, isLoaded, unityProvider } = unityContext;
+  const { sendMessage, isLoaded } = unityContext;
+  const [splashScreenComplete, setSplashScreenComplete] = useState(false);
 
   const callUnityFunction = (
     functionName: string,
     param?: ReactUnityEventParameter | object,
   ) => {
+    if (!splashScreenComplete) return;
     if (!param && param !== 0) {
       sendMessage("Receiver", functionName);
       return;
@@ -64,36 +54,25 @@ export default function UnityPlayer({
     }
   };
 
-  const [splashScreenComplete, setSplashScreenComplete] = useState(false);
-
   useEffect(() => {
     if (!isLoaded) return;
-
-    //waits for Unity splash screen to finish
+    // Waits for Unity splash screen to finish
     setTimeout(() => {
       setSplashScreenComplete(true);
     }, 2500);
   }, [isLoaded]);
 
   useUpdateGameState(unityContext);
-  const { playerPeers } = useWebRTC(splashScreenComplete, callUnityFunction);
-
+  
   return (
     <UnityReactContext.Provider
       value={{
         ...unityContext,
         splashScreenComplete,
-        playerPeers,
         callUnityFunction,
       }}
     >
-      <div className="pointer-events-none absolute z-10 flex h-dvh w-screen items-center justify-center">
-        {children}
-      </div>
-      <Unity
-        unityProvider={unityProvider}
-        className={`h-dvh w-screen transition-opacity duration-700 ${splashScreenComplete ? "opacity-100" : "opacity-0"}`}
-      />
+      {children}
     </UnityReactContext.Provider>
   );
 }

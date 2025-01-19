@@ -1,28 +1,28 @@
-import usePanelTransition from "@/hooks/usePanelTransition";
-import { AppDispatch, RootState } from "@/store/store";
-import { useEffect, useState } from "react";
+import { AppDispatch, mainMenuState, RootState } from "@/store/store";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GuestNameType } from "../GuestNameInput";
 import SignIn from "../SignIn";
-import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { logInJoin } from "@/store/logInSlice";
-import useLogOutOnError from "@/hooks/useLogOutOnError";
+import useLogOut from "@/hooks/useLogOut";
+import { useMenuButtons } from "../InnerPanelWrapper";
 
 export default function JoinLogIn() {
-  const [enableButtons, setEnableButtons] = useState(true);
-  const { scope, animationCallback } = usePanelTransition();
+  const {enableButtons, setEnableButtons} = useMenuButtons()
   const currentJoinCode = useSelector((state: RootState) => state.joinCode);
   const sessionData = useSelector((state: RootState) => state.logIn);
-  const { logOutOnError } = useLogOutOnError();
+  const { logOutOnError } = useLogOut();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
-      logOutOnError(sessionData.error)
+      logOutOnError(sessionData.error);
     }
 
     if (!sessionData.error && sessionData.gameId) {
-      animationCallback({ state: "Join Game", slideFrom: "right" });
+      dispatch(
+        mainMenuState.updateState({ state: "Join Game", slideFrom: "right" }),
+      );
     }
   }, [sessionData]);
 
@@ -37,16 +37,15 @@ export default function JoinLogIn() {
   };
 
   return (
-    <InnerPanelWrapper ref={scope}>
+    <>
       <SignIn
         back={{
           state: "Enter Join Code",
           slideFrom: "left",
         }}
         submitHandler={handleSubmit}
-        animationCallback={animationCallback}
         enableButtons={enableButtons}
       />
-    </InnerPanelWrapper>
+    </>
   );
 }

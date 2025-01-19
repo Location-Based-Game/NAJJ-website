@@ -1,17 +1,15 @@
-import InnerPanelWrapper from "@/components/InnerPanelWrapper";
 import { Button } from "@/components/ui/button";
-import usePanelTransition from "@/hooks/usePanelTransition";
 import { useEffect, useState } from "react";
-
 import { Loader2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setJoinCode } from "@/store/joinCodeSlice";
 import JoinCodeInput from "./JoinCodeInput";
+import { mainMenuState } from "@/store/store";
+import { useMenuButtons } from "../../InnerPanelWrapper";
 
 export default function JoinCode() {
   const dispatch = useDispatch();
-  const [enableButtons, setEnableButtons] = useState(true);
-  const { scope, animationCallback } = usePanelTransition();
+  const {enableButtons, setEnableButtons} = useMenuButtons()
   const [codeInput, setCodeInput] = useState<string>("");
 
   useEffect(() => {
@@ -29,13 +27,15 @@ export default function JoinCode() {
   }, []);
 
   return (
-    <InnerPanelWrapper ref={scope}>
+    <>
       <Button
         disabled={!enableButtons}
         variant={"outline"}
         className="h-12 w-full"
         onClick={() => {
-          animationCallback({ state: "Home", slideFrom: "left" });
+          dispatch(
+            mainMenuState.updateState({ state: "Home", slideFrom: "left" }),
+          );
           setEnableButtons(false);
         }}
       >
@@ -44,22 +44,26 @@ export default function JoinCode() {
       <JoinCodeInput
         codeInput={codeInput}
         setCodeInput={setCodeInput}
-        setEnableButtons={(setEnableButtons)}
+        setEnableButtons={setEnableButtons}
         callback={() => {
           dispatch(setJoinCode(codeInput));
-          animationCallback({ state: "Sign In to Join", slideFrom: "right" });
+          dispatch(
+            mainMenuState.updateState({
+              state: "Sign In to Join",
+              slideFrom: "right",
+            }),
+          );
         }}
       >
         <Button
           disabled={!enableButtons || codeInput.length !== 4}
           className="h-12 w-full"
           type="submit"
-
         >
           {!enableButtons && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Continue
         </Button>
       </JoinCodeInput>
-    </InnerPanelWrapper>
+    </>
   );
 }
