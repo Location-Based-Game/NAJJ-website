@@ -3,7 +3,7 @@ import { LeaveGameView } from "@/app/LeaveGameProvider";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-export default () => {
+export default function LeaveGameFixture() {
   const [openDialogue, setOpenDialogue] = useState(false);
   const [enableButtons, setEnableButtons] = useState(false);
 

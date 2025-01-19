@@ -2,7 +2,7 @@ import { rejoin } from "../../src";
 import { db } from "../../src/lib/firebaseAdmin";
 import { addPlayer } from "../../src/firebase-actions/addPlayer";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
-import { SessionData } from "../../src/schemas/sessionSchema";
+import { SessionData } from "../../../schemas/sessionSchema";
 import { encryptJWT } from "../../src/lib/jwtUtils";
 import { createGameId } from "../../src/lib/createGameId";
 

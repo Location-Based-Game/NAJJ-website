@@ -9,13 +9,13 @@ import React, { useState } from "react";
 import { ItemTypes, LetterBlock } from "@types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import TileIcon from "@/components/TileIcon";
-import { letterPoints } from "../../../../functions/src/lib/letterPoints";
-import { ChallengeWordSchemaType } from "../../../../functions/src/endpoints/challengeWord";
+import { letterPoints } from "../../../../shared/letterPoints";
 import { Button } from "@/components/ui/button";
 import { SwordsIcon } from "lucide-react";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
 import { motion } from "framer-motion";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
+import { ChallengeWordSchemaType } from "@schemas/challengeWordSchema";
 
 const MotionButton = motion(Button);
 interface SelectLettersToWagerPopover {

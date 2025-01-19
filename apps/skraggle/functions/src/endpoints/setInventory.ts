@@ -1,9 +1,9 @@
 import { getSessionData } from "../lib/sessionUtils";
-import { Inventory } from "../types";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
-import { currentItemsSchema } from "../schemas/currentItemsSchema";
 import { moveInventoryItemToGrid } from "../firebase-actions/moveInventoryItemToGrid";
 import validateBody from "../lib/validateBody";
+import { Inventory } from "../../../types";
+import { currentItemsSchema } from "../../../schemas/currentItemsSchema";
 
 export const setInventory = onAuthorizedRequest(async (request, response) => {
   const validatedData = validateBody<typeof currentItemsSchema>(

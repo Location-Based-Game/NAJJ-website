@@ -1,5 +1,5 @@
+import { GameRoom } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
-import { GameRoom } from "../types";
 import { transitionTurnsDiceRollToFirstTurn } from "./transitionTurnsDiceRollToFirstTurn";
 
 export default async function removePlayer(gameId: string, playerId: string) {

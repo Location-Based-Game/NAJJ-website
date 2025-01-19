@@ -143,3 +143,5 @@ const BonusPoints = forwardRef<HTMLDivElement, BonusPoints>(
     );
   },
 );
+
+BonusPoints.displayName = "BonusPoints"

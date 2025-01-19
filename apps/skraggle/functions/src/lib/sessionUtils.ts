@@ -1,7 +1,7 @@
 import type { Request } from "firebase-functions/v2/https";
 import { decryptJWT, encryptJWT } from "./jwtUtils";
-import { SessionData, sessionSchema } from "../schemas/sessionSchema";
 import type { Response } from "express";
+import { sessionSchema, SessionData } from "../../../schemas/sessionSchema";
 
 export async function getSessionData(request: Request) {
   const cookies = request.headers.cookie;
@@ -33,7 +33,7 @@ export async function setSessionCookie(
 ) {
   const expires = new Date(Date.now() + secondsUntilExpiration * 1000);
   const session = await encryptJWT({ ...sessionData });
-  response.cookie("session", session, { expires, httpOnly: true });
+  response.cookie("session", session, { expires, httpOnly: true, secure: true, sameSite: "none" });
 }
 
 export async function deleteSession(response: Response) {

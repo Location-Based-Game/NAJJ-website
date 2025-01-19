@@ -1,6 +1,6 @@
+import { Item } from "../../../schemas/itemSchema";
+import { Inventory, GameStates, ItemTypes } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
-import { Item } from "../schemas/itemSchema";
-import { GameStates, Inventory, ItemTypes } from "../types";
 import { transitionTurnsDiceRollToFirstTurn } from "./transitionTurnsDiceRollToFirstTurn";
 
 export async function moveInventoryItemToGrid(

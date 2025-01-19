@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
-export default () => {
+export default function JoinGameOTP() {
   return (
     <div className="flex h-dvh w-full items-center justify-center">
       <div

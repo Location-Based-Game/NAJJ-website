@@ -1,9 +1,6 @@
-import { dictionaryAPIValidWordSchema } from "../schemas/dictionaryAPISchema";
-import {
-  urbanDictionaryAPISchema,
-  UrbanDictionaryDefinition,
-} from "../schemas/urbanDictionaryDefinitionSchema";
-import { WordDefinition } from "../schemas/wordDefinitionSchema";
+import { dictionaryAPIValidWordSchema } from "../../../schemas/dictionaryAPISchema";
+import { urbanDictionaryAPISchema, UrbanDictionaryDefinition } from "../../../schemas/urbanDictionaryDefinitionSchema";
+import { WordDefinition } from "../../../schemas/wordDefinitionSchema";
 
 export default async function getWordDefinitions(
   words: string[],

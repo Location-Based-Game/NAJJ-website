@@ -1,6 +1,6 @@
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
 import WordItem from "../_your-turn/WordItem";
-import { ChallengeWordType } from "@schemas/challengeWordSchema";
+import { ChallengeWordType } from "@schemas/challengerSchema";
 import { cn } from "@/lib/tailwindUtils";
 import SelectLettersToWagerPopover from "./SelectLettersToWagerPopover";
 import ChallengerList from "./ChallengerList";

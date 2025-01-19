@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
-import { ChallengeWordsRecord } from "@schemas/challengeWordSchema";
+import { ChallengeWordsRecord } from "@schemas/challengerSchema";
 import useSetInventories from "./useSetInventories";
 import { CurrentItemsType } from "@schemas/currentItemsSchema";
 import useWebRTC from "./useWebRTC";

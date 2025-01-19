@@ -1,5 +1,5 @@
+import { GameRoom } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
-import { GameRoom } from "../types";
 
 export async function createRoomData(gameId: string) {
   const gameRoomData: GameRoom = {

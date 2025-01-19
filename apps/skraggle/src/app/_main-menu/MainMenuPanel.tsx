@@ -55,9 +55,11 @@ export default function MainMenuPanel() {
       className="pointer-events-auto relative z-10 flex h-full items-center justify-center"
       style={{ width: targetWidth }}
     >
-      <div className="absolute top-[4rem] h-[300px] w-[700px]">
-        <Image src="/Logo.png" alt="Skraggl.io Logo" fill objectFit="contain" />
-      </div>
+      <img
+        src="/Logo.png"
+        alt="Skraggl.io Logo"
+        className="absolute top-[4rem] h-auto min-w-[700px]"
+      />
       <AnimatePresence mode="popLayout" initial={false}>
         {currentUI}
       </AnimatePresence>

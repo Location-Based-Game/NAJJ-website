@@ -1,13 +1,10 @@
+import { submittedChallengeWordsSchema, ChallengeWordsData } from "../../../schemas/challengerSchema";
+import { Inventory } from "../../../types";
 import { moveInventoryItemToGrid } from "../firebase-actions/moveInventoryItemToGrid";
 import { db } from "../lib/firebaseAdmin";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
 import validateBody from "../lib/validateBody";
-import {
-  ChallengeWordsData,
-  submittedChallengeWordsSchema,
-} from "../schemas/challengeWordSchema";
-import { Inventory } from "../types";
 import { ServerValue } from "firebase-admin/database";
 
 export const COUNTDOWN_SECONDS = 10;

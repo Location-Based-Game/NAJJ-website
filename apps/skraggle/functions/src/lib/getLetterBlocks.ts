@@ -1,4 +1,4 @@
-import { Inventory, ItemTypes, LetterBlock } from "../types";
+import { Inventory, LetterBlock, ItemTypes } from "../../../types";
 import { v4 as uuidv4 } from "uuid";
 
 const letters =

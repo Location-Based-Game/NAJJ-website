@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../lib/firebaseAdmin";
-import { PlayersData, Inventories, ItemTypes, StartingDice } from "../types";
+import { PlayersData, Inventories, StartingDice, ItemTypes } from "../../../types";
 
 export async function createTurnNumbers(gameId: string) {
   const playersRef = db.ref(`activeGames/${gameId}/players`);

@@ -1,12 +1,12 @@
+import { GameStates, Inventory } from "../../../types";
+import { currentItemsSchema } from "../../../schemas/currentItemsSchema";
+import { challengeWordsDataSchema } from "../../../schemas/challengerSchema";
 import calculatePoints from "../firebase-actions/calculatePoints";
 import { incrementTurn } from "../firebase-actions/incrementTurn";
 import { db } from "../lib/firebaseAdmin";
 import { getLetterBlocks } from "../lib/getLetterBlocks";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
-import { challengeWordsDataSchema } from "../schemas/challengeWordSchema";
-import { currentItemsSchema } from "../schemas/currentItemsSchema";
-import { GameStates, Inventory } from "../types";
 
 export const endTurnGetNewLetters = onAuthorizedRequest(
   async (request, response) => {

@@ -1,5 +1,5 @@
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
-import { challengeWordRecordSchema } from "@schemas/challengeWordSchema";
+import { challengeWordRecordSchema } from "@schemas/challengerSchema";
 import { WordData } from "@schemas/wordDataSchema";
 import { useAnimate } from "framer-motion";
 import { useState, useCallback, useEffect } from "react";

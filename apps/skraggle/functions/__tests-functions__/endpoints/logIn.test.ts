@@ -1,5 +1,5 @@
 import { logIn } from "../../src";
-import { sessionSchema } from "../../src/schemas/sessionSchema";
+import { sessionSchema } from "../../../schemas/sessionSchema";
 import { decryptJWT } from "../../src/lib/jwtUtils";
 const express = require("express");
 const supertest = require("supertest");

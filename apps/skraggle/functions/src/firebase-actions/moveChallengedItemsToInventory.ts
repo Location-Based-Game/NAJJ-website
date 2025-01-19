@@ -1,5 +1,5 @@
+import { Inventory } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
-import { Inventory } from "../types";
 import { v4 as uuidv4 } from "uuid";
 
 export default async function moveChallengedItemsToInventory(

@@ -5,7 +5,7 @@ import { fetchApi } from "@/lib/fetchApi";
 import { useValidatedWordContext } from "./YourTurnUI";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
 import useLogOut from "@/hooks/useLogOut";
-import { SubmittedChallengeWords } from "@schemas/challengeWordSchema";
+import { ChallengeWordsRecord, SubmittedChallengeWords } from "@schemas/challengerSchema";
 
 const MotionButton = motion.create(Button);
 
@@ -20,7 +20,7 @@ const EndTurnButton = forwardRef<HTMLSpanElement, EndTurnButton>(({}, ref) => {
   const handleEndTurn = async () => {
     const { currentItems } = await getCurrentItems();
     const challengeWordsData: SubmittedChallengeWords = {
-      submittedChallengeWords: wordsData,
+      submittedChallengeWords: wordsData as ChallengeWordsRecord,
       currentItems,
     };
 

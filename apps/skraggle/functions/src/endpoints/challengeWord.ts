@@ -1,16 +1,8 @@
-import { z } from "zod";
 import { db } from "../lib/firebaseAdmin";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
-import { LetterBlock } from "../types";
 import validateBody from "../lib/validateBody";
-
-const challengeWordSchema = z.object({
-  wordId: z.string(),
-  wageredLetters: z.record(z.custom<LetterBlock>()),
-});
-
-export type ChallengeWordSchemaType = z.infer<typeof challengeWordSchema>;
+import { challengeWordSchema } from "../../../schemas/challengeWordSchema";
 
 export const challengeWord = onAuthorizedRequest(async (request, response) => {
   const validatedData = validateBody<typeof challengeWordSchema>(

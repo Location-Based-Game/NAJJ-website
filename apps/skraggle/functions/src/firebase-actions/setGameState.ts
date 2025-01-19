@@ -1,4 +1,4 @@
-import { GameStates } from "../types";
+import { GameStates } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
 
 export default async function setGameState(gameId: string, gameState: GameStates) {

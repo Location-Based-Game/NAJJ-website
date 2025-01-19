@@ -1,5 +1,5 @@
+import { GameStates, PlayersData } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
-import { GameStates, PlayersData } from "../types";
 
 export async function incrementTurn(
   gameId: string,
