@@ -1,5 +1,5 @@
 import { onValueUpdated } from "firebase-functions/v2/database";
-import { Inventory, PlayersData } from "../types";
+import { PlayersData } from "../types";
 import { db } from "../lib/firebaseAdmin";
 import { logger } from "firebase-functions";
 import { incrementTurn } from "../firebase-actions/incrementTurn";
@@ -9,7 +9,7 @@ import moveChallengedItemsToInventory from "../firebase-actions/moveChallengedIt
 const path = { ref: "/activeGames/{gameId}/players/{playerId}/isOnline" };
 export const onPlayerDisconnect = onValueUpdated(path, async (event) => {
   const isOnline = event.data.after.val() as boolean;
-  const deleteRoomsRef = db.ref(`gamesToDelete`);
+  const deleteRoomsRef = db.ref("gamesToDelete");
   const playerRef = event.data.after.ref.parent!;
   const allPlayersRef = playerRef.parent!;
   const gameIdRef = allPlayersRef.parent!.child("id");
@@ -43,12 +43,13 @@ export const onPlayerDisconnect = onValueUpdated(path, async (event) => {
     const allPlayersData = (await allPlayersRef.get()).val() as PlayersData;
     if (!Object.values(allPlayersData).every((e) => !e.isOnline)) return;
 
-    deleteRoomsRef.transaction((currentVal) => {
+    return deleteRoomsRef.transaction((currentVal) => {
       if (currentVal === null) return [gameId];
       currentVal.push(gameId);
       return currentVal;
     });
   } catch (error) {
     logger.error(`${error}`);
+    return Promise.reject(error)
   }
 });

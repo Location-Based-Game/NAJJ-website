@@ -1,7 +1,7 @@
-import { serverTimestamp } from "firebase/database";
 import { db } from "../lib/firebaseAdmin";
 import { GameStates, PlayerData } from "../types";
 import { getLetterBlocks } from "../lib/getLetterBlocks";
+import { ServerValue } from "firebase-admin/database";
 
 export async function addPlayer(
   gameId: string,
@@ -18,7 +18,7 @@ export async function addPlayer(
   await signalingRef.set({
     name: playerName,
     signalStatus: "pending",
-    timestamp: serverTimestamp(),
+    timestamp: ServerValue.TIMESTAMP
   });
 
   //get letter blocks if joining during Gameplay or FirstTurn states

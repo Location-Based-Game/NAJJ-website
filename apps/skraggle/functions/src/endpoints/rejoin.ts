@@ -1,7 +1,7 @@
 import { getSessionData } from "../lib/sessionUtils";
 import getHost from "../firebase-actions/getHost";
 import { db } from "../lib/firebaseAdmin";
-import { serverTimestamp } from "firebase/database";
+import { ServerValue } from "firebase-admin/database";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 
 export const rejoin = onAuthorizedRequest(async (request, response) => {
@@ -20,7 +20,7 @@ export const rejoin = onAuthorizedRequest(async (request, response) => {
   await playerRef.set({
     signalStatus: "pending",
     name: playerName,
-    timestamp: serverTimestamp(),
+    timestamp: ServerValue.TIMESTAMP,
   });
 
   if (!playerId) {
