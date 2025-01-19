@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 
-export default (
-    <Button>Button</Button>
-)
+export default function ButtonFixture() {
+    return (
+        <Button>Button</Button>
+    )
+}

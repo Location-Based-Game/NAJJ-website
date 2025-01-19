@@ -11,7 +11,7 @@ import { GameInfoDropdownView } from "@/components/sidebar/GameInfoDropdown";
 import { useState } from "react";
 import { useFixtureInput } from "react-cosmos/client";
 
-export default () => {
+export default function SidebarHeaderFixture() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isGameplay] = useFixtureInput("isGamePlay", false);
 

@@ -2,7 +2,7 @@
 import { WordDefinitionsView } from "@/app/_gameplay-ui/WordDefinitions";
 import { useState } from "react";
 
-export default () => {
+export default function WordDefinitionsFixture() {
   const [open, setOpen] = useState(true);
   return (
     <WordDefinitionsView

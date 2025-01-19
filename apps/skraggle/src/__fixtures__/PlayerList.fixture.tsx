@@ -6,7 +6,7 @@ import { PeerStatuses } from "@/store/peerStatusSlice";
 import { PlayersData } from "@types";
 import panelStyles from "@styles/panel.module.css";
 
-export default () => {
+export default function PlayerListFixture() {
   const players: PlayersData = {
     TestPlayer: {
       name: "TestPlayer",

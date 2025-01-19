@@ -10,7 +10,7 @@ import SidebarBase from "@/components/sidebar/SidebarBase";
 import SidebarRail from "@/components/sidebar/SidebarRail";
 import { Button } from "@/components/ui/button";
 
-export default () => {
+export default function SidebarNavMainFixture() {
   return (
     <SidebarProvider>
       <SidebarBase collapsible="icon">

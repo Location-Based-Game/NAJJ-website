@@ -7,9 +7,9 @@ import { ItemTypes } from "@types";
 import { useState } from "react";
 import { useFixtureInput } from "react-cosmos/client";
 
-export default () => {
-    const [itemAmount] = useFixtureInput("Item Amount", 1);
-  
+export default function SelectLettersToWagerPopoverFixture() {
+  const [itemAmount] = useFixtureInput("Item Amount", 1);
+
   const [letterSelection, setLetterSelection] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
@@ -17,7 +17,7 @@ export default () => {
     <SelectLettersToWagerPopoverContent
       letterSelection={letterSelection}
       setLetterSelection={setLetterSelection}
-      letterBlocks={[...new Array(itemAmount)].map(_ => {
+      letterBlocks={[...new Array(itemAmount)].map((_) => {
         return {
           itemData: { letter: "Y" },
           playerId: "testPlayer",
@@ -27,13 +27,13 @@ export default () => {
           gridPosition: [],
           standOrder: 0,
           isDestroyed: false,
-        }
+        };
       })}
       handleSubmit={async () => {}}
       open={open}
       setOpen={setOpen}
     >
-      <div className="w-full flex justify-center mt-2">
+      <div className="mt-2 flex w-full justify-center">
         <PopoverTrigger asChild>
           <Button>Wager Letters</Button>
         </PopoverTrigger>

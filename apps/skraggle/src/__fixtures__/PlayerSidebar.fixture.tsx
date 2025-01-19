@@ -7,7 +7,7 @@ import { useFixtureInput } from "react-cosmos/client";
 import styles from "@styles/main.module.css";
 import Noise from "@/components/Noise";
 
-export default () => {
+export default function PlayerSidebarFixture() {
   const [currentTurn] = useFixtureInput("Current Turn", 0);
   const players: PlayersData = {
     TestPlayer: {
