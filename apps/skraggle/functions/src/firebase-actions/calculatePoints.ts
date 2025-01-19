@@ -1,9 +1,9 @@
-import { ChallengeWordsData, Challengers } from "../../../schemas/challengeWordSchema";
+import { ChallengeWordsData, Challengers } from "../../../schemas/challengerSchema";
 import { WordData } from "../../../schemas/wordDataSchema";
 import { Inventory, TileType, ItemTypes, LetterBlock } from "../../../types";
 import { db } from "../lib/firebaseAdmin";
 import getWordDefinitions from "../lib/getWordDefinitions";
-import { letterPoints } from "../lib/letterPoints";
+import { letterPoints } from "../../../shared/letterPoints";
 import moveChallengedItemsToInventory from "./moveChallengedItemsToInventory";
 
 export default async function calculatePoints(

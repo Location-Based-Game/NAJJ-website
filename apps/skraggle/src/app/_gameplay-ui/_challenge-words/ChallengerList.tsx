@@ -1,4 +1,4 @@
-import { ChallengeWordType } from "@schemas/challengeWordSchema";
+import { ChallengeWordType } from "@schemas/challengerSchema";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

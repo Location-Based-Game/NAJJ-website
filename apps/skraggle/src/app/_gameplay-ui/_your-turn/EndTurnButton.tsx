@@ -5,7 +5,7 @@ import { fetchApi } from "@/lib/fetchApi";
 import { useValidatedWordContext } from "./YourTurnUI";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
 import useLogOut from "@/hooks/useLogOut";
-import { ChallengeWordsRecord, SubmittedChallengeWords } from "@schemas/challengeWordSchema";
+import { ChallengeWordsRecord, SubmittedChallengeWords } from "@schemas/challengerSchema";
 
 const MotionButton = motion.create(Button);
 

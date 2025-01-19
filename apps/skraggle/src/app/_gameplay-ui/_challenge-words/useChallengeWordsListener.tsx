@@ -8,7 +8,7 @@ import {
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { rtdb } from "../../firebaseConfig";
-import { challengeWordSchema } from "@schemas/challengeWordSchema";
+import { challengeWordSchema } from "@schemas/challengerSchema";
 import { useGameplayUIContext } from "../GameplayUIContextProvider";
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 

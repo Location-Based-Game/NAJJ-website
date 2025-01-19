@@ -1,4 +1,4 @@
-import { ChallengeWordsData } from "./schemas/challengeWordSchema";
+import { ChallengeWordsData } from "./schemas/challengerSchema";
 import type { Item } from "./schemas/itemSchema";
 
 export type GameStates = "Menu" | "TurnsDiceRoll" | "FirstTurn" | "Gameplay";

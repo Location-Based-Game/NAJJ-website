@@ -1,4 +1,4 @@
-import { submittedChallengeWordsSchema, ChallengeWordsData } from "../../../schemas/challengeWordSchema";
+import { submittedChallengeWordsSchema, ChallengeWordsData } from "../../../schemas/challengerSchema";
 import { Inventory } from "../../../types";
 import { moveInventoryItemToGrid } from "../firebase-actions/moveInventoryItemToGrid";
 import { db } from "../lib/firebaseAdmin";
