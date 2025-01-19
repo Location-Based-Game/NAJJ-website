@@ -1,5 +1,5 @@
 import { addPlayer } from "../../src/firebase-actions/addPlayer";
-import { addPlayer as addPlayerEndPoint } from "../../src";
+import { addPlayer as addPlayerEndPoint } from "../../../index";
 import { db } from "../../src/lib/firebaseAdmin";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
 import { createGameId } from "../../src/lib/createGameId";

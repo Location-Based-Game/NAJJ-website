@@ -1,4 +1,4 @@
-import { LetterBlock } from "@types";
+import { LetterBlock } from "../types";
 import { z } from "zod";
 
 export const challengeWordSchema = z.object({
