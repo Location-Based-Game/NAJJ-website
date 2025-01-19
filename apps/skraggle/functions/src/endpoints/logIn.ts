@@ -9,10 +9,7 @@ const logInSchema = z.object({
 });
 
 export const logIn = onAuthorizedRequest(async (request, response) => {
-  const validatedData = validateBody<typeof logInSchema>(
-    request.body,
-    logInSchema,
-  );
+  const validatedData = validateBody(request.body, logInSchema);
 
   let { gameId } = validatedData;
 

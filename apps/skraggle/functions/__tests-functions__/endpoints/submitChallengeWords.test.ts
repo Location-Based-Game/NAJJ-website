@@ -1,4 +1,4 @@
-import { submitChallengeWords } from "../../src";
+import { submitChallengeWords } from "../../../index";
 import { db } from "../../src/lib/firebaseAdmin";
 import { addPlayer } from "../../src/firebase-actions/addPlayer";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
@@ -8,7 +8,7 @@ import { Inventory } from "../../../types";
 import { createGameId } from "../../src/lib/createGameId";
 import setGameState from "../../src/firebase-actions/setGameState";
 import { getLetterBlocks } from "../../src/lib/getLetterBlocks";
-import { SubmittedChallengeWords } from "../../../schemas/challengeWordSchema";
+import { SubmittedChallengeWords } from "../../../schemas/challengerSchema";
 
 const express = require("express");
 const supertest = require("supertest");

@@ -1,4 +1,4 @@
-import { challengeWord } from "../../src";
+import { challengeWord } from "../../../index";
 import { db } from "../../src/lib/firebaseAdmin";
 import { addPlayer } from "../../src/firebase-actions/addPlayer";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
@@ -7,10 +7,10 @@ import { encryptJWT } from "../../src/lib/jwtUtils";
 import { ItemTypes } from "../../../types";
 import { createGameId } from "../../src/lib/createGameId";
 import setGameState from "../../src/firebase-actions/setGameState";
-import { ChallengeWordsData } from "../../../schemas/challengeWordSchema";
+import { ChallengeWordsData } from "../../../schemas/challengerSchema";
 import { ServerValue } from "firebase-admin/database";
 import { COUNTDOWN_SECONDS } from "../../src/endpoints/submitChallengeWords";
-import { ChallengeWordSchemaType } from "../../src/endpoints/challengeWord";
+import { ChallengeWordSchemaType } from "../../../schemas/challengeWordSchema";
 
 const express = require("express");
 const supertest = require("supertest");

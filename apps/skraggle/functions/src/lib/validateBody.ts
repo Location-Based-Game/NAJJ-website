@@ -1,9 +1,9 @@
 import { type Request } from "express";
-import { z, ZodTypeAny } from "zod";
+import { z } from "zod";
 
-export default function validateBody<TSchema extends ZodTypeAny>(
-  body: Request["body"] | string,
-  schema: z.AnyZodObject,
+export default function validateBody<TBody extends (Request["body"] | string), TSchema extends z.AnyZodObject>(
+  body: TBody,
+  schema: TSchema,
 ) {
   const validatedData = schema.safeParse(
     typeof body === "string" ? JSON.parse(body) : body,

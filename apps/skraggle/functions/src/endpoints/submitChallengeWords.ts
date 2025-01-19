@@ -1,4 +1,7 @@
-import { submittedChallengeWordsSchema, ChallengeWordsData } from "../../../schemas/challengerSchema";
+import {
+  submittedChallengeWordsSchema,
+  ChallengeWordsData,
+} from "../../../schemas/challengerSchema";
 import { Inventory } from "../../../types";
 import { moveInventoryItemToGrid } from "../firebase-actions/moveInventoryItemToGrid";
 import { db } from "../lib/firebaseAdmin";
@@ -11,15 +14,16 @@ export const COUNTDOWN_SECONDS = 10;
 
 export const submitChallengeWords = onAuthorizedRequest(
   async (request, response) => {
-    const validatedData = validateBody<typeof submittedChallengeWordsSchema>(
+    const validatedData = validateBody(
       request.body,
       submittedChallengeWordsSchema,
     );
+    
     const { submittedChallengeWords, currentItems } = validatedData;
     const { gameId, playerId } = await getSessionData(request);
 
     const placedItems = Object.entries(currentItems).reduce<
-    typeof currentItems
+      typeof currentItems
     >((obj, [key, value]) => {
       if (value.isPlaced) {
         obj[key] = value;
@@ -28,9 +32,9 @@ export const submitChallengeWords = onAuthorizedRequest(
     }, {});
 
     if (Object.keys(placedItems).length === 0) {
-      throw new Error("No items placed!")
+      throw new Error("No items placed!");
     }
-    
+
     const data: ChallengeWordsData = {
       playerId,
       words: submittedChallengeWords,
@@ -41,7 +45,7 @@ export const submitChallengeWords = onAuthorizedRequest(
         seconds: COUNTDOWN_SECONDS,
       },
     };
-    
+
     const challengeWordsRef = db.ref(`activeGames/${gameId}/challengeWords`);
     await challengeWordsRef.set(data);
 

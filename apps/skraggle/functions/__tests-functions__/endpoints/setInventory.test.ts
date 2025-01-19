@@ -1,4 +1,4 @@
-import { setInventory } from "../../src";
+import { setInventory } from "../../../index";
 import { db } from "../../src/lib/firebaseAdmin";
 import { addPlayer } from "../../src/firebase-actions/addPlayer";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";

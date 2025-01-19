@@ -1,4 +1,4 @@
-import { createRoom } from "../../src";
+import { createRoom } from "../../../index";
 import { db } from "../../src/lib/firebaseAdmin";
 import { createGameId } from "../../src/lib/createGameId";
 const express = require("express");

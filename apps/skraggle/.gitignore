@@ -41,3 +41,4 @@ node_modules/
 /playwright/.cache/
 
 cosmos.imports.ts
+src/app/cosmos

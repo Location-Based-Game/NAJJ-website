@@ -1,4 +1,4 @@
-import { logIn } from "../../src";
+import { logIn } from "../../../index";
 import { sessionSchema } from "../../../schemas/sessionSchema";
 import { decryptJWT } from "../../src/lib/jwtUtils";
 const express = require("express");

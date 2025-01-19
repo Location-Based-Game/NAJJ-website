@@ -5,10 +5,7 @@ import validateBody from "../lib/validateBody";
 import { challengeWordSchema } from "../../../schemas/challengeWordSchema";
 
 export const challengeWord = onAuthorizedRequest(async (request, response) => {
-  const validatedData = validateBody<typeof challengeWordSchema>(
-    request.body,
-    challengeWordSchema,
-  );
+  const validatedData = validateBody(request.body, challengeWordSchema);
   const { wordId, wageredLetters } = validatedData;
 
   if (Object.keys(wageredLetters).length === 0) {
@@ -26,7 +23,7 @@ export const challengeWord = onAuthorizedRequest(async (request, response) => {
     return;
   }
 
-  const challengersRef = wordIdRef.child("challengers")
+  const challengersRef = wordIdRef.child("challengers");
   await challengersRef.update({ [playerId]: wageredLetters });
 
   response.send({ data: "Success" });
