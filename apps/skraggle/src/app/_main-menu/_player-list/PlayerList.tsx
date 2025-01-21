@@ -61,9 +61,6 @@ export function PlayerListView({
             )}
           >
             <TableCell className="font-medium">
-              {i === 0 && <HostIcon name={players[id].name} />}
-            </TableCell>
-            <TableCell className="font-medium">
               <ConnectionIcon
                 isMainPlayer={id === playerId}
                 name={players[id].name}
@@ -71,6 +68,9 @@ export function PlayerListView({
               />
             </TableCell>
             <TableCell className="w-full">{players[id].name}</TableCell>
+            <TableCell className="font-medium">
+              {i === 0 && <HostIcon name={players[id].name} />}
+            </TableCell>
             <PlayerColor
               playerColor={players[id].color}
               isMainPlayer={id === playerId}

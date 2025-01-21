@@ -8,7 +8,7 @@ export default function HostLeaveGameButton() {
 
   return (
     <Button
-      variant="outline"
+      variant="secondary"
       className="h-12 basis-0 grow relative"
       onClick={() => {
         onLeave.current = async () => {

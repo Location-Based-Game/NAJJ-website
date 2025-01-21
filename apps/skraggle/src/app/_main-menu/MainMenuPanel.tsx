@@ -33,7 +33,7 @@ export default function MainMenuPanel() {
         setTargetWidth("34rem");
         return <JoinGame />;
       case "Create Game":
-        setTargetWidth("40rem");
+        setTargetWidth("34rem");
         return <CreateGame />;
       case "Rejoining":
         return <Rejoining />;
