@@ -27,7 +27,7 @@ export default function CreateGame() {
     <>
       <JoinCode />
       <PlayerList />
-      <div className="flex w-full gap-4">
+      <div className="flex w-full flex-col gap-2 xs:gap-4 xs:flex-row">
         <HostLeaveGameButton />
         {loadingProgression === 1 && splashScreenComplete ? (
           <Button
@@ -41,7 +41,7 @@ export default function CreateGame() {
             Start
           </Button>
         ) : (
-          <div className="relative inline-flex h-12 grow basis-0 items-center justify-center whitespace-nowrap rounded-md bg-primary/70 px-4 text-sm font-medium text-primary-foreground transition-colors">
+          <div className="relative inline-flex min-h-10 grow basis-0 items-center justify-center whitespace-nowrap rounded-md bg-primary/70 px-4 text-sm font-medium text-primary-foreground drop-shadow-md transition-colors xs:min-h-12">
             <Progress
               className="absolute left-0 h-full rounded-md"
               value={loadingProgression}

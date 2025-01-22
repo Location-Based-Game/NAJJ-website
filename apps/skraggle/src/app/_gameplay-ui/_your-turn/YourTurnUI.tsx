@@ -6,6 +6,7 @@ import { useGameplayUIContext } from "../GameplayUIContextProvider";
 import ChallengeWordsContainer from "./ChallengeWordsContainer";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const ValidatedWordContext = createContext<ReturnType<
   typeof useGetValidatedWord
@@ -14,6 +15,7 @@ const ValidatedWordContext = createContext<ReturnType<
 export default function YourTurnUI() {
   const validatedWordData = useGetValidatedWord();
   const { challengeWords } = useGameplayUIContext();
+  const isMobile = useMediaQuery(1024);
 
   return (
     <ValidatedWordContext.Provider value={validatedWordData}>
@@ -24,7 +26,7 @@ export default function YourTurnUI() {
             key={0}
             className="static flex h-full w-full items-center justify-center"
           >
-            <CurrentTurnWordsList />
+            {!isMobile && <CurrentTurnWordsList />}
             <EndTurnButton ref={validatedWordData.scopeLabel} />
           </motion.div>
         ) : (

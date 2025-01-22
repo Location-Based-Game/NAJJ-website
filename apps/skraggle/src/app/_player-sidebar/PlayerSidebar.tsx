@@ -96,7 +96,9 @@ export function PlayerSidebarView({
         <SheetHeader>
           <SheetTitle className="text-white text-left mb-4 mt-[-1rem]">Players</SheetTitle>
         </SheetHeader>
-        {playerList}
+        <div className="flex flex-col gap-1">
+          {playerList}
+        </div>
       </SheetContent>
     </Sheet>
   ) : (
