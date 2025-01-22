@@ -10,7 +10,7 @@ import { getSessionData } from "../lib/sessionUtils";
 import validateBody from "../lib/validateBody";
 import { ServerValue } from "firebase-admin/database";
 
-export const COUNTDOWN_SECONDS = 10;
+export const COUNTDOWN_SECONDS = 12;
 
 export const submitChallengeWords = onAuthorizedRequest(
   async (request, response) => {
