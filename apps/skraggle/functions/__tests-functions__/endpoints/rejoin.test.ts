@@ -77,7 +77,8 @@ describe("rejoin endpoint", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
-    expect(response.body.data).not.toHaveProperty("isHost");
+    expect(response.body.data).toHaveProperty("isHost");
+    expect(response.body.data.isHost).toBeFalsy();
 
     expect(response.body.data).toHaveProperty("gameId");
     expect(response.body.data.gameId).toEqual(gameId);

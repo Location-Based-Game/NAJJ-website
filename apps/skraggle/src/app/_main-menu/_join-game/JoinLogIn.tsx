@@ -6,9 +6,10 @@ import SignIn from "../SignIn";
 import { logInJoin } from "@/store/logInSlice";
 import useLogOut from "@/hooks/useLogOut";
 import { useMenuButtons } from "../InnerPanelWrapper";
+import { SESSION_SET_MESSAGE } from "@shared/constants";
 
 export default function JoinLogIn() {
-  const {enableButtons, setEnableButtons} = useMenuButtons()
+  const { enableButtons, setEnableButtons } = useMenuButtons();
   const currentJoinCode = useSelector((state: RootState) => state.joinCode);
   const sessionData = useSelector((state: RootState) => state.logIn);
   const { logOutOnError } = useLogOut();
@@ -16,7 +17,11 @@ export default function JoinLogIn() {
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
-      logOutOnError(sessionData.error);
+      if (sessionData.error.replace("Error: ", "") === SESSION_SET_MESSAGE) {
+        location.reload();
+      } else {
+        logOutOnError(sessionData.error);
+      }
     }
 
     if (!sessionData.error && sessionData.gameId) {

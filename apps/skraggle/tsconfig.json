@@ -21,6 +21,7 @@
       "@/*": ["./src/*"],
       "@types": ["./types.ts"],
       "@schemas/*": ["./schemas/*"],
+      "@shared/*": ["./shared/*"],
       "@styles/*": ["./src/app/_styles/*"]
     }
   },
