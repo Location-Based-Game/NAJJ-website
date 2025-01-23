@@ -3,6 +3,7 @@ export async function fetchApi(route: string, payload: object = {}) {
     process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
   const path = isDev ? "http://localhost:5001/skraggle-2e19f/us-central1/" : "https://us-central1-skraggle-2e19f.cloudfunctions.net/";
   const data = await fetch(`${path}${route}`, {
+    cache: "no-store",
     method: "POST",
     body: JSON.stringify(payload),
     credentials: "include",
