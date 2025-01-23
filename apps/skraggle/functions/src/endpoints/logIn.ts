@@ -17,7 +17,7 @@ export const logIn = onAuthorizedRequest(async (request, response) => {
   if (cookies) {
     const sessionCookie = cookies
       .split("; ")
-      .find((row) => row.startsWith("session="))
+      .find((row) => row.startsWith("__session="))
       ?.split("=")[1];
 
     if (sessionCookie) {

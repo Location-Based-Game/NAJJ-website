@@ -85,7 +85,7 @@ describe("challengeWord endpoint", () => {
       .post("/challengeWord")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send(requestData);
 
     expect(response.status).toBe(200);
@@ -155,7 +155,7 @@ describe("challengeWord endpoint", () => {
       .post("/challengeWord")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send(requestData);
 
     expect(response.status).toBe(400);
@@ -215,7 +215,7 @@ describe("challengeWord endpoint", () => {
       .post("/challengeWord")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send(requestData);
 
     expect(response.status).toBe(400);

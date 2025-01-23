@@ -7,7 +7,7 @@ import { sessionSchema, SessionData } from "@schemas/sessionSchema";
  * Reads the session cookie and deserializes and validates the JWT
  */
 export async function getSessionData() {
-  let session = cookies().get("session")?.value;
+  let session = cookies().get("__session")?.value;
   if (!session) {
     throw new Error("Session not set!");
   }
@@ -23,16 +23,14 @@ export async function getSessionData() {
 
 const secondsUntilExpiration = 10000;
 
-export async function setSessionCookie(
-  sessionData: SessionData
-) {
+export async function setSessionCookie(sessionData: SessionData) {
   const expires = new Date(Date.now() + secondsUntilExpiration * 1000);
   const session = await encryptJWT({ ...sessionData });
-  cookies().set("session", session, { expires, httpOnly: true });
+  cookies().set("__session", session, { expires, httpOnly: true });
 }
 
 export async function updateSession(request: NextRequest) {
-  const session = request.cookies.get('session')?.value;
+  const session = request.cookies.get("__session")?.value;
   if (!session) return;
 
   const parsedData = await decryptJWT(session);
@@ -44,23 +42,23 @@ export async function updateSession(request: NextRequest) {
   const expires = new Date(Date.now() + secondsUntilExpiration * 1000);
   const res = NextResponse.next();
   res.cookies.set({
-    name: 'session',
+    name: "__session",
     value: await encryptJWT(validatedData.data),
     httpOnly: true,
-    expires
+    expires,
   });
 
   //setup for redux state
   res.cookies.set({
-    name: 'session_data',
+    name: "session_data",
     value: JSON.stringify(validatedData.data),
-    expires
+    expires,
   });
 
   return res;
 }
 
 export function deleteSession() {
-  cookies().delete("session");
+  cookies().delete("__session");
   cookies().delete("session_data");
 }

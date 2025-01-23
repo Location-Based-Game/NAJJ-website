@@ -24,7 +24,7 @@ describe("logIn endpoint", () => {
 
     const sessionCookie = response.headers["set-cookie"][0]
       .split("; ")
-      .find((row: string) => row.startsWith("session="))
+      .find((row: string) => row.startsWith("__session="))
       ?.split("=")[1];
 
     const parsedData = await decryptJWT(sessionCookie);
@@ -49,7 +49,7 @@ describe("logIn endpoint", () => {
 
     const sessionCookie = response.headers["set-cookie"][0]
       .split("; ")
-      .find((row: string) => row.startsWith("session="))
+      .find((row: string) => row.startsWith("__session="))
       ?.split("=")[1];
 
     const parsedData = await decryptJWT(sessionCookie);
@@ -72,7 +72,7 @@ describe("logIn endpoint", () => {
       .post("/logIn")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send({ gameId: "test" });
 
     expect(response.status).toBe(400);

@@ -58,7 +58,7 @@ describe("setInventory endpoint", () => {
       .post("/setInventory")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send({ currentItems: castStartingDice });
 
     expect(response.status).toBe(200);
@@ -119,7 +119,7 @@ describe("setInventory endpoint", () => {
       .post("/setInventory")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${hostSessionJWT}`])
+      .set("Cookie", [`__session=${hostSessionJWT}`])
       .send({ currentItems: castStartingDice });
 
     expect(response.status).toBe(200);
@@ -179,7 +179,7 @@ describe("setInventory endpoint", () => {
       .post("/setInventory")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${otherPlayerSessionJWT}`])
+      .set("Cookie", [`__session=${otherPlayerSessionJWT}`])
       .send({ currentItems: castOtherPlayerStartingDice });
 
     expect(otherPlayerResponse.status).toBe(200);
@@ -262,7 +262,7 @@ describe("setInventory endpoint", () => {
       .post("/setInventory")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${hostSessionJWT}`])
+      .set("Cookie", [`__session=${hostSessionJWT}`])
       .send({ currentItems: castStartingDice });
 
     expect(response.status).toBe(200);

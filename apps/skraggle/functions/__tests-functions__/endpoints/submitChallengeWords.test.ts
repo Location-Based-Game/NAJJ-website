@@ -78,7 +78,7 @@ describe("submitChallengeWords endpoint", () => {
       .post("/submitChallengeWords")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send(data);
 
     expect(response.status).toBe(200);
@@ -165,7 +165,7 @@ describe("submitChallengeWords endpoint", () => {
       .post("/submitChallengeWords")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send(data);
 
     expect(response.status).toBe(200);
@@ -224,7 +224,7 @@ describe("submitChallengeWords endpoint", () => {
       .post("/submitChallengeWords")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send(data);
 
     expect(response.status).toBe(400);
