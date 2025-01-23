@@ -6,10 +6,7 @@ import { Inventory } from "../../../types";
 import { currentItemsSchema } from "../../../schemas/currentItemsSchema";
 
 export const setInventory = onAuthorizedRequest(async (request, response) => {
-  const validatedData = validateBody<typeof currentItemsSchema>(
-    request.body,
-    currentItemsSchema,
-  );
+  const validatedData = validateBody(request.body, currentItemsSchema);
 
   const { currentItems } = validatedData;
   const { gameId, playerId } = await getSessionData(request);

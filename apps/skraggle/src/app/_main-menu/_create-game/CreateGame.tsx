@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import QRCode from "./QRCode";
+import JoinCode from "./JoinCode";
 import { Button } from "@/components/ui/button";
 import PlayerList from "../_player-list/PlayerList";
 import useStartGame from "./useStartGame";
@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { useMenuButtons } from "../InnerPanelWrapper";
 
 export default function CreateGame() {
-  const {enableButtons, setEnableButtons} = useMenuButtons()
+  const { enableButtons, setEnableButtons } = useMenuButtons();
   const { handleStartGame } = useStartGame();
   const { loadingProgression, splashScreenComplete } = useUnityReactContext();
 
@@ -25,13 +25,9 @@ export default function CreateGame() {
 
   return (
     <>
-      <div className="flex w-full grow gap-8">
-        <QRCode />
-        <div className="w-full grow">
-          <PlayerList />
-        </div>
-      </div>
-      <div className="flex w-full gap-4">
+      <JoinCode />
+      <PlayerList />
+      <div className="flex w-full flex-col gap-2 xs:gap-4 xs:flex-row">
         <HostLeaveGameButton />
         {loadingProgression === 1 && splashScreenComplete ? (
           <Button
@@ -45,7 +41,7 @@ export default function CreateGame() {
             Start
           </Button>
         ) : (
-          <div className="relative inline-flex h-12 grow basis-0 items-center justify-center whitespace-nowrap rounded-md bg-primary/70 px-4 text-sm font-medium text-primary-foreground transition-colors">
+          <div className="relative inline-flex min-h-10 grow basis-0 items-center justify-center whitespace-nowrap rounded-md bg-primary/70 px-4 text-sm font-medium text-primary-foreground drop-shadow-md transition-colors xs:min-h-12">
             <Progress
               className="absolute left-0 h-full rounded-md"
               value={loadingProgression}

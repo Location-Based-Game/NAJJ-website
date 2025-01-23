@@ -16,11 +16,13 @@ const tripleWordColor = "bg-[#F38B23]";
 type WordItem = HTMLAttributes<HTMLDivElement> & {
   wordData: WordData;
   showBonusPoints?: boolean;
-}
+  hasExitAnimation?: boolean;
+};
 
 export default function WordItem({
   wordData,
   showBonusPoints = false,
+  hasExitAnimation = true,
   ...props
 }: WordItem) {
   const { state } = useSelector((state: RootState) => state.gameState);
@@ -53,7 +55,7 @@ export default function WordItem({
       layout={!showBonusPoints}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
+      exit={hasExitAnimation ? { opacity: 0, y: 20 } : {}}
       transition={{ layout: { duration: 0.3, type: "spring" } }}
       className={cn("flex gap-2", props.className)}
     >
@@ -144,4 +146,4 @@ const BonusPoints = forwardRef<HTMLDivElement, BonusPoints>(
   },
 );
 
-BonusPoints.displayName = "BonusPoints"
+BonusPoints.displayName = "BonusPoints";

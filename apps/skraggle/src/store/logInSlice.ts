@@ -1,6 +1,7 @@
 import { fetchApi } from "@/lib/fetchApi";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SessionData } from "@schemas/sessionSchema";
+import { z } from "zod";
 
 export type LogInType = SessionData & {
   loading: boolean;
@@ -53,8 +54,11 @@ export const logInSlice = createSlice({
 export const logInCreate = createAsyncThunk(
   "log in/create room",
   async (playerName: string) => {
-    const gameId = await fetchApi("logIn", { gameId: null });
-    const playerId = await fetchApi("createRoom", { playerName });
+    const logInData = await fetchApi("logIn", { gameId: null });
+    const { gameId } = z.object({ gameId: z.string() }).parse(logInData);
+
+    const createRoomData = await fetchApi("createRoom", { playerName });
+    const playerId = z.string().parse(createRoomData);
 
     const sessionData: LogInType = {
       loading: false,
@@ -72,8 +76,11 @@ export const logInJoin = createAsyncThunk(
   async (payload: { playerName: string; joinCode: string }) => {
     const { playerName, joinCode } = payload;
 
-    const gameId = await fetchApi("logIn", { gameId: joinCode });
-    const playerId = await fetchApi("addPlayer", { playerName });
+    const logInData = await fetchApi("logIn", { gameId: joinCode });
+    const { gameId } = z.object({ gameId: z.string() }).parse(logInData);
+
+    const addPlayerData = await fetchApi("addPlayer", { playerName });
+    const playerId = z.string().parse(addPlayerData);
 
     const sessionData: LogInType = {
       loading: false,

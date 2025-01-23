@@ -19,7 +19,7 @@ export default function ChallengeWordsContainer() {
   useEffect(() => {
     timerRef.current = setTimeout(() => {
       handleChallengeTimeout();
-    }, 10000);
+    }, 12000);
     
     return () => {
       if (timerRef.current) {
@@ -39,7 +39,7 @@ export default function ChallengeWordsContainer() {
         <motion.div
           className="absolute bottom-0 right-0 h-full w-full origin-left bg-[#d4d4d4]"
           animate={{ scaleX: 0 }}
-          transition={{ duration: 10, ease: "linear" }}
+          transition={{ duration: 12, ease: "linear" }}
         />
         <span className="animate-pulse text-gray-600">
           Waiting for challengers

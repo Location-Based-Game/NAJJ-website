@@ -25,7 +25,7 @@ interface SelectLettersToWagerPopover {
 export default function SelectLettersToWagerPopover({
   wordId,
 }: SelectLettersToWagerPopover) {
-  const { getCurrentItems } = useGameplayUIContext();
+  const { getCurrentItems, currentWageredLetters } = useGameplayUIContext();
   const [letterBlocks, setLetterBlocks] = useState<LetterBlock[]>([]);
   const [letterSelection, setLetterSelection] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
@@ -72,13 +72,21 @@ export default function SelectLettersToWagerPopover({
     Object.keys(wageredLetters).forEach((itemId) => {
       callUnityFunction("SelectWageredLetters", itemId);
     });
+
+    currentWageredLetters.current = [
+      ...currentWageredLetters.current,
+      ...Object.keys(wageredLetters),
+    ];
   };
 
   return (
     <SelectLettersToWagerPopoverContent
       letterSelection={letterSelection}
       setLetterSelection={setLetterSelection}
-      letterBlocks={letterBlocks}
+      letterBlocks={letterBlocks.filter(
+        (letterBlock) =>
+          !currentWageredLetters.current.includes(letterBlock.itemId),
+      )}
       handleSubmit={handleSubmit}
       open={open}
       setOpen={setOpen}
@@ -118,8 +126,10 @@ export function SelectLettersToWagerPopoverContent({
   children,
 }: SelectLettersToWagerPopoverContent) {
   const getPointsFromSelection = () => {
-    const letter = (index: string) =>
-      letterBlocks[parseInt(index)].itemData.letter;
+    const letter = (index: string) => {
+      if (!(parseInt(index) in letterBlocks)) return "";
+      return letterBlocks[parseInt(index)].itemData.letter;
+    };
 
     const totalPoints = letterSelection
       .map((index) => {
@@ -134,21 +144,24 @@ export function SelectLettersToWagerPopoverContent({
   };
 
   return (
-    <Popover open={open} onOpenChange={(open) => {
-      if (open) {
-        setLetterSelection([])
-      }
-      setOpen(open);
-    }}>
+    <Popover
+      open={open}
+      onOpenChange={(open) => {
+        if (open) {
+          setLetterSelection([]);
+        }
+        setOpen(open);
+      }}
+    >
       {children}
-      <PopoverContent className="flex flex-col gap-2 p-3 w-auto">
+      <PopoverContent className="flex w-auto flex-col gap-2 p-3">
         <ToggleGroup type="multiple" onValueChange={setLetterSelection}>
           {letterBlocks.map((e, i) => {
             return (
               <ToggleGroupItem
                 value={i.toString()}
                 key={i}
-                className="hover:bg-primary/30 data-[state=on]:bg-primary p-0"
+                className="p-0 hover:bg-primary/30 data-[state=on]:bg-primary"
               >
                 <TileIcon letter={e.itemData.letter} showPoints />
               </ToggleGroupItem>

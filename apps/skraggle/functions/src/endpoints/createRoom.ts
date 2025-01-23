@@ -11,10 +11,7 @@ const createRoomSchema = z.object({
 });
 
 export const createRoom = onAuthorizedRequest(async (request, response) => {
-  const validatedData = validateBody<typeof createRoomSchema>(
-    request.body,
-    createRoomSchema,
-  );
+  const validatedData = validateBody(request.body, createRoomSchema);
 
   const { playerName } = validatedData;
   const { gameId } = await getSessionData(request);

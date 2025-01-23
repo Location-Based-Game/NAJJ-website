@@ -1,0 +1,1 @@
+export const SESSION_SET_MESSAGE = "Session already set!"

@@ -6,6 +6,7 @@ import { rtdb } from "../firebaseConfig";
 import { setFirstTurnPassed, setCurrentTurn } from "@/store/turnSlice";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
 import { GameStates } from "@types";
+import { useGameplayUIContext } from "./GameplayUIContextProvider";
 
 export default function useTurnListener() {
   const { gameId } = useSelector((state: RootState) => state.logIn);
@@ -17,6 +18,7 @@ export default function useTurnListener() {
   const players = useSelector((state:RootState) => state.players)
   const firstTurn = useRef<number>()
   const firstState = useRef(false)
+  const {currentWageredLetters} = useGameplayUIContext()
 
   useEffect(() => {
     if (!gameId) {
@@ -47,6 +49,8 @@ export default function useTurnListener() {
         if (firstTurn.current !== turn) {
           dispatch(setFirstTurnPassed(true))
         }
+
+        currentWageredLetters.current = []
       }
     });
 

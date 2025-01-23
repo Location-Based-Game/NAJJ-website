@@ -5,6 +5,7 @@ import React, {
   useEffect,
   createContext,
   useContext,
+  useRef,
 } from "react";
 import { useSelector } from "react-redux";
 import { useUnityReactContext } from "../_unity-player/UnityContext";
@@ -20,6 +21,7 @@ export const GamePlayUIContext = createContext<{
   getCurrentItems: () => Promise<CurrentItemsType>;
   setShowExpandPreviewButton: React.Dispatch<React.SetStateAction<boolean>>;
   showExpandPreviewButton: boolean;
+  currentWageredLetters: React.MutableRefObject<string[]>
 } | null>(null);
 
 export default function GameplayUIContextProvider({
@@ -39,6 +41,7 @@ export default function GameplayUIContextProvider({
   const { isGameActive } = useSelector((state: RootState) => state.gameState);
   const { addEventListener, removeEventListener } = useUnityReactContext();
   const { getCurrentItems } = useSetInventories();
+  const currentWageredLetters = useRef<string[]>([])
   useWebRTC();
 
   const handleShowExpandPreviewButton = () => setShowExpandPreviewButton(true);
@@ -75,7 +78,8 @@ export default function GameplayUIContextProvider({
         setChallengeWords,
         getCurrentItems,
         showExpandPreviewButton,
-        setShowExpandPreviewButton
+        setShowExpandPreviewButton,
+        currentWageredLetters
       }}
     >
       {children}

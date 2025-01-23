@@ -1,6 +1,7 @@
-import { logIn } from "../../src";
-import { sessionSchema } from "../../../schemas/sessionSchema";
-import { decryptJWT } from "../../src/lib/jwtUtils";
+import { logIn } from "../../../index";
+import { SessionData, sessionSchema } from "../../../schemas/sessionSchema";
+import { SESSION_SET_MESSAGE } from "../../../shared/constants";
+import { decryptJWT, encryptJWT } from "../../src/lib/jwtUtils";
 const express = require("express");
 const supertest = require("supertest");
 
@@ -15,6 +16,11 @@ describe("logIn endpoint", () => {
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
       .send({ gameId: null });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("data");
+    expect(response.body.data).toHaveProperty("gameId");
+    expect(response.body.data.gameId).toBeTruthy();
 
     const sessionCookie = response.headers["set-cookie"][0]
       .split("; ")
@@ -36,6 +42,11 @@ describe("logIn endpoint", () => {
       .set("Content-Type", "application/json")
       .send({ gameId: "test" });
 
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("data");
+    expect(response.body.data).toHaveProperty("gameId");
+    expect(response.body.data.gameId).toBeTruthy();
+
     const sessionCookie = response.headers["set-cookie"][0]
       .split("; ")
       .find((row: string) => row.startsWith("session="))
@@ -49,6 +60,26 @@ describe("logIn endpoint", () => {
     expect(validatedData.data?.playerName).toBeFalsy();
   }, 100000);
 
+  test("returns error message if a session already exists", async () => {
+    const sessionData: SessionData = {
+      gameId: "xxxx",
+      playerId: "hostPlayerId",
+      playerName: "host player",
+    };
+    const sessionJWT = await encryptJWT(sessionData);
+
+    const response = await supertest(app)
+      .post("/logIn")
+      .set("Origin", "http://localhost")
+      .set("Content-Type", "application/json")
+      .set("Cookie", [`session=${sessionJWT}`])
+      .send({ gameId: "test" });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toEqual(SESSION_SET_MESSAGE);
+  }, 100000);
+
   test("returns error message if the data is incorrect", async () => {
     const response = await supertest(app)
       .post("/logIn")
@@ -58,5 +89,6 @@ describe("logIn endpoint", () => {
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toEqual("Error: Invalid Data!");
   }, 100000);
 });

@@ -22,7 +22,7 @@ export default function ChallengeWordsList({
         showChallengeButton ? "justify-end" : "justify-center",
       )}
     >
-      <WordItem wordData={wordData} />
+      <WordItem wordData={wordData} hasExitAnimation={false} />
       {showChallengeButton && <SelectLettersToWagerPopover wordId={wordId} />}
       <ChallengerList wordData={wordData} />
     </div>

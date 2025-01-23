@@ -10,10 +10,7 @@ const addPlayerSchema = z.object({
 });
 
 export const addPlayer = onAuthorizedRequest(async (request, response) => {
-  const validatedData = validateBody<typeof addPlayerSchema>(
-    request.body,
-    addPlayerSchema,
-  );
+  const validatedData = validateBody(request.body, addPlayerSchema);
 
   const { playerName } = validatedData;
   const { gameId } = await getSessionData(request);

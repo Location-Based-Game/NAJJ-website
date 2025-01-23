@@ -21,6 +21,7 @@ const mainMenuStateRelations: MainMenuStateRelation = {
   "Enter Join Code": "Home",
   "Join Game": "Sign In to Join",
   Rejoining: null,
+  "Rejoin Failed": null,
 } as const;
 
 const MainMenuBreadCrumb = memo(() => {
@@ -38,7 +39,14 @@ const MainMenuBreadCrumb = memo(() => {
   createBreadCrumb(mainMenuStateRelations[mainMenu.state]);
 
   const handleCollapsedBreadcrumb = () => {
-    if (mainMenu.state === "Home" || mainMenu.state === "Rejoining") return;
+    if (
+      mainMenu.state === "Home" ||
+      mainMenu.state === "Rejoining" ||
+      mainMenu.state === "Rejoin Failed"
+    ) {
+      return;
+    }
+    
     return (
       <>
         <BreadCrumbDropdown menuItems={previousItems.reverse()}>

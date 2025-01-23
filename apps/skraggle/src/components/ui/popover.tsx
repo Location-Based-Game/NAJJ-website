@@ -4,6 +4,7 @@ import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { cn } from "@/lib/tailwindUtils";
 import styles from "@styles/main.module.css";
+import Noise from "../Noise";
 
 const Popover = PopoverPrimitive.Root;
 
@@ -27,7 +28,10 @@ const PopoverContent = React.forwardRef<
         className,
       )}
       {...props}
-    />
+    >
+      <Noise />
+      {props.children}
+    </PopoverPrimitive.Content>
   </PopoverPrimitive.Portal>
 ));
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;

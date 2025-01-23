@@ -1,5 +1,5 @@
 import { addPlayer } from "../../src/firebase-actions/addPlayer";
-import { leaveGame } from "../../src";
+import { leaveGame } from "../../../index";
 import { db } from "../../src/lib/firebaseAdmin";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
 import { SessionData } from "../../../schemas/sessionSchema";

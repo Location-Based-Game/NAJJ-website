@@ -6,6 +6,7 @@ import SignIn from "../SignIn";
 import { GuestNameType } from "../GuestNameInput";
 import useLogOut from "@/hooks/useLogOut";
 import { useMenuButtons } from "../InnerPanelWrapper";
+import { SESSION_SET_MESSAGE } from "@shared/constants";
 
 export default function CreateLogIn() {
   const {enableButtons, setEnableButtons} = useMenuButtons()
@@ -15,7 +16,11 @@ export default function CreateLogIn() {
 
   useEffect(() => {
     if (sessionData.error && !sessionData.loading) {
-      logOutOnError(sessionData.error);
+      if (sessionData.error.replace("Error: ", "") === SESSION_SET_MESSAGE) {
+        location.reload();
+      } else {
+        logOutOnError(sessionData.error);
+      }
     }
 
     if (!sessionData.error && sessionData.gameId) {

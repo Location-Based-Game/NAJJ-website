@@ -43,6 +43,7 @@ module.exports = {
     "no-prototype-builtins": "off",
     "quote-props": "off",
     "valid-jsdoc": "off",
-    "padded-blocks": "off"
+    "padded-blocks": "off",
+    "space-before-function-paren": "off"
   },
 };
