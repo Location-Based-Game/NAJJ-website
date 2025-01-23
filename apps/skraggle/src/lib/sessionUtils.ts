@@ -46,6 +46,8 @@ export async function updateSession(request: NextRequest) {
     value: await encryptJWT(validatedData.data),
     httpOnly: true,
     expires,
+    secure: true,
+    sameSite: "none",
   });
 
   //setup for redux state
@@ -53,6 +55,8 @@ export async function updateSession(request: NextRequest) {
     name: "session_data",
     value: JSON.stringify(validatedData.data),
     expires,
+    secure: true,
+    sameSite: "none",
   });
 
   return res;

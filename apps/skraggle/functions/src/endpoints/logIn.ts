@@ -13,24 +13,25 @@ const logInSchema = z.object({
 
 export const logIn = onAuthorizedRequest(async (request, response) => {
   const validatedData = validateBody(request.body, logInSchema);
-
+  response.clearCookie("__session");
+  response.clearCookie("session_data");
   // Throw an error if a session already exists
-  const cookies = request.headers.cookie;
-  if (cookies) {
-    const sessionCookie = cookies
-      .split("; ")
-      .find((row) => row.startsWith("__session="))
-      ?.split("=")[1];
+  // const cookies = request.headers.cookie;
+  // if (cookies) {
+  //   const sessionCookie = cookies
+  //     .split("; ")
+  //     .find((row) => row.startsWith("__session="))
+  //     ?.split("=")[1];
 
-      if (sessionCookie) {
-      const parsedData = await decryptJWT(sessionCookie);
-      logger.log(parsedData)
-      // Even when there are no cookies present on the client, this
-      // is still being called
-      response.status(400).send({ error: SESSION_SET_MESSAGE });
-      return;
-    }
-  }
+  //     if (sessionCookie) {
+  //     const parsedData = await decryptJWT(sessionCookie);
+  //     logger.log(parsedData)
+  //     // Even when there are no cookies present on the client, this
+  //     // is still being called
+  //     response.status(400).send({ error: SESSION_SET_MESSAGE });
+  //     return;
+  //   }
+  // }
 
   let { gameId } = validatedData;
 
