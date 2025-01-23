@@ -31,7 +31,7 @@ export async function setSessionCookie(sessionData: SessionData) {
 
 export async function updateSession(request: NextRequest) {
   const session = request.cookies.get("__session")?.value;
-  if (!session) return;
+  if (!session) return NextResponse.next();
 
   const parsedData = await decryptJWT(session);
   const validatedData = sessionSchema.safeParse(parsedData);

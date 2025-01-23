@@ -4,6 +4,8 @@ import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import validateBody from "../lib/validateBody";
 import { createGameId } from "../lib/createGameId";
 import { SESSION_SET_MESSAGE } from "../../../shared/constants";
+import * as logger from "firebase-functions/logger"
+import { decryptJWT } from "../lib/jwtUtils";
 
 const logInSchema = z.object({
   gameId: z.string().length(4).nullable(),
@@ -20,7 +22,11 @@ export const logIn = onAuthorizedRequest(async (request, response) => {
       .find((row) => row.startsWith("__session="))
       ?.split("=")[1];
 
-    if (sessionCookie) {
+      if (sessionCookie) {
+      const parsedData = await decryptJWT(sessionCookie);
+      logger.log(parsedData)
+      // Even when there are no cookies present on the client, this
+      // is still being called
       response.status(400).send({ error: SESSION_SET_MESSAGE });
       return;
     }
