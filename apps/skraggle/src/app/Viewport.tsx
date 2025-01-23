@@ -13,6 +13,7 @@ import { forwardRef, useEffect, useState } from "react";
 import cursors from "@styles/cursors.module.css";
 import loadingBackground from "@styles/loadingBackground.module.css";
 import useTransmitWebRTCData from "./_gameplay-ui/useTransmitWebRTCData";
+import useSessionRejoin from "./_main-menu/_rejoin/useSessionRejoin";
 
 const Unity = dynamic(
   () => import("react-unity-webgl").then((mod) => mod.Unity),
@@ -34,6 +35,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
     usePlayersData();
     useSetGameState();
     useTransmitWebRTCData();
+    useSessionRejoin();
 
     const [viewPortCursor, setViewPortCursor] = useState(cursors.auto);
     const updateCursor = (cursorType: any) => {

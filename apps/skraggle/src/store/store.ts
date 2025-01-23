@@ -19,7 +19,8 @@ export type MainMenuStates =
   | "Create Game"
   | "Enter Join Code"
   | "Join Game"
-  | "Rejoining";
+  | "Rejoining"
+  | "Rejoin Failed"
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
   state: "Home",
