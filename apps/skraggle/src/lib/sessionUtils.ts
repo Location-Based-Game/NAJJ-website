@@ -43,12 +43,12 @@ export async function updateSession(request: NextRequest) {
 
   const expires = new Date(Date.now() + secondsUntilExpiration * 1000);
   const res = NextResponse.next();
-  res.cookies.set({
-    name: 'session',
-    value: await encryptJWT(validatedData.data),
-    httpOnly: true,
-    expires
-  });
+  // res.cookies.set({
+  //   name: 'session',
+  //   value: await encryptJWT(validatedData.data),
+  //   httpOnly: true,
+  //   expires
+  // });
 
   //setup for redux state
   res.cookies.set({
