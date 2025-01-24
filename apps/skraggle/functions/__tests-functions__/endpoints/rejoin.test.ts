@@ -34,7 +34,7 @@ describe("rejoin endpoint", () => {
       .post("/rejoin")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`]);
+      .set("Cookie", [`__session=${sessionJWT}`]);
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
@@ -73,7 +73,7 @@ describe("rejoin endpoint", () => {
       .post("/rejoin")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`]);
+      .set("Cookie", [`__session=${sessionJWT}`]);
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
@@ -109,7 +109,7 @@ describe("rejoin endpoint", () => {
       .post("/rejoin")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`]);
+      .set("Cookie", [`__session=${sessionJWT}`]);
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");
@@ -128,7 +128,7 @@ describe("rejoin endpoint", () => {
       .post("/rejoin")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`]);
+      .set("Cookie", [`__session=${sessionJWT}`]);
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");

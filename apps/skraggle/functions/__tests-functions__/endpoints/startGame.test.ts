@@ -43,7 +43,7 @@ describe("startGame endpoint", () => {
       .post("/startGame")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`]);
+      .set("Cookie", [`__session=${sessionJWT}`]);
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
@@ -86,7 +86,7 @@ describe("startGame endpoint", () => {
       .post("/startGame")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`]);
+      .set("Cookie", [`__session=${sessionJWT}`]);
 
     expect(response.status).toBe(403);
     expect(response.body).toHaveProperty("error");
@@ -104,7 +104,7 @@ describe("startGame endpoint", () => {
       .post("/startGame")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`]);
+      .set("Cookie", [`__session=${sessionJWT}`]);
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");

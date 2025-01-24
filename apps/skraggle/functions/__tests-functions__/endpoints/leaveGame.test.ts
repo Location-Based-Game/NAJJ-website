@@ -30,7 +30,7 @@ describe("leaveGame endpoint", () => {
       .post("/leaveGame")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send({ playerName: "test player" });
 
     expect(response.status).toBe(200);
@@ -70,7 +70,7 @@ describe("leaveGame endpoint", () => {
       .post("/leaveGame")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .set("Cookie", [`session=${sessionJWT}`])
+      .set("Cookie", [`__session=${sessionJWT}`])
       .send({ playerName: "test player" });
 
     expect(response.status).toBe(200);
