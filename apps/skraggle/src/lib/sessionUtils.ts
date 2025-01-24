@@ -3,24 +3,6 @@ import { decryptJWT, encryptJWT } from "./jwtUtils";
 import { NextRequest, NextResponse } from "next/server";
 import { sessionSchema, SessionData } from "@schemas/sessionSchema";
 
-/**
- * Reads the session cookie and deserializes and validates the JWT
- */
-export async function getSessionData() {
-  let session = cookies().get("__session")?.value;
-  if (!session) {
-    throw new Error("Session not set!");
-  }
-
-  const parsedData = await decryptJWT(session);
-  const validatedData = sessionSchema.safeParse(parsedData);
-  if (!validatedData.success) {
-    throw new Error("Invalid session data!");
-  }
-
-  return validatedData.data;
-}
-
 const secondsUntilExpiration = 10000;
 
 export async function setSessionCookie(sessionData: SessionData) {
@@ -60,9 +42,4 @@ export async function updateSession(request: NextRequest) {
   });
 
   return res;
-}
-
-export function deleteSession() {
-  cookies().delete("__session");
-  cookies().delete("session_data");
 }
