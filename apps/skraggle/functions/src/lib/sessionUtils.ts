@@ -33,7 +33,7 @@ export async function setSessionCookie(
 ) {
   const expires = new Date(Date.now() + secondsUntilExpiration * 1000);
   const session = await encryptJWT({ ...sessionData });
-  response.cookie("__session", session, { expires, httpOnly: true, secure: true, sameSite: "none" });
+  response.cookie("__session", session, { expires, httpOnly: true, secure: true, sameSite: "none", domain: "skraggl.io" });
 }
 
 export async function deleteSession(response: Response) {
