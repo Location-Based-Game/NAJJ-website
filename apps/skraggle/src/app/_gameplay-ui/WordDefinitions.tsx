@@ -97,7 +97,7 @@ export function WordDefinitionsView({
                   exit={{ opacity: 0, y: 30 }}
                   transition={{ type: "spring", duration: 0.4 }}
                   className={cn(
-                    "pointer-events-auto absolute top-4 z-20 w-[36rem] border-none text-white",
+                    "pointer-events-auto absolute top-4 z-20 w-full border-none text-white sm:w-[36rem]",
                     panelStyles.woodBorder,
                   )}
                 >
@@ -139,12 +139,14 @@ function Definitions({ definitions }: { definitions: WordDefinition[] }) {
       return (
         <div
           key={i}
-          className="flex flex-1 items-center gap-4 py-4 pl-[3.25rem] pr-5 outline-none transition-all"
+          className="flex flex-1 flex-wrap items-center gap-1 py-4 pl-[3.25rem] pr-5 outline-none transition-all"
         >
-          <div className="text-left text-xl font-bold text-sidebar-foreground">
+          <div className="mr-4 text-left text-xl font-bold text-sidebar-foreground">
             {e.word}
           </div>
-          <div className="text-sm ml-2 bg-black/20 rounded-md px-2 py-1 text-gray-400">NOT A REAL WORD</div>
+          <div className="rounded-md bg-black/20 px-2 py-1 text-sm text-gray-400">
+            NOT A REAL WORD
+          </div>
         </div>
       );
     }
