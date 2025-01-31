@@ -30,7 +30,6 @@ export async function updateSession(request: NextRequest) {
     expires,
     secure: true,
     sameSite: "none",
-    domain: "skraggl.io",
   });
 
   //setup for redux state
@@ -40,7 +39,6 @@ export async function updateSession(request: NextRequest) {
     expires,
     secure: true,
     sameSite: "none",
-    domain: "skraggl.io",
   });
 
   return res;
