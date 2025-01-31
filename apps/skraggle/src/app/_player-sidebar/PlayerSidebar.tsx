@@ -19,6 +19,9 @@ import { Users } from "lucide-react";
 import sidebarStyles from "./playerSidebar.module.css";
 import backgroundStyles from "@styles/main.module.css";
 import Noise from "@/components/Noise";
+import dynamic from "next/dynamic";
+
+const SidebarAd = dynamic(() => import("./SidebarAd"), { ssr: false })
 
 export default function PlayerSidebar() {
   const players = useSelector((state: RootState) => state.players);
@@ -94,10 +97,13 @@ export function PlayerSidebarView({
       >
         <Noise />
         <SheetHeader>
-          <SheetTitle className="text-white text-left mb-4 mt-[-1rem]">Players</SheetTitle>
+          <SheetTitle className="mb-4 mt-[-1rem] text-left text-white">
+            Players
+          </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-1">
           {playerList}
+          <SidebarAd />
         </div>
       </SheetContent>
     </Sheet>
@@ -105,6 +111,7 @@ export function PlayerSidebarView({
     <div className="min-w-[14rem]">
       <div className="flex w-full flex-col gap-1 pl-4 pr-3 pt-12 text-white">
         {playerList}
+        <SidebarAd />
       </div>
     </div>
   );
