@@ -11,7 +11,14 @@ import Link from "next/link";
 import { cn } from "@/lib/tailwindUtils";
 import styles from "./sidebar.module.css";
 
-export const navItems = [
+type NavItem = {
+  title: string;
+  url: string;
+  icon: React.ReactNode;
+  newTab?: boolean;
+};
+
+export const navItems: NavItem[] = [
   {
     title: "Play Skraggle!",
     url: "/",
@@ -34,8 +41,9 @@ export const navItems = [
   },
   {
     title: "More Games",
-    url: "#",
+    url: "https://mookorea.itch.io/",
     icon: <Gamepad2 />,
+    newTab: true,
   },
 ];
 
@@ -48,9 +56,13 @@ export function SidebarNavMain() {
             <SidebarMenuButton
               asChild
               tooltip={item.title}
-              className="h-12 gap-4 pl-6 text-sm group-data-[collapsible=icon]:!pl-4 text-sidebar-foreground"
+              className="h-12 gap-4 pl-6 text-sm text-sidebar-foreground group-data-[collapsible=icon]:!pl-4"
             >
-              <Link href={item.url} className="min-w-full drop-shadow-dark">
+              <Link
+                href={item.url}
+                className="min-w-full drop-shadow-dark"
+                target={item.newTab ? "_blank" : "_self"}
+              >
                 {item.icon}
                 <span>{item.title}</span>
               </Link>
