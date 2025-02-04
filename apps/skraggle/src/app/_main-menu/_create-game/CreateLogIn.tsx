@@ -12,6 +12,7 @@ export default function CreateLogIn() {
   const { enableButtons, setEnableButtons } = useMenuButtons();
   const dispatch = useDispatch<AppDispatch>();
   const sessionData = useSelector((state: RootState) => state.logIn);
+  const gameSettings = useSelector((state: RootState) => state.gameSettings);
   const { logOutOnError } = useLogOut();
 
   useEffect(() => {
@@ -35,9 +36,7 @@ export default function CreateLogIn() {
     dispatch(
       logInCreate({
         playerName: values.guestName,
-        gameSettings: {
-          realWordsOnly: false,
-        },
+        gameSettings,
       }),
     );
   };

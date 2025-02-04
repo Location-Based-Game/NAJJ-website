@@ -5,6 +5,7 @@ import { db } from "../lib/firebaseAdmin";
 import getWordDefinitions from "../lib/getWordDefinitions";
 import { letterPoints } from "../../../shared/letterPoints";
 import moveChallengedItemsToInventory from "./moveChallengedItemsToInventory";
+import { GameSettings } from "../../../schemas/gameSettingsSchema";
 
 export default async function calculatePoints(
   gameId: string,
@@ -17,9 +18,14 @@ export default async function calculatePoints(
     throw new Error("Cannot end turn prematurely!")
   }
 
+  // Get game settings
+  const gameSettingsRef = db.ref(`activeGames/${gameId}/gameSettings`)
+  const gameSettings = (await gameSettingsRef.get()).val() as GameSettings
+
   // Get definitions
   const wordDefinitions = await getWordDefinitions(
     Object.values(words).map((x) => x.word),
+    gameSettings.realWordsOnly
   );
   const currentDefinitionsRef = db.ref(
     `activeGames/${gameId}/currentDefinitions`,
