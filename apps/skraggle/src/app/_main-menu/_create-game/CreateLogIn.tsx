@@ -9,7 +9,7 @@ import { useMenuButtons } from "../InnerPanelWrapper";
 import { SESSION_SET_MESSAGE } from "@shared/constants";
 
 export default function CreateLogIn() {
-  const {enableButtons, setEnableButtons} = useMenuButtons()
+  const { enableButtons, setEnableButtons } = useMenuButtons();
   const dispatch = useDispatch<AppDispatch>();
   const sessionData = useSelector((state: RootState) => state.logIn);
   const { logOutOnError } = useLogOut();
@@ -32,7 +32,14 @@ export default function CreateLogIn() {
 
   const handleSubmit = async (values: GuestNameType) => {
     setEnableButtons(false);
-    dispatch(logInCreate(values.guestName));
+    dispatch(
+      logInCreate({
+        playerName: values.guestName,
+        gameSettings: {
+          realWordsOnly: false,
+        },
+      }),
+    );
   };
 
   return (
