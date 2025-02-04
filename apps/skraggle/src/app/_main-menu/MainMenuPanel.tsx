@@ -11,6 +11,7 @@ import JoinLogIn from "./_join-game/JoinLogIn";
 import { useEffect, useState } from "react";
 import InnerPanelWrapper from "./InnerPanelWrapper";
 import RejoinFailed from "./_rejoin/RejoinFailed";
+import SetGameSettings from "./_create-game/SetGameSettings";
 
 export default function MainMenuPanel() {
   const { state } = useSelector((state: RootState) => state.mainMenu);
@@ -39,6 +40,8 @@ export default function MainMenuPanel() {
       case "Rejoin Failed":
         setTargetWidth("30rem")
         return <RejoinFailed />
+      case "Set Game Settings":
+        return <SetGameSettings />
     }
   };
 

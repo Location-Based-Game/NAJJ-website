@@ -15,7 +15,8 @@ import { BreadcrumbEllipsis } from "@/components/ui/breadcrumb";
 type MainMenuStateRelation = Record<MainMenuStates, MainMenuStates | null>;
 const mainMenuStateRelations: MainMenuStateRelation = {
   Home: null,
-  "Sign In to Create": "Home",
+  "Set Game Settings": "Home",
+  "Sign In to Create" : "Set Game Settings",
   "Sign In to Join": "Enter Join Code",
   "Create Game": "Sign In to Create",
   "Enter Join Code": "Home",

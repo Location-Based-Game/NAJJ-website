@@ -45,7 +45,7 @@ export default function CreateLogIn() {
   return (
     <SignIn
       back={{
-        state: "Home",
+        state: "Set Game Settings",
         slideFrom: "left",
       }}
       submitHandler={handleSubmit}
