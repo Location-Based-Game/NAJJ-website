@@ -32,7 +32,7 @@ export default function MainButtons() {
           setEnableButtons(false);
           dispatch(
             mainMenuState.updateState({
-              state: "Sign In to Create",
+              state: "Set Game Settings",
               slideFrom: "right",
             }),
           );

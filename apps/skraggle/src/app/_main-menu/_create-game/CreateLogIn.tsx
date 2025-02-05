@@ -9,9 +9,10 @@ import { useMenuButtons } from "../InnerPanelWrapper";
 import { SESSION_SET_MESSAGE } from "@shared/constants";
 
 export default function CreateLogIn() {
-  const {enableButtons, setEnableButtons} = useMenuButtons()
+  const { enableButtons, setEnableButtons } = useMenuButtons();
   const dispatch = useDispatch<AppDispatch>();
   const sessionData = useSelector((state: RootState) => state.logIn);
+  const gameSettings = useSelector((state: RootState) => state.gameSettings);
   const { logOutOnError } = useLogOut();
 
   useEffect(() => {
@@ -32,13 +33,18 @@ export default function CreateLogIn() {
 
   const handleSubmit = async (values: GuestNameType) => {
     setEnableButtons(false);
-    dispatch(logInCreate(values.guestName));
+    dispatch(
+      logInCreate({
+        playerName: values.guestName,
+        gameSettings,
+      }),
+    );
   };
 
   return (
     <SignIn
       back={{
-        state: "Home",
+        state: "Set Game Settings",
         slideFrom: "left",
       }}
       submitHandler={handleSubmit}

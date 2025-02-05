@@ -1,3 +1,4 @@
+import { GameSettings } from "./schemas/gameSettingsSchema";
 import { ChallengeWordsData } from "./schemas/challengerSchema";
 import type { Item } from "./schemas/itemSchema";
 
@@ -11,6 +12,7 @@ export type GameRoom = {
   grid: Inventory;
   currentTurn: number;
   challengeWords?: ChallengeWordsData;
+  gameSettings: GameSettings;
 };
 
 export enum ItemTypes {

@@ -6,6 +6,7 @@ import { turnSlice } from "./turnSlice";
 import { logInSlice } from "./logInSlice";
 import { peerStatusSlice } from "./peerStatusSlice";
 import { playersSlice } from "./playersSlice";
+import { gameSettingsSlice } from "./gameSettingsSlice";
 
 export type MainMenuState = {
   state: MainMenuStates
@@ -21,6 +22,7 @@ export type MainMenuStates =
   | "Join Game"
   | "Rejoining"
   | "Rejoin Failed"
+  | "Set Game Settings"
 
 export const mainMenuState = new UIStateSlice<MainMenuState>("mainMenu", {
   state: "Home",
@@ -34,7 +36,8 @@ const rootReducer = combineReducers({
   turnState: turnSlice.reducer,
   logIn: logInSlice.reducer,
   peerStatus: peerStatusSlice.reducer,
-  players: playersSlice.reducer
+  players: playersSlice.reducer,
+  gameSettings: gameSettingsSlice.reducer
 });
 
 export const setupStore = (preloadedState?: Partial<RootState>) => {
