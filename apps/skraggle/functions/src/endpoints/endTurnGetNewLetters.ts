@@ -7,17 +7,12 @@ import { db } from "../lib/firebaseAdmin";
 import { getLetterBlocks } from "../lib/getLetterBlocks";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import { getSessionData } from "../lib/sessionUtils";
+import validateBody from "../lib/validateBody";
 
 export const endTurnGetNewLetters = onAuthorizedRequest(
   async (request, response) => {
-    const validatedData = currentItemsSchema.safeParse(
-      JSON.parse(request.body),
-    );
-    if (!validatedData.success) {
-      response.send({ error: "Invalid Data!" });
-      return;
-    }
-    const { currentItems } = validatedData.data;
+    const validatedData = validateBody(request.body, currentItemsSchema);
+    const { currentItems } = validatedData;
 
     const { gameId, playerId } = await getSessionData(request);
 
