@@ -9,9 +9,9 @@ export default async function moveChallengedItemsToInventory(
   const currentPlacedLettersRef = db.ref(
     `activeGames/${gameId}/challengeWords/placedLetters`,
   );
-  const currentPlacedLetters = (
-    await currentPlacedLettersRef.get()
-  ).val() as Inventory;
+  const currentPlacedLettersSnapshot = await currentPlacedLettersRef.get();
+  if (!currentPlacedLettersSnapshot.exists()) return;
+  const currentPlacedLetters = currentPlacedLettersSnapshot.val() as Inventory;
 
   // Remove items from grid
   const gridRef = db.ref(`activeGames/${gameId}/grid`);
