@@ -38,6 +38,7 @@ export async function setSessionCookie(
     httpOnly: true,
     secure: true,
     sameSite: "none",
+    domain: "skraggl.io"
   });
 }
 
