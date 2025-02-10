@@ -18,30 +18,32 @@ export default async function removePlayer(gameId: string, playerId: string) {
 
     const { currentTurn, players } = gameData;
 
-    // If the player leaves during their turn, remove any placed items
-    // that were submitted to challenge
-    if (
-      gameData.currentTurn === players[playerId].turn &&
-      gameData.challengeWords !== undefined
-    ) {
-      Object.keys(gameData.challengeWords.placedLetters).forEach((itemId) => {
-        delete gameData.grid[itemId];
-      });
-      delete gameData.challengeWords;
-    }
-
-    for (const key in players) {
+    if (playerId in players) {
+      // If the player leaves during their turn, remove any placed items
+      // that were submitted to challenge
       if (
-        players.hasOwnProperty(key) &&
-        players[key].turn >= currentTurn &&
-        players[key].turn > players[playerId].turn
+        gameData.currentTurn === players[playerId].turn &&
+        gameData.challengeWords !== undefined
       ) {
-        gameData.players[key].turn--;
+        Object.keys(gameData.challengeWords.placedLetters).forEach((itemId) => {
+          delete gameData.grid[itemId];
+        });
+        delete gameData.challengeWords;
       }
-    }
 
-    if (gameData.currentTurn > players[playerId].turn) {
-      gameData.currentTurn--;
+      for (const key in players) {
+        if (
+          key in players &&
+          players[key].turn >= currentTurn &&
+          players[key].turn > players[playerId].turn
+        ) {
+          gameData.players[key].turn--;
+        }
+      }
+
+      if (gameData.currentTurn > players[playerId].turn) {
+        gameData.currentTurn--;
+      }
     }
 
     if (!players) return;

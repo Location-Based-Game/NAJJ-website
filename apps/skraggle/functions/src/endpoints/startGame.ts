@@ -1,4 +1,4 @@
-import { getSessionData } from "../lib/sessionUtils";
+import { deleteSession, getSessionData } from "../lib/sessionUtils";
 import getHost from "../firebase-actions/getHost";
 import setGameState from "../firebase-actions/setGameState";
 import { createTurnNumbers } from "../firebase-actions/createTurnNumbers";
@@ -12,6 +12,7 @@ export const startGame = onAuthorizedRequest(async (request, response) => {
   if (host !== playerId) {
     const error = "Only the host can start the game";
     response.status(403).send({ error });
+    deleteSession(response);
     logger.error(error);
     return;
   }
