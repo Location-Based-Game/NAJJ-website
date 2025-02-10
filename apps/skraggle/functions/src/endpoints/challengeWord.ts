@@ -1,6 +1,6 @@
 import { db } from "../lib/firebaseAdmin";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
-import { getSessionData } from "../lib/sessionUtils";
+import { deleteSession, getSessionData } from "../lib/sessionUtils";
 import validateBody from "../lib/validateBody";
 import { challengeWordSchema } from "../../../schemas/challengeWordSchema";
 
@@ -19,6 +19,7 @@ export const challengeWord = onAuthorizedRequest(async (request, response) => {
   );
   const wordIdSnapshot = await wordIdRef.get();
   if (!wordIdSnapshot.exists()) {
+    deleteSession(response);
     response.status(400).send({ error: "Error: Invalid wordId!" });
     return;
   }
