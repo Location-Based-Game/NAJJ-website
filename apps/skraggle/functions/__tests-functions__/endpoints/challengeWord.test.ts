@@ -26,7 +26,7 @@ describe("challengeWord endpoint", () => {
     const gameId = createGameId();
 
     // First create a room with a host
-    await createRoomData(gameId);
+    await createRoomData(gameId, { realWordsOnly: false });
     const playerName = "Host Player";
     const hostPlayerId = await addPlayer(gameId, playerName);
     await db.ref(`activeGames/${gameId}/host`).set(hostPlayerId);
@@ -69,7 +69,7 @@ describe("challengeWord endpoint", () => {
           isPlaced: false,
           gridPosition: [],
           isDestroyed: false,
-          itemData: { letter: "A" },
+          itemData: { letter: "A", isBlank: false },
         },
       },
     };
@@ -106,7 +106,9 @@ describe("challengeWord endpoint", () => {
     const gameId = createGameId();
 
     // First create a room with a host
-    await createRoomData(gameId);
+    await createRoomData(gameId, {
+      realWordsOnly: false,
+    });
     const playerName = "Host Player";
     const hostPlayerId = await addPlayer(gameId, playerName);
     await db.ref(`activeGames/${gameId}/host`).set(hostPlayerId);
@@ -167,7 +169,9 @@ describe("challengeWord endpoint", () => {
     const gameId = createGameId();
 
     // First create a room with a host
-    await createRoomData(gameId);
+    await createRoomData(gameId, {
+      realWordsOnly: false,
+    });
     const playerName = "Host Player";
     const hostPlayerId = await addPlayer(gameId, playerName);
     await db.ref(`activeGames/${gameId}/host`).set(hostPlayerId);
@@ -190,19 +194,19 @@ describe("challengeWord endpoint", () => {
     await challengeWordsRef.set(challengeWordsData);
 
     const requestData: ChallengeWordSchemaType = {
-        wordId,
-        wageredLetters: {
-          letterBlockId: {
-            type: ItemTypes.LetterBlock,
-            playerId: hostPlayerId,
-            itemId: "letterBlockId",
-            isPlaced: false,
-            gridPosition: [],
-            isDestroyed: false,
-            itemData: { letter: "A" },
-          },
+      wordId,
+      wageredLetters: {
+        letterBlockId: {
+          type: ItemTypes.LetterBlock,
+          playerId: hostPlayerId,
+          itemId: "letterBlockId",
+          isPlaced: false,
+          gridPosition: [],
+          isDestroyed: false,
+          itemData: { letter: "A", isBlank: false },
         },
-      };
+      },
+    };
 
     const sessionData: SessionData = {
       gameId,

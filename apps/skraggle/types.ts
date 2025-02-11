@@ -44,4 +44,4 @@ export enum TileType {
   CenterStart,
 }
 
-export type LetterBlock = Item<{ letter: string }>;
+export type LetterBlock = Item<{ letter: string; isBlank: boolean }>;

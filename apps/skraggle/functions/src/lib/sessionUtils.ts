@@ -1,6 +1,6 @@
 import type { Request } from "firebase-functions/v2/https";
 import { decryptJWT, encryptJWT } from "./jwtUtils";
-import type { Response } from "express";
+import type { CookieOptions, Response } from "express";
 import { sessionSchema, SessionData } from "../../../schemas/sessionSchema";
 
 export async function getSessionData(request: Request) {
@@ -33,13 +33,19 @@ export async function setSessionCookie(
 ) {
   const expires = new Date(Date.now() + secondsUntilExpiration * 1000);
   const session = await encryptJWT({ ...sessionData });
-  response.cookie("__session", session, {
+  const cookieData: CookieOptions = {
     expires,
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    domain: "skraggl.io"
-  });
+  };
+
+
+  if (process.env.IS_LOCAL !== "true") {
+    cookieData.secure = true,
+    cookieData.sameSite = "none",
+    cookieData.domain = "skraggl.io";
+  }
+
+  response.cookie("__session", session, cookieData);
 }
 
 export async function deleteSession(response: Response) {

@@ -1,6 +1,4 @@
 import { jwtVerify, SignJWT } from "jose";
-import * as logger from "firebase-functions/logger"
-
 
 export async function decryptJWT(input: string) {
   const secretKey = process.env.JWT_SECRET_TOKEN;
