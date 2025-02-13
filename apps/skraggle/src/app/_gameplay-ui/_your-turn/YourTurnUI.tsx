@@ -7,6 +7,7 @@ import ChallengeWordsContainer from "./ChallengeWordsContainer";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import BlankLetterInput from "./BlankLetterInput";
 
 const ValidatedWordContext = createContext<ReturnType<
   typeof useGetValidatedWord
@@ -28,6 +29,7 @@ export default function YourTurnUI() {
           >
             {!isMobile && <CurrentTurnWordsList />}
             <EndTurnButton ref={validatedWordData.scopeLabel} />
+            <BlankLetterInput />
           </motion.div>
         ) : (
           <ChallengeWordsContainer />

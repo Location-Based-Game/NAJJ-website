@@ -83,7 +83,7 @@ export function WordDefinitionsView({
   return (
     <>
       <div
-        className="absolute flex w-full justify-center"
+        className="absolute top-0 flex w-full justify-center"
         ref={containerRef}
       />
       <Dialog open={open} onOpenChange={setOpen}>
