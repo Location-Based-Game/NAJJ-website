@@ -30,7 +30,7 @@ export async function updateSession(request: NextRequest) {
     expires,
     secure: true,
     sameSite: "none",
-    domain: "skraggl.io"
+    domain: process.env.NODE_ENV === "development" ? undefined : "skraggl.io"
   });
 
   //setup for redux state
@@ -40,7 +40,7 @@ export async function updateSession(request: NextRequest) {
     expires,
     secure: true,
     sameSite: "none",
-    domain: "skraggl.io"
+    domain: process.env.NODE_ENV === "development" ? undefined : "skraggl.io"
   });
 
   return res;

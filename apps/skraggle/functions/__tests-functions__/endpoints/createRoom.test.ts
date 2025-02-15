@@ -1,10 +1,14 @@
 import { createRoom } from "../../../index";
 import { db } from "../../src/lib/firebaseAdmin";
 import { createGameId } from "../../src/lib/createGameId";
+import { GameSettings } from "../../../schemas/gameSettingsSchema";
 const express = require("express");
 const supertest = require("supertest");
 
 const gameId = createGameId()
+const gameSettings:GameSettings = {
+  realWordsOnly: false
+}
 
 jest.mock("../../src/lib/sessionUtils", () => ({
   getSessionData: jest.fn(() => Promise.resolve({ gameId })),
@@ -22,7 +26,7 @@ describe("createRoom endpoint", () => {
       .post("/createRoom")
       .set("Origin", "http://localhost")
       .set("Content-Type", "application/json")
-      .send({ playerName: "test player" });
+      .send({ playerName: "test player", gameSettings });
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");

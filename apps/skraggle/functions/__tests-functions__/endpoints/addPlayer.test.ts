@@ -3,10 +3,13 @@ import { addPlayer as addPlayerEndPoint } from "../../../index";
 import { db } from "../../src/lib/firebaseAdmin";
 import { createRoomData } from "../../src/firebase-actions/createRoomData";
 import { createGameId } from "../../src/lib/createGameId";
+import { GameSettings } from "../../../schemas/gameSettingsSchema";
 
 const express = require("express");
 const supertest = require("supertest");
-
+const gameSettings:GameSettings = {
+  realWordsOnly: false
+}
 const gameId = createGameId();
 
 jest.mock("../../src/lib/sessionUtils", () => ({
@@ -24,7 +27,7 @@ app.post("/addPlayer", (req: any, res: any) =>
 describe("addPlayer endpoint", () => {
   test("adds a player to an existing room with just the host, and keep adding players until max is reached", async () => {
     // First create a room with a host
-    await createRoomData(gameId)
+    await createRoomData(gameId, gameSettings)
     const playerId = await addPlayer(gameId, "Host Player");
     await db.ref(`activeGames/${gameId}/host`).set(playerId);
 

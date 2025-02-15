@@ -6,9 +6,13 @@ import { SessionData } from "../../../schemas/sessionSchema";
 import { encryptJWT } from "../../src/lib/jwtUtils";
 import { GameStates, Inventory, ItemTypes, PlayersData } from "../../../types";
 import { createGameId } from "../../src/lib/createGameId";
+import { GameSettings } from "../../../schemas/gameSettingsSchema";
 
 const express = require("express");
 const supertest = require("supertest");
+const gameSettings:GameSettings = {
+  realWordsOnly: false
+}
 
 const app = express();
 app.use(express.json());
@@ -19,7 +23,7 @@ describe("startGame endpoint", () => {
     const gameId = createGameId();
 
     // First create a room with a host
-    await createRoomData(gameId);
+    await createRoomData(gameId, gameSettings);
     const hostPlayerId = await addPlayer(gameId, "Host Player");
     await db.ref(`activeGames/${gameId}/host`).set(hostPlayerId);
 
@@ -71,7 +75,7 @@ describe("startGame endpoint", () => {
     const gameId = createGameId();
 
     // First create a room with a host
-    await createRoomData(gameId);
+    await createRoomData(gameId, gameSettings);
     const playerId = await addPlayer(gameId, "Host Player");
     await db.ref(`activeGames/${gameId}/host`).set(playerId);
 

@@ -9,10 +9,13 @@ import { createGameId } from "../../src/lib/createGameId";
 import setGameState from "../../src/firebase-actions/setGameState";
 import { getLetterBlocks } from "../../src/lib/getLetterBlocks";
 import { SubmittedChallengeWords } from "../../../schemas/challengerSchema";
+import { GameSettings } from "../../../schemas/gameSettingsSchema";
 
 const express = require("express");
 const supertest = require("supertest");
-
+const gameSettings:GameSettings = {
+  realWordsOnly: false
+}
 const app = express();
 app.use(express.json());
 app.post("/submitChallengeWords", (req: any, res: any) =>
@@ -24,7 +27,7 @@ describe("submitChallengeWords endpoint", () => {
     const gameId = createGameId();
 
     // First create a room with a host
-    await createRoomData(gameId);
+    await createRoomData(gameId, gameSettings);
     const playerName = "Host Player";
     const hostPlayerId = await addPlayer(gameId, playerName);
     await db.ref(`activeGames/${gameId}/host`).set(hostPlayerId);
@@ -101,7 +104,7 @@ describe("submitChallengeWords endpoint", () => {
     const gameId = createGameId();
 
     // First create a room with a host
-    await createRoomData(gameId);
+    await createRoomData(gameId, gameSettings);
     const playerName = "Host Player";
     const hostPlayerId = await addPlayer(gameId, playerName);
     await db.ref(`activeGames/${gameId}/host`).set(hostPlayerId);
@@ -190,7 +193,7 @@ describe("submitChallengeWords endpoint", () => {
     const gameId = createGameId();
 
     // First create a room with a host
-    await createRoomData(gameId);
+    await createRoomData(gameId, gameSettings);
     const playerName = "Host Player";
     const hostPlayerId = await addPlayer(gameId, playerName);
     await db.ref(`activeGames/${gameId}/host`).set(hostPlayerId);

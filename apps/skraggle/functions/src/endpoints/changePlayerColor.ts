@@ -3,6 +3,7 @@ import { db } from "../lib/firebaseAdmin";
 import { deleteSession, getSessionData } from "../lib/sessionUtils";
 import { z } from "zod";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
+import validateBody from "../lib/validateBody";
 
 const colorSchema = z.object({
   color: z.string(),
@@ -10,14 +11,9 @@ const colorSchema = z.object({
 
 export const changePlayerColor = onAuthorizedRequest(
   async (request, response) => {
-    const validatedData = colorSchema.safeParse(JSON.parse(request.body));
+    const validatedData = validateBody(request.body, colorSchema);
+    const { color } = validatedData;
 
-    if (!validatedData.success) {
-      response.send({ error: "Invalid Data!" });
-      return;
-    }
-
-    const { color } = validatedData.data;
     const { gameId, playerId } = await getSessionData(request);
     const playerRef = db.ref(`activeGames/${gameId}/players/${playerId}/color`);
     await playerRef.set(color);

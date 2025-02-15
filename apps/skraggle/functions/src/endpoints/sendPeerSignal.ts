@@ -1,9 +1,9 @@
-import { onRequest } from "firebase-functions/https";
 import { z } from "zod";
-import { deleteSession, getSessionData } from "../lib/sessionUtils";
+import { getSessionData } from "../lib/sessionUtils";
 import { db } from "../lib/firebaseAdmin";
 import { SignalData } from "simple-peer";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
+import validateBody from "../lib/validateBody";
 
 const sendPeerSignalSchema = z.object({
   isInitiator: z.boolean(),
@@ -13,16 +13,8 @@ const sendPeerSignalSchema = z.object({
 });
 
 export const sendPeerSignal = onAuthorizedRequest(async (request, response) => {
-  const validatedData = sendPeerSignalSchema.safeParse(
-    JSON.parse(request.body),
-  );
-
-  if (!validatedData.success) {
-    response.send({ error: "Invalid Data!" });
-    return;
-  }
-
-  const { isInitiator, signal, peerId, name } = validatedData.data;
+  const validatedData = validateBody(request.body, sendPeerSignalSchema);
+  const { isInitiator, signal, peerId, name } = validatedData;
 
   const { gameId, playerId } = await getSessionData(request);
 

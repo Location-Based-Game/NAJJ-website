@@ -23,7 +23,7 @@ export function getLetterBlocks(
     const randomLetter = letters[randomIndex];
     const itemId = `${randomLetter}-${uuidv4()}`;
     letterBlocks[itemId] = {
-      itemData: { letter: randomLetter },
+      itemData: { letter: randomLetter, isBlank: randomLetter === "_" },
       playerId,
       itemId,
       type: ItemTypes.LetterBlock,

@@ -55,7 +55,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
       <div
         ref={ref}
         className={cn(
-          "relative flex h-[calc(100dvh-3rem)] items-center justify-center bg-[#eaae6a]",
+          "relative flex h-[calc(100%-3rem)] items-center justify-center bg-[#eaae6a]",
           className,
         )}
         {...props}
