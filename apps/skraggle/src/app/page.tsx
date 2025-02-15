@@ -26,7 +26,7 @@ function Main() {
   return (
     <main className={cn(styles.mainBackground, "relative flex h-dvh flex-1")}>
       <Noise />
-      <div className="grow">
+      <div className="grow flex flex-col">
         <GameHeader />
         <Viewport className={styles.viewPort} />
       </div>
