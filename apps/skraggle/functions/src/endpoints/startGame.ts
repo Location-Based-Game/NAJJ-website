@@ -11,8 +11,8 @@ export const startGame = onAuthorizedRequest(async (request, response) => {
   const host = await getHost(gameId);
   if (host !== playerId) {
     const error = "Only the host can start the game";
-    response.status(403).send({ error });
     deleteSession(response);
+    response.status(403).send({ error });
     logger.error(error);
     return;
   }

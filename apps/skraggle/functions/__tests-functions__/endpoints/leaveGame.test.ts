@@ -5,8 +5,12 @@ import { createRoomData } from "../../src/firebase-actions/createRoomData";
 import { SessionData } from "../../../schemas/sessionSchema";
 import { encryptJWT } from "../../src/lib/jwtUtils";
 import { createGameId } from "../../src/lib/createGameId";
+import { GameSettings } from "../../../schemas/gameSettingsSchema";
 const express = require("express");
 const supertest = require("supertest");
+const gameSettings:GameSettings = {
+  realWordsOnly: false
+}
 
 const app = express();
 app.use(express.json());
@@ -16,7 +20,7 @@ describe("leaveGame endpoint", () => {
   test("host and only player leaves the game and room is deleted", async () => {
     const gameId = createGameId();
 
-    await createRoomData(gameId);
+    await createRoomData(gameId, gameSettings);
     const playerId = await addPlayer(gameId, "Host Player");
     const sessionData: SessionData = {
       gameId,
@@ -45,7 +49,7 @@ describe("leaveGame endpoint", () => {
   test("host leaves the game and a different player becomes host", async () => {
     const gameId = createGameId();
 
-    await createRoomData(gameId);
+    await createRoomData(gameId, gameSettings);
     const hostId = await addPlayer(gameId, "Host Player");
 
     // Adds two players. The first player should become host when the current host leaves
