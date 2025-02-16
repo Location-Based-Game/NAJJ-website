@@ -49,6 +49,14 @@ export async function setSessionCookie(
 }
 
 export async function deleteSession(response: Response) {
-  response.clearCookie("__session");
-  response.clearCookie("session_data");
+  const cookieData: CookieOptions = {};
+
+  if (process.env.IS_LOCAL !== "true") {
+    cookieData.secure = true,
+    cookieData.sameSite = "none",
+    cookieData.domain = "skraggl.io";
+  }
+
+  response.clearCookie("__session", cookieData);
+  response.clearCookie("session_data", cookieData);
 }
