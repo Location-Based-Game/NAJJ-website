@@ -18,7 +18,7 @@ export default function BlankLetterInputFixture() {
   return (
     <>
       <Button onClick={handleMenuOpen}>Open Context Menu</Button>
-      <BlankLetterInputView ref={trigger} />
+      <BlankLetterInputView ref={trigger} onChange={() => {}}/>
     </>
   );
 }

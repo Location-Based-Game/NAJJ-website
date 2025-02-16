@@ -20,16 +20,21 @@ const blankLetterParamsSchema = z.object({
 type BlankLetterParams = z.infer<typeof blankLetterParamsSchema>;
 
 export default function BlankLetterInput() {
+  const { addEventListener, removeEventListener, callUnityFunction } =
+    useUnityReactContext();
+
   const trigger = useRef<HTMLSpanElement>(null!);
   const xPos = useRef<number>(0);
   const yPos = useRef<number>(0);
-  const handleMousePos = (event: MouseEvent) => {
+  const handlePointerPos = (event: MouseEvent) => {
     xPos.current = event.clientX;
     yPos.current = event.clientY;
   };
 
   const handleMenuOpen = (letterData: any) => {
-    const { letter, id } = blankLetterParamsSchema.parse(JSON.parse(letterData));
+    const { letter, id } = blankLetterParamsSchema.parse(
+      JSON.parse(letterData),
+    );
     letterSignal.value = letter;
     currentBlankLetterId.value = id;
 
@@ -42,30 +47,49 @@ export default function BlankLetterInput() {
     );
   };
 
-  const { addEventListener, removeEventListener } = useUnityReactContext();
+  const handleOnChange = (data: BlankLetterParams) => {
+    callUnityFunction("SetBlankLetter", data);
+  };
 
   useEffect(() => {
-    document.addEventListener("mousemove", handleMousePos);
+    // "pointermove" is used instead of "mousemove" to support both mouse and touch
+    document.addEventListener("pointermove", handlePointerPos);
     addEventListener("ShowBlankLetterInputPopup", handleMenuOpen);
     return () => {
-      document.removeEventListener("mousemove", handleMousePos);
+      document.removeEventListener("pointermove", handlePointerPos);
       removeEventListener("ShowBlankLetterInputPopup", handleMenuOpen);
     };
   }, []);
 
   return (
     <>
-      <BlankLetterInputView ref={trigger} />
+      <BlankLetterInputView ref={trigger} onChange={handleOnChange} />
     </>
   );
 }
 
-const BlankLetterInputView = forwardRef<HTMLSpanElement>(({}, ref) => {
+type BlankLetterInputViewProps = {
+  onChange: (data: BlankLetterParams) => void;
+};
+
+const BlankLetterInputView = forwardRef<
+  HTMLSpanElement,
+  BlankLetterInputViewProps
+>(({ onChange }, ref) => {
+  const contextMenuContentRef = useRef<HTMLDivElement>(null!);
   return (
     <ContextMenu>
       <ContextMenuTrigger ref={ref} />
-      <ContextMenuContent className="w-[12rem]">
-        <BlankLetterInputViewContent />
+      <ContextMenuContent
+        ref={contextMenuContentRef}
+        className="w-[12rem]"
+        onInteractOutside={() => {
+          contextMenuContentRef.current.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "Escape" }),
+          );
+        }}
+      >
+        <BlankLetterInputViewContent onChange={onChange} />
       </ContextMenuContent>
     </ContextMenu>
   );
@@ -74,16 +98,21 @@ const BlankLetterInputView = forwardRef<HTMLSpanElement>(({}, ref) => {
 BlankLetterInputView.displayName = "BlankLetterInputView";
 export { BlankLetterInputView };
 
-function BlankLetterInputViewContent() {
+interface BlankLetterInputViewContent {
+  onChange: (data: BlankLetterParams) => void;
+}
+
+function BlankLetterInputViewContent({
+  onChange,
+}: BlankLetterInputViewContent) {
   const input = useRef<HTMLInputElement>(null!);
   useEffect(() => {
     input.current.focus();
     input.current.value = letterSignal.value.replaceAll(" ", "");
   }, []);
 
-  const { callUnityFunction } = useUnityReactContext();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const lastLetter = e.target.value[e.target.value.length - 1]
+    const lastLetter = e.target.value[e.target.value.length - 1];
     if (lastLetter && !lastLetter.match(/^[A-Za-z]+$/)) {
       e.target.value = e.target.value.replace(lastLetter, "");
       return;
@@ -93,7 +122,7 @@ function BlankLetterInputViewContent() {
       id: currentBlankLetterId.value,
     };
     input.current.value = data.letter;
-    callUnityFunction("SetBlankLetter", data);
+    onChange(data);
   };
 
   return (
