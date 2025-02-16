@@ -12,7 +12,6 @@ export function onAuthorizedRequest(
     { cors: true, secrets: [JWT_SECRET_TOKEN] },
     async (request, response) => {
       response.set("Access-Control-Allow-Credentials", "true");
-      response.set("Cache-Control", "no-store");
 
       try {
         await handler(request, response);

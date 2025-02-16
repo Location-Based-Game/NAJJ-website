@@ -90,7 +90,7 @@ export function WordDefinitionsView({
         <AnimatePresence>
           {open && (
             <DialogPortal container={containerRef.current} forceMount>
-              <DialogContent asChild>
+              <DialogContent asChild onInteractOutside={() => setOpen(false)}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
