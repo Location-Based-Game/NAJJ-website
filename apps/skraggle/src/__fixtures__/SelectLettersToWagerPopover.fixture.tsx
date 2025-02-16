@@ -19,7 +19,7 @@ export default function SelectLettersToWagerPopoverFixture() {
       setLetterSelection={setLetterSelection}
       letterBlocks={[...new Array(itemAmount)].map((_) => {
         return {
-          itemData: { letter: "Y" },
+          itemData: { letter: "Y", isBlank: false },
           playerId: "testPlayer",
           itemId: "",
           type: ItemTypes.LetterBlock,
