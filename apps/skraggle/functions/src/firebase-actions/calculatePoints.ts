@@ -110,6 +110,12 @@ function calculateWordPoints(wordData: WordData) {
   for (let i = 0; i < wordData.word.length; i++) {
     wordPoints += letterPoints[wordData.word[i].toUpperCase()];
   }
+
+  // Cancel out points for blank tiles
+  for (let i = 0; i < wordData.blankLetters.length; i++) {
+    wordPoints -= letterPoints[wordData.blankLetters[i].toUpperCase()];
+  }
+
   wordPoints += wordData.doubleBonus + wordData.tripleBonus;
   wordData.scoreMultipliers.forEach((multiplier: TileType) => {
     if (multiplier === TileType.TripleWordScore) {

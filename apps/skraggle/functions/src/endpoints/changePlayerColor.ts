@@ -1,6 +1,5 @@
-import { onRequest } from "firebase-functions/https";
 import { db } from "../lib/firebaseAdmin";
-import { deleteSession, getSessionData } from "../lib/sessionUtils";
+import { getSessionData } from "../lib/sessionUtils";
 import { z } from "zod";
 import { onAuthorizedRequest } from "../lib/onAuthorizedRequest";
 import validateBody from "../lib/validateBody";

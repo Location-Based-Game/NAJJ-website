@@ -11,6 +11,7 @@ import selectionStyles from "@styles/selectionGradient.module.css";
 import { cn } from "@/lib/tailwindUtils";
 import { PlayersData } from "@types";
 import { PeerStatuses } from "@/store/peerStatusSlice";
+import { z } from "zod";
 
 export default function PlayerList() {
   const players = useSelector((state: RootState) => state.players);
@@ -20,7 +21,11 @@ export default function PlayerList() {
   const { logOutOnError } = useLogOut();
   const handleChangeColor = async (color: string) => {
     try {
-      await fetchApi("changePlayerColor", { color });
+      const validatedColor = z.string().safeParse(color)
+      if (!validatedColor.success) {
+        throw new Error("Invalid Color!")
+      }
+      await fetchApi("changePlayerColor", { color: validatedColor.data });
     } catch (error) {
       logOutOnError(error);
     }
