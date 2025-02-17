@@ -8,6 +8,11 @@ import {
 import { useUnityReactContext } from "@/app/_unity-player/UnityContext";
 import { signal } from "@preact/signals-react";
 import { z } from "zod";
+import { Form, FormLabel } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const letterSignal = signal("");
 const currentBlankLetterId = signal("");
@@ -77,19 +82,24 @@ const BlankLetterInputView = forwardRef<
   BlankLetterInputViewProps
 >(({ onChange }, ref) => {
   const contextMenuContentRef = useRef<HTMLDivElement>(null!);
+  const handleClose = () => {
+    contextMenuContentRef.current.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Escape" }),
+    );
+  };
+
   return (
     <ContextMenu>
       <ContextMenuTrigger ref={ref} />
       <ContextMenuContent
         ref={contextMenuContentRef}
         className="w-[12rem]"
-        onInteractOutside={() => {
-          contextMenuContentRef.current.dispatchEvent(
-            new KeyboardEvent("keydown", { key: "Escape" }),
-          );
-        }}
+        onInteractOutside={() => handleClose()}
       >
-        <BlankLetterInputViewContent onChange={onChange} />
+        <BlankLetterInputViewContent
+          onChange={onChange}
+          onSubmit={() => handleClose()}
+        />
       </ContextMenuContent>
     </ContextMenu>
   );
@@ -100,10 +110,12 @@ export { BlankLetterInputView };
 
 interface BlankLetterInputViewContent {
   onChange: (data: BlankLetterParams) => void;
+  onSubmit: () => void;
 }
 
 function BlankLetterInputViewContent({
   onChange,
+  onSubmit,
 }: BlankLetterInputViewContent) {
   const input = useRef<HTMLInputElement>(null!);
   useEffect(() => {
@@ -125,17 +137,38 @@ function BlankLetterInputViewContent({
     onChange(data);
   };
 
+  const form = useForm<{ customLetter: string }>({
+    resolver: zodResolver(z.object({ customLetter: z.string().max(1) })),
+  });
+
   return (
     <div className="flex flex-col gap-2 p-2">
-      <h2 className="text-center text-white drop-shadow-dark">
-        Enter Custom Letter
-      </h2>
-      <Input
-        ref={input}
-        className="bg-black/50 text-center text-lg"
-        maxLength={2}
-        onChange={handleChange}
-      />
+      <Form {...form}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+        >
+          <FormLabel
+            className="block text-center text-white drop-shadow-dark"
+            htmlFor="customLetter"
+          >
+            Enter Custom Letter
+          </FormLabel>
+          <Input
+            id="customLetter"
+            ref={input}
+            className="bg-black/50 text-center text-lg"
+            maxLength={2}
+            onChange={handleChange}
+          />
+          {/* Hidden submit button so that mobile devices can close keyboard when tapping the "Go" button */}
+          <VisuallyHidden>
+            <Button type="submit">Submit</Button>
+          </VisuallyHidden>
+        </form>
+      </Form>
     </div>
   );
 }
