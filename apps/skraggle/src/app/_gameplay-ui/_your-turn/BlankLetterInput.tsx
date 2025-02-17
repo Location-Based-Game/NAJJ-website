@@ -51,12 +51,20 @@ export default function BlankLetterInput() {
     callUnityFunction("SetBlankLetter", data);
   };
 
+  const handleClick = (event: MouseEvent) => {
+    if (event.target instanceof HTMLCanvasElement) {
+      document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    }
+  };
+
   useEffect(() => {
     // "pointermove" is used instead of "mousemove" to support both mouse and touch
     document.addEventListener("pointermove", handlePointerPos);
+    document.addEventListener("pointerdown", handleClick);
     addEventListener("ShowBlankLetterInputPopup", handleMenuOpen);
     return () => {
       document.removeEventListener("pointermove", handlePointerPos);
+      document.removeEventListener("pointerdown", handleClick);
       removeEventListener("ShowBlankLetterInputPopup", handleMenuOpen);
     };
   }, []);

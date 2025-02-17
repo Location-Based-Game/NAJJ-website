@@ -4,52 +4,27 @@ import { useSelector } from "react-redux";
 import MainMenuPanel from "./_main-menu/MainMenuPanel";
 import useSetGameState from "./useSetGameState";
 import { useUnityReactContext } from "./_unity-player/UnityContext";
-import dynamic from "next/dynamic";
 import { cn } from "@/lib/tailwindUtils";
 import usePlayersData from "@/app/usePlayersData";
 import GameplayUIContextProvider from "./_gameplay-ui/GameplayUIContextProvider";
 import GameplayUI from "./_gameplay-ui/GameplayUI";
-import { forwardRef, useEffect, useState } from "react";
-import cursors from "@styles/cursors.module.css";
+import { forwardRef } from "react";
 import loadingBackground from "@styles/loadingBackground.module.css";
 import useTransmitWebRTCData from "./_gameplay-ui/useTransmitWebRTCData";
 import useSessionRejoin from "./_main-menu/_rejoin/useSessionRejoin";
-
-const Unity = dynamic(
-  () => import("react-unity-webgl").then((mod) => mod.Unity),
-  { ssr: false },
-);
+import UnityCanvas from "./_unity-player/UnityCanvas";
 
 const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
   ({ className, ...props }, ref) => {
-    const { state: gameState, isGameActive } = useSelector(
+    const { state: gameState } = useSelector(
       (state: RootState) => state.gameState,
     );
-    const {
-      splashScreenComplete,
-      unityProvider,
-      addEventListener,
-      removeEventListener,
-    } = useUnityReactContext();
+    const { splashScreenComplete } = useUnityReactContext();
 
     usePlayersData();
     useSetGameState();
     useTransmitWebRTCData();
     useSessionRejoin();
-
-    const [viewPortCursor, setViewPortCursor] = useState(cursors.auto);
-    const updateCursor = (cursorType: any) => {
-      setViewPortCursor(cursors[cursorType]);
-    };
-
-    useEffect(() => {
-      if (!splashScreenComplete) return;
-      addEventListener("SetCursorType", updateCursor);
-
-      return () => {
-        removeEventListener("SetCursorType", updateCursor);
-      };
-    }, [addEventListener, removeEventListener, splashScreenComplete]);
 
     return (
       <div
@@ -63,7 +38,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
         <div
           className={cn(
             loadingBackground.loadingBackground,
-            "transition-opacity pointer-events-none",
+            "pointer-events-none transition-opacity",
             !splashScreenComplete ? "opacity-100" : "opacity-0",
           )}
         ></div>
@@ -72,15 +47,7 @@ const Viewport = forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
             {gameState === "Menu" ? <MainMenuPanel /> : <GameplayUI />}
           </GameplayUIContextProvider>
         </div>
-        <Unity
-          unityProvider={unityProvider}
-          className={cn(
-            "h-full w-full transition-opacity duration-700",
-            isGameActive ? "pointer-events-auto" : "pointer-events-none",
-            splashScreenComplete ? "opacity-100" : "opacity-0",
-            viewPortCursor,
-          )}
-        />
+        <UnityCanvas />
       </div>
     );
   },
