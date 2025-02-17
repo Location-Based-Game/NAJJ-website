@@ -35,6 +35,18 @@ export default function UnityCanvas() {
     };
   }, [addEventListener, removeEventListener, splashScreenComplete]);
 
+  const handleClick = (event: MouseEvent) => {
+    if (event.target instanceof HTMLCanvasElement) {
+      // Triggers Radix's outside click handler to close dialogues, context menus, etc
+      document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("pointerdown", handleClick);
+    return () => document.removeEventListener("pointerdown", handleClick);
+  }, []);
+
   return (
     <Unity
       unityProvider={unityProvider}
