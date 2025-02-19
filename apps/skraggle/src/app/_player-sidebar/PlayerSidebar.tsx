@@ -21,7 +21,7 @@ import backgroundStyles from "@styles/main.module.css";
 import Noise from "@/components/Noise";
 import dynamic from "next/dynamic";
 
-const SidebarAd = dynamic(() => import("./SidebarAd"), { ssr: false })
+const SidebarAd = dynamic(() => import("./SidebarAd"), { ssr: false });
 
 export default function PlayerSidebar() {
   const players = useSelector((state: RootState) => state.players);
@@ -109,8 +109,8 @@ export function PlayerSidebarView({
     </Sheet>
   ) : (
     <div className="min-w-[14rem]">
-      <div className="flex w-full flex-col gap-1 pl-4 pr-3 pt-12 text-white">
-        {playerList}
+      <div className="flex w-full flex-col justify-between gap-1 pl-4 pr-3 pt-12 text-white">
+        <div>{playerList}</div>
         <SidebarAd />
       </div>
     </div>
