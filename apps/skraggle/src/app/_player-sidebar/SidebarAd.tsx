@@ -1,6 +1,9 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 
 const SidebarAd = memo(() => {
+  useEffect(() => {
+    ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
+  }, [])
   return (
     <>
       <script
@@ -16,7 +19,6 @@ const SidebarAd = memo(() => {
         data-ad-format="auto"
         data-full-width-responsive="true"
       ></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </>
   );
 });
