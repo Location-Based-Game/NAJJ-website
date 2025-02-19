@@ -101,15 +101,15 @@ export function PlayerSidebarView({
             Players
           </SheetTitle>
         </SheetHeader>
-        <div className="flex flex-col gap-1">
-          {playerList}
+        <div className="flex h-full flex-col justify-between gap-1">
+          <div>{playerList}</div>
           <SidebarAd />
         </div>
       </SheetContent>
     </Sheet>
   ) : (
     <div className="min-w-[14rem]">
-      <div className="flex w-full flex-col justify-between gap-1 pl-4 pr-3 pt-12 text-white">
+      <div className="flex h-full w-full flex-col justify-between gap-1 pl-4 pr-3 pt-12 text-white">
         <div>{playerList}</div>
         <SidebarAd />
       </div>
